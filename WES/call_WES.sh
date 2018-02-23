@@ -1,10 +1,10 @@
 tag=$1
-dir=/home/luyulan/project/WES_tmp/data
+dir=XXX/WES_tmp/data
 
-picard_dir=/home/luyulan/Tools/picard-tools-1.131
-gatk_dir=/home/luyulan/Tools/GATK/GenomeAnalysisTK-3.3-0
+picard_dir=XXX/picard-tools-1.131
+gatk_dir=XXX/GATK/GenomeAnalysisTK-3.3-0
 
-dir_out=/home/luyulan/project/WES_tmp/data/${tag}
+dir_out=XXX/WES_tmp/data/${tag}
 
 known_dir=${gatk_dir}/bundle
 ref_genome=${known_dir}/ucsc.hg19.fasta
