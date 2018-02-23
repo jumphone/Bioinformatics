@@ -1,1 +1,1 @@
-# Bioinformatics
+# Bioinformatics workflows
