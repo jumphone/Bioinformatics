@@ -1,3 +1,5 @@
+# Enhancer connectome in primary human cells identifies target genes of disease-associated DNA elements
+
 # HiChIP data processing. 
 
 HiChIP paired-end reads were aligned to the hg19
@@ -25,8 +27,6 @@ the hg19 genome and make indexes. HiC-Pro settings were similar to those
 described above, with the exception that reads were aligned to the masked
 genome and then assigned to a specific allele on the basis of phasing data.
 
-
-# Enhancer connectome in primary human cells identifies target genes of disease-associated DNA elements
 
 51. Servant, N. et al. HiC-Pro: an optimized and flexible pipeline for Hi-C data processing. Genome Biol. 16, 259 (2015).
 
