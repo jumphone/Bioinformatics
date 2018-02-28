@@ -1,4 +1,6 @@
-HiChIP data processing. HiChIP paired-end reads were aligned to the hg19
+#HiChIP data processing. 
+
+HiChIP paired-end reads were aligned to the hg19
 or mm9 genome using the HiC-Pro pipeline51. Default settings were used to
 remove duplicate reads, assign reads to MboI restriction fragments, filter for
 valid interactions, and generate binned interaction matrices. HiC-Pro filtered
