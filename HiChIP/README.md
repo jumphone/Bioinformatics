@@ -1,4 +1,4 @@
-#HiChIP data processing. 
+# HiChIP data processing. 
 
 HiChIP paired-end reads were aligned to the hg19
 or mm9 genome using the HiC-Pro pipeline51. Default settings were used to
