@@ -1,3 +1,6 @@
+sudo ln -s /usr/X11 /opt/X11
+
+
 system("locate libSM.6.dylib")
 source("https://bioconductor.org/biocLite.R")
 biocLite("metagene")
