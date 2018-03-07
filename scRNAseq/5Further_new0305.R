@@ -68,4 +68,22 @@ print(c)
 write.table(c,file=paste0('images/GFP/CNUM/',as.character(i),'.csv'),row.names=T,col.names=T,quote=F,sep='\t')
 i=i+1
 }
+i=0
+nonGFP=table(EXP_GFP@ident[which(EXP_cluster@ident==i & EXP_GFP@meta.data$GFP==0)])
+GFP=table(EXP_GFP@ident[which(EXP_cluster@ident==i & EXP_GFP@meta.data$GFP>0)])
+c=cbind(nonGFP,GFP)
+
+i=1
+while(i<=30){
+nonGFP=table(EXP_GFP@ident[which(EXP_cluster@ident==i & EXP_GFP@meta.data$GFP==0)])
+GFP=table(EXP_GFP@ident[which(EXP_cluster@ident==i & EXP_GFP@meta.data$GFP>0)])
+c_new=cbind(nonGFP,GFP)
+c=cbind(c,c_new)
+#print(c)
+#write.table(c,file=paste0('images/GFP/CNUM/',as.character(i),'.tsv'),row.names=T,col.names=T,quote=F,sep='\t')
+i=i+1
+}
+
+write.table(c,file=paste0('images/GFP/CNUM_GFP.tsv'),row.names=T,col.names=T,quote=F,sep='\t')
+
 
