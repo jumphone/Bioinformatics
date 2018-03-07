@@ -57,3 +57,15 @@ FeaturePlot(object = EXP_cluster, features.plot = c("Foxp3","Cd4","Ccl5","Car2",
 FeaturePlot(object = EXP_cluster, features.plot = c("Cxcr4","Cxcl12","Cxcr3","Cxcl10","Foxr2","Tnfrsf4","Pdcd1lg2","Pdgfrl","Cd274"), cols.use = c("grey", "blue"), reduction.use = "tsne")
 dev.off()
 
+
+#cell number in an excel file for GFP+ cells in each cluster for all 6 samples
+i=0
+while(i<=30){
+nonGFP=table(EXP_GFP@ident[which(EXP_cluster@ident==i & EXP_GFP@meta.data$GFP==0)])
+GFP=table(EXP_GFP@ident[which(EXP_cluster@ident==i & EXP_GFP@meta.data$GFP>0)])
+c=cbind(nonGFP,GFP)
+print(c)
+write.table(c,file=paste0('images/GFP/CNUM/',as.character(i),'.csv'),row.names=T,col.names=T,quote=F,sep='\t')
+i=i+1
+}
+
