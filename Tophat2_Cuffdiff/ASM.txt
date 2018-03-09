@@ -1,0 +1,8 @@
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1052_S71_L007_R1_001.fastq.cufflinks/transcripts.gtf
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1054_S72_L007_R1_001.fastq.cufflinks/transcripts.gtf
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1055_S73_L007_R1_001.fastq.cufflinks/transcripts.gtf
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1061_S74_L007_R1_001.fastq.cufflinks/transcripts.gtf
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1078_S75_L007_R1_001.fastq.cufflinks/transcripts.gtf
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1081_S76_L007_R1_001.fastq.cufflinks/transcripts.gtf
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1089_S77_L007_R1_001.fastq.cufflinks/transcripts.gtf
+/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/1090_S78_L007_R1_001.fastq.cufflinks/transcripts.gtf
