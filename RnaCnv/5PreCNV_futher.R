@@ -48,10 +48,11 @@ CELL_TAG=read.delim('cell_tag.txt',header=F,sep='\t')
 GENE_TAG=read.delim('gene_tag.txt',header=F,sep='\t')
 CELL_COLOR= as.character(CELL_TAG[,2])
 CHROM_COLOR= as.character(GENE_TAG[,2][(WINDOW/2+1):(WINDOW/2+length(center_ALLCNV[,1]))])
-
+CHROM_TAG= GENE_TAG[(WINDOW/2+1):(WINDOW/2+length(center_ALLCNV[,1])),]
 
 write.table(t(relative_center_ALLCNV),file='relative_ALLCNV.txt',row.names=T,col.names=T,quote=F,sep='\t')
 write.table(CELL_COLOR, file='CELL_COLOR.txt',row.names=F,col.names=F,quote=F,sep='\t')
 write.table(CHROM_COLOR, file='CHROM_COLOR.txt',row.names=F,col.names=F,quote=F,sep='\t')
+write.table(CHROM_TAG, file='CHROM_TAG.txt',row.names=F,col.names=F,quote=F,sep='\t')
 
 
