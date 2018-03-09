@@ -13,13 +13,13 @@ center_ALLCNV=as.matrix(raw_data[,c(5:length(raw_data[1,]))])
 reference_cell_name=as.character(read.delim(REFERENCE_CELL,header=F,sep='\t')[,1])
 reference_cell= which(colnames(center_ALLCNV) %in% reference_cell_name )
 
-max_base_line = apply(center_ALLCNV[,reference_cell],1,mean)
-min_base_line = apply(center_ALLCNV[,reference_cell],1,mean)
-mean_base_line=apply(center_ALLCNV[,reference_cell],1,mean)
-sd_base_line=apply(center_ALLCNV[,reference_cell],1,sd)
+max_base_line = apply(center_ALLCNV[,reference_cell],1,max)
+min_base_line = apply(center_ALLCNV[,reference_cell],1,min)
+#mean_base_line=apply(center_ALLCNV[,reference_cell],1,mean)
+#sd_base_line=apply(center_ALLCNV[,reference_cell],1,sd)
 
-max_base_line =qnorm(0.975, mean=mean_base_line, sd=sd_base_line)      #apply(center_ALLCNV[,reference_cell],1,mean)
-min_base_line =qnorm(0.025, mean=mean_base_line, sd=sd_base_line) #apply(center_ALLCNV[,reference_cell],1,mean)
+#max_base_line =qnorm(0.975, mean=mean_base_line, sd=sd_base_line)      #apply(center_ALLCNV[,reference_cell],1,mean)
+#min_base_line =qnorm(0.025, mean=mean_base_line, sd=sd_base_line) #apply(center_ALLCNV[,reference_cell],1,mean)
 
 
 relative_center_ALLCNV = center_ALLCNV
