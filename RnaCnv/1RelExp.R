@@ -9,7 +9,7 @@ suppressPackageStartupMessages(library(edgeR))
 raw_exp_data=read.delim(TPM_MATRIX, sep='\t', header=T, row.names=1)
 tmm=edgeR::calcNormFactors(raw_exp_data)
 exptmm=edgeR::cpm(raw_exp_data, lib.size = tmm * colSums(raw_exp_data))
-logexp <- log2(exptmm + 1)
+logexp <- exptmm #log2(exptmm + 1)
 
 agg=apply(logexp,1,sum)
 gene_analyzed= which( agg > quantile(agg,0.0))
