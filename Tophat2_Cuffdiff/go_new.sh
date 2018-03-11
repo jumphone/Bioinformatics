@@ -10,8 +10,8 @@ pc_gtf='/home/zhangfeng/disk/project/data/annotation/mm9.gtf'
 downloaddir='/home/zhangfeng/disk/project/data/download/'
 human_gtf='/home/genomewide/annotation/hg19/Homo_sapiens.GRCh37.75.chr.gtf'
 
-mm10_gft='/home/genomewide/annotation/mm10/Mus_musculus.GRCm38.87.chr.gtf'
-mm9_gft='/home/genomewide/annotation/mm9/Mus_musculus.NCBIM37.67.chr.gtf'
+mm10_gtf='/home/genomewide/annotation/mm10/Mus_musculus.GRCm38.87.chr.gtf'
+mm9_gtf='/home/genomewide/annotation/mm9/Mus_musculus.NCBIM37.67.chr.gtf'
 mm10_index='/home/genomewide/refgenome/mm10/mm10'
 mm10_fa='/home/genomewide/refgenome/mm10/mm10.fa'
 
