@@ -62,14 +62,14 @@ ASM=/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/ASM.txt
 
 $cuffmerge -g $mm10_gtf -s $mm10_fa -p 10  -o $GTF  $ASM
 
-$KRAS_1052=$wp\1052_S71_L007_R1_001.fastq.tophatdir/accepted_hits.bam
-$KRAS_1054=$wp\1054_S72_L007_R1_001.fastq.tophatdir/accepted_hits.bam
-$KRAS_1078=$wp\1078_S75_L007_R1_001.fastq.tophatdir/accepted_hits.bam
-$KRAS_1089=$wp\1089_S77_L007_R1_001.fastq.tophatdir/accepted_hits.bam
-$CONTROL_1055=$wp\1055_S73_L007_R1_001.fastq.tophatdir/accepted_hits.bam
-$CONTROL_1061=$wp\1061_S74_L007_R1_001.fastq.tophatdir/accepted_hits.bam
-$CONTROL_1081=$wp\1081_S76_L007_R1_001.fastq.tophatdir/accepted_hits.bam
-$CONTROL_1090=$wp\1090_S78_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+KRAS_1052=$wp\1052_S71_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+KRAS_1054=$wp\1054_S72_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+KRAS_1078=$wp\1078_S75_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+KRAS_1089=$wp\1089_S77_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+CONTROL_1055=$wp\1055_S73_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+CONTROL_1061=$wp\1061_S74_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+CONTROL_1081=$wp\1081_S76_L007_R1_001.fastq.tophatdir/accepted_hits.bam
+CONTROL_1090=$wp\1090_S78_L007_R1_001.fastq.tophatdir/accepted_hits.bam
 
 DIF=/home/disk/lynn/data/Cindy_RNA_seq/FASTQ_03062018/DIF
 $cuffdiff -o $DIF  -p 10 -L KRAS,CONTROL -u $GTF\/merged.gtf $KRAS_1052,$KRAS_1054,$KRAS_1078,$KRAS_1089 $CONTROL_1055,$CONTROL_1061,$CONTROL_1090
