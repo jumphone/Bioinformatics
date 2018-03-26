@@ -47,8 +47,9 @@ fo=open('COMBINED.txt','w')
 H='GENE\t'+H1+'\t'+H2+'\n'
 fo.write(H)
 for G in GENE:
-    fo.write(G+'\t')
+    
     if G in G1 and G in G2:
+        fo.write(G+'\t')
         fo.write(G1[G])
         fo.write('\t')
         fo.write(G2[G])
