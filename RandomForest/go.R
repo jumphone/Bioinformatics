@@ -17,9 +17,13 @@ traindata <- DATA[index==1,]
 testdata <- DATA[index==2,]
 
 set.seed(12345)
-rf_ntree <- randomForest(TARGET_NUM~.,data=traindata,ntree=100)
-
+rf_ntree <- randomForest(TARGET_NUM~.,data=traindata,ntree=100,proximity=TRUE)
 
 pdf('tmp.pdf')
 plot(rf_ntree)
 dev.off()
+
+rf_ntree_pred <- predict(rf_ntree, newdata=testdata)
+table(rf_ntree_pred, testdata$TARGET_NUM)
+
+
