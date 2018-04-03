@@ -18,4 +18,6 @@ TARGET[which(TAG=='OMIM220210')]=1
 set.seed(12345)
 rf_ntree <- randomForest(TARGET~.,data=traindata,ntree=300)
 
-
+pdf('tmp.pdf')
+plot(rf_ntree)
+dev.off()
