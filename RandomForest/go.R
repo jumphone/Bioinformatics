@@ -29,7 +29,10 @@ pdf('tmp.pdf')
 plot(rf_ntree)
 dev.off()
 
-rf_ntree_pred <- predict(rf_ntree, newdata=testdata)
-table(rf_ntree_pred, testtarget)
+OK=names(which(rf_ntree$err.rate[500,]<0.1))
 
+rf_ntree_pred <- predict(rf_ntree, newdata=testdata)
+
+RESULT = table(rf_ntree_pred, testtarget)
+OKRESULT= RESULT[, which(colnames(RESULT) %in% OK)]
 
