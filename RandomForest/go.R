@@ -30,6 +30,6 @@ plot(rf_ntree)
 dev.off()
 
 rf_ntree_pred <- predict(rf_ntree, newdata=testdata)
-table(rf_ntree_pred, testdata$TARGET_NUM)
+table(rf_ntree_pred, testtarget)
 
 
