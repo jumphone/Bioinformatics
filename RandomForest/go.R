@@ -5,18 +5,20 @@ library(randomForest)
 rawdata=read.table('OMIMID_Name.txt.stat.name.sig.t',header=T,row.names=1)
 trawdata=t(rawdata)
 
-TAG=read.table('OMIMID_Name.txt.stat.name.sig.t.tag',header=T)[,1]
+TAG=read.table('OMIMID_Name.txt.stat.name.sig.t.tag',header=F)[,1]
+TARGET_STR=TAG
+TARGET_NUM=as.numeric(as.factor(TAG))
+
+DATA=cbind(trawdata,TARGET_NUM)
 
 set.seed(12345)
-index <- sample(2,nrow(trawdata),replace = TRUE,prob=c(0.7,0.3))
-traindata <- trawdata[index==1,]
-testdata <- trawdata[index==2,]
-
-TARGET=rep(0,length(traindata[,1]))
-TARGET[which(TAG=='OMIM220210')]=1
+index <- sample(2,nrow(DATA),replace = TRUE,prob=c(0.7,0.3))
+traindata <- DATA[index==1,]
+testdata <- DATA[index==2,]
 
 set.seed(12345)
-rf_ntree <- randomForest(TARGET~.,data=traindata,ntree=300)
+rf_ntree <- randomForest(TARGET_NUM~.,data=traindata,ntree=100)
+
 
 pdf('tmp.pdf')
 plot(rf_ntree)
