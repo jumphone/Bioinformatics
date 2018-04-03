@@ -23,7 +23,7 @@ traintarget=as.factor(traintarget)
 testtarget <- TARGET[index==2]
 
 set.seed(12345)
-rf_ntree <- randomForest(traintarget~. ,data=traindata,ntree=100,proximity=TRUE)
+rf_ntree <- randomForest(traintarget~. ,data=traindata,ntree=500,proximity=TRUE)
 
 pdf('tmp.pdf')
 plot(rf_ntree)
