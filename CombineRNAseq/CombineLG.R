@@ -36,15 +36,15 @@ p2 <- TSNEPlot(immune.combined, do.label = T, do.return = T, pt.size = 0.5)
 plot_grid(p1, p2)
 dev.off()
 
-save.image('RData')
-save(immune.combined, file = "Seurat.Robj")
+#save.image('RData')
+#save(immune.combined, file = "Seurat.Robj")
 
 #################
 #################
 #################
 
 
-load('Seurat.Robj')
+#load('Seurat.Robj')
 
 p1 <- TSNEPlot(immune.combined, do.return = T, pt.size = 0.5, group.by = "stim")
 p2 <- TSNEPlot(immune.combined, do.label = T, do.return = T, pt.size = 0.5)
