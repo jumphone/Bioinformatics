@@ -31,6 +31,7 @@ immune.combined <- RunTSNE(immune.combined, reduction.use = "cca.aligned", dims.
 immune.combined <- FindClusters(immune.combined, reduction.type = "cca.aligned", resolution = 0.6, dims.use = 1:20)
 
 save.image('RData')
+save(immune.combined, file = "Seurat.Robj")
 
 pdf('TSNE.pdf',width=20,height=10)
 p1 <- TSNEPlot(immune.combined, do.return = T, pt.size = 0.5, group.by = "stim")
