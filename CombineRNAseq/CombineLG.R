@@ -30,11 +30,29 @@ immune.combined <- AlignSubspace(immune.combined, reduction.type = "cca", groupi
 immune.combined <- RunTSNE(immune.combined, reduction.use = "cca.aligned", dims.use = 1:20, do.fast = T)
 immune.combined <- FindClusters(immune.combined, reduction.type = "cca.aligned", resolution = 0.6, dims.use = 1:20)
 
-save.image('RData')
-save(immune.combined, file = "Seurat.Robj")
-
 pdf('TSNE.pdf',width=20,height=10)
 p1 <- TSNEPlot(immune.combined, do.return = T, pt.size = 0.5, group.by = "stim")
 p2 <- TSNEPlot(immune.combined, do.label = T, do.return = T, pt.size = 0.5)
 plot_grid(p1, p2)
 dev.off()
+
+save.image('RData')
+save(immune.combined, file = "Seurat.Robj")
+
+#################
+#################
+#################
+
+
+load('Seurat.Robj')
+
+p1 <- TSNEPlot(immune.combined, do.return = T, pt.size = 0.5, group.by = "stim")
+p2 <- TSNEPlot(immune.combined, do.label = T, do.return = T, pt.size = 0.5)
+plot_grid(p1, p2)
+
+
+
+
+
+
+
