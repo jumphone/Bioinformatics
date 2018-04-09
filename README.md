@@ -24,6 +24,5 @@ Allen Brain Atlas: http://www.brain-map.org/
 
 Ecological Data Wiki: https://ecologicaldata.org/home
 
-Ocean Biogeographic Information System: http://www.iobis.org/
-http://www.iobis.org/manual/visualization/
+Ocean Biogeographic Information System: http://www.iobis.org/ , http://www.iobis.org/manual/visualization/
 
