@@ -92,6 +92,8 @@ S1.5GFP=which(EXP_GFP@meta.data$GFP > 0 & EXP_GFP@ident %in% c('S1.5MD','S1.5MP'
 S4GFP=which(EXP_GFP@meta.data$GFP > 0 & EXP_GFP@ident %in% c('S4MD','S4MP','S4MSN'))
 
 
+EXAMPLE=which(EXP_GFP@meta.data$GFP > 0 & EXP_GFP@ident %in% c('S1.5MD') & EXP_cluster_GFP@ident %in% c(2))
+
 write.table(as.matrix(EXP_GFP@data)[,S1.5GFP],file='images/GFP/S1.5GFP.tsv',row.names=T,col.names=T,quote=F,sep='\t')
 write.table(as.matrix(EXP_GFP@data)[,S4GFP],file='images/GFP/S4GFP.tsv',row.names=T,col.names=T,quote=F,sep='\t')
 
