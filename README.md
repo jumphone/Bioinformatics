@@ -26,3 +26,6 @@ Ecological Data Wiki: https://ecologicaldata.org/home
 
 Ocean Biogeographic Information System: http://www.iobis.org/ , http://www.iobis.org/manual/visualization/
 
+UCSC ENCODE composite: http://hgdownload.cse.ucsc.edu/goldenpath/hg19/encodeDCC/wgEncodeUwDgf/
+
+Cell line microarray: http://cellexpress.cgm.ntu.edu.tw/
