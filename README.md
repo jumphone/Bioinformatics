@@ -32,4 +32,4 @@ Cell line microarray: http://cellexpress.cgm.ntu.edu.tw/
 
 IntoGen: https://www.intogen.org
 
-GePia: http://gepia.cancer-pku.cn/index.html
+GEPIA: http://gepia.cancer-pku.cn/index.html
