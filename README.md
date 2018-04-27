@@ -34,5 +34,8 @@ IntoGen: https://www.intogen.org
 
 GEPIA: http://gepia.cancer-pku.cn/index.html
 
-CoExpress: http://coxpresdb.jp
+CoExpress: http://coxpresdb.jp, http://www.genefriends.org/RNAseq/
 
+TF-JASPAR: http://jaspar.genereg.net
+
+MicroRNA: http://mirtarbase.mbc.nctu.edu.tw/php/index.php
