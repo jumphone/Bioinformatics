@@ -43,3 +43,5 @@ MicroRNA: http://mirtarbase.mbc.nctu.edu.tw/php/index.php
 LINCS: http://www.lincsproject.org/LINCS/
 
 3DSNP: http://cbportal.org/3dsnp/
+
+TF CHIP-seq database GTRD: http://gtrd.biouml.org
