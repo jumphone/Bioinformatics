@@ -10,7 +10,7 @@ MARKER=read.table('Marker_GENE.txt',header=T)
 THIS=which(MARKER[,7] %in% c('Astro','RG','OPC','IGC') & MARKER[,6]<0.05)
 #THIS=which( MARKER[,6]<0.05)
 MARKER_GENE=MARKER[THIS,1]
-MARKER_GENE=c('Olig2','Myc')
+#MARKER_GENE=c('Olig2','Myc')
 
 
 
@@ -32,6 +32,9 @@ plot_ordering_genes(HSMM_myo)
 #HSMM_myo <- reduceDimension(HSMM_myo, max_components = 3,method = 'DDRTree')
 HSMM_myo <- reduceDimension(HSMM_myo, max_components = 3,method = 'tSNE')
 HSMM_myo <- orderCells(HSMM_myo)
+plot_cell_trajectory(HSMM_myo)
+
+HSMM_myo <- orderCells(HSMM_myo,root_state=4)
 plot_cell_trajectory(HSMM_myo,color_by = "LABEL")
 
 
