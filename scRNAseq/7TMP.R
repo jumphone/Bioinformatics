@@ -13,6 +13,11 @@ write.table(file='var_gene_data.txt',OUT,sep='\t',quote=F,row.names=T,col.names=
 library(Seurat)
 library(dplyr)
 library(Matrix)
+
+PCNUM=40
+PCUSE=1:35
+RES=2
+
 #a=read.table('var_gene_data.SSN.txt',header=T,row.names=1)
 exp_data=read.table('var_gene_data.SSN.txt.uniq.txt',header=T,row.names=1)
 exp_data[is.na(exp_data)]=0
