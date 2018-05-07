@@ -45,4 +45,29 @@ plot_grid(plot1, plot2,plot3,plot4,plot5,plot6)
 dev.off()
 
 
+SSN_CLUSTER=EXP_cluster@ident
+
+
+load('../images/Seurat_EXP_cluster.Robj')
+OLD_CLUSTER=EXP_cluster@ident
+EXP_cluster@ident=SSN_CLUSTER
+
+
+
+i=0
+while(i<=23){
+print(i)
+#TSNEPlot(object = EXP_cluster,colors.use=c(rep('grey',i),'red',rep('grey',30-i)))
+cluster.markers <- FindMarkers(object = EXP_cluster, ident.1 = i, min.pct = 0.25)
+cluser_top = head(x = cluster.markers, n = 1000)
+write.table(file=paste0('Cluster_Marker/Cluster_',as.character(i),'_marker.tsv'),cluser_top,sep='\t',quote=F)
+i=i+1}
+
+
+
+
+
+
+
+
 
