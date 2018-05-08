@@ -62,8 +62,8 @@ def SINGLE(p1, p2,p1_old_exp,p2_old_exp):
         j=0
         while j<len(header):
             H=header[j]
-            p1_new_exp=p1_old_exp+[Person_EXP[H][p1]]
-            p2_new_exp=p2_old_exp+[Person_EXP[H][p2]]
+            p1_new_exp=p1_old_exp+[THIS_EXP[H][p1]]
+            p2_new_exp=p2_old_exp+[THIS_EXP[H][p2]]
             pcc_new = stats.pearsonr(p1_new_exp,p2_new_exp)[0]
             pcc = data.PCC_POOL[edge]
             delta_pcc = pcc_new - pcc
