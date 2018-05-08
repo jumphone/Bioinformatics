@@ -85,8 +85,8 @@ for edge in data.PCC_POOL:
     try:
         p1_old_exp=data.EXP[p1]
         p2_old_exp=data.EXP[p2]
-        Person_EXP[header[0]][p1]
-        Person_EXP[header[0]][p2]
+        THIS_EXP[header[0]][p1]
+        THIS_EXP[header[0]][p2]
         p= multiprocessing.Process(target=SINGLE, args=(p1,p2,p1_old_exp,p2_old_exp))
         p.start()
         jobs.append(p)
