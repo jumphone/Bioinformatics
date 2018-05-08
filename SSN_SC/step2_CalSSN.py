@@ -75,7 +75,7 @@ def SINGLE(p1, p2,p1_old_exp,p2_old_exp):
 
 
 
-open(OUTDIR+'header.txt','w').write('\t'.join(header)+'\n')
+open(OUTDIR+'/header.txt','w').write('\t'.join(header)+'\n')
 
 jobs=[]
 for edge in data.PCC_POOL:
