@@ -45,3 +45,5 @@ LINCS: http://www.lincsproject.org/LINCS/
 3DSNP: http://cbportal.org/3dsnp/
 
 TF CHIP-seq database GTRD: http://gtrd.biouml.org
+
+TF Target Gene database TRRUST: http://www.grnpedia.org/trrust/
