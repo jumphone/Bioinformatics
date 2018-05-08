@@ -47,3 +47,5 @@ LINCS: http://www.lincsproject.org/LINCS/
 TF CHIP-seq database GTRD: http://gtrd.biouml.org
 
 TF Target Gene database TRRUST: http://www.grnpedia.org/trrust/
+
+Tissue Specific Expression Analysis (TSEA): http://genetics.wustl.edu/jdlab/tsea/
