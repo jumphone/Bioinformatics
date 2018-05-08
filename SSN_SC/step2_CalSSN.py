@@ -50,7 +50,7 @@ for line in fi:
     except Exception as e:
         pass
 fi.close()
-import random,subprocess
+import random,subprocess, os
 OUTDIR=OUT_FILE+'_TMP_'+str(random.random())
 subprocess.Popen('mkdir '+OUTDIR,shell=True).wait()
 
