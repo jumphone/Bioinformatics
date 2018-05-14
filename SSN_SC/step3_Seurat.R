@@ -9,16 +9,10 @@ RES=0.8
 
 exp_data=read.table('OUT',header=T,row.names=1)
 exp_data[is.na(exp_data)]=0
-exp_data=10^exp_data
+
 
 EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=200)
-EXP=NormalizeData(object = EXP, normalization.method = "LogNormalize", scale.factor = 10000)
-pdf('./VarGene.pdf')
-EXP=FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.8)
-dev.off()
-length(x=EXP@var.genes)
-
-all_gene=EXP@var.genes #row.names(exp_data)
+all_gene=row.names(exp_data)
 EXP = ScaleData(object = EXP,vars.to.regress = c("nUMI"), genes.use = all_gene)
 EXP <- RunPCA(object = EXP, pc.genes = all_gene, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE)
