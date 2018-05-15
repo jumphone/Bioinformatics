@@ -23,10 +23,10 @@ EXP <- RunPCA(object = EXP, pc.genes = all_gene, do.print = TRUE, pcs.print = 1:
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE)
 EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
 
-save(EXP, file = "NEW_SSN_EXP.Robj")
-save(EXP_cluster, file = "NEW_SSN_EXP_cluster.Robj")
+save(EXP, file = "SSN_EXP.Robj")
+save(EXP_cluster, file = "SSN_EXP_cluster.Robj")
 
-pdf('NEW_SSN_Seurat.pdf',width=30,height=15)
+pdf('SSN_Seurat.pdf',width=30,height=15)
 TSNEPlot(object = EXP)
 TSNEPlot(object = EXP_cluster)
 TSNEPlot(object = EXP_cluster,do.label=T)
