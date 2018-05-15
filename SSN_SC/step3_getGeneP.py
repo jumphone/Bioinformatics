@@ -94,6 +94,7 @@ def SINGLE(tmp,gene):
 
 fo=open(OUTDIR+'/header.txt','w')
 fo.write('\t'.join(header)+'\n')
+fo.close()
 PROC_LIMIT=CPU
 jobs=[]
 for gene in GENE_INDEX:
