@@ -12,7 +12,7 @@ STDVAR=function(a){stdvar=sqrt(sum((a-mean(a))^2/(length(a)-1)));return(stdvar)}
 exp_data=read.table('var_gene_data.txt.jaspar.result.tmp',header=T,row.names=1)
 exp_data[is.na(exp_data)]=0
 
-EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=200)
+EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=0)
 
 stdvar=apply(exp_data,1,STDVAR)
 
