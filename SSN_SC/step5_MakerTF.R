@@ -37,5 +37,5 @@ print(i)
 P=Compare(c(i),c(0:length(table(EXP_cluster@ident))))
 AP=p.adjust(P,method='bonferroni')
 cluser_top= as.matrix(cbind(row.names(EXP_cluster@data),P,AP))
-write.table(file=paste0('Cluster_Marker_Pair/Cluster_',as.character(i),'_marker.tsv'),cluser_top,sep='\t',quote=F,row.names=F,col.names=F)
+write.table(file=paste0('Cluster_Marker_TF/Cluster_',as.character(i),'_marker.tsv'),cluser_top,sep='\t',quote=F,row.names=F,col.names=F)
 i=i+1}
