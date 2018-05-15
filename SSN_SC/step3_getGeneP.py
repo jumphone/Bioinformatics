@@ -17,6 +17,9 @@ header=fi.readline().rstrip().split('\t')
 CELL={}
 for cell in header:
     CELL[cell]={}
+
+ALL={}    
+    
 j=1
 for line in fi:
     #print j;j+=1
@@ -33,10 +36,19 @@ for line in fi:
 
         score= abs(zvalue)#stats.norm.sf(abs(zvalue))*2 #abs(zvalue)
 
-        if 'ALL' in CELL[cell]:
-            CELL[cell]['ALL'].append(score)
+            
+        if g1 in ALL:
+            ALL[g1].append(score)
         else:
-            CELL[cell]['ALL']=[score]
+            ALL[g1]=[score]
+
+        if g2 in ALL:
+            ALL[g2].append(score)
+        else:
+            ALL[g2]=[score]      
+            
+            
+            
         if g1 in CELL[cell]:
             CELL[cell][g1].append(score)
         else:
@@ -63,12 +75,16 @@ subprocess.Popen('mkdir '+OUTDIR,shell=True).wait()
 
 
 def SINGLE(tmp,gene):
+    BACKGROUND=ALL[gene]
+    ramdom.shuffle(BACKGROUND)
+    BACKGROUND=BACKGROUND[:1000]
+    
     outfile=OUTDIR+'/'+gene+'.pvalue'
     fo=open(outfile,'w')
     fo.write(gene)
     for cell in header:
         try:
-            pvalue= stats.mannwhitneyu( CELL[cell][gene], CELL[cell]['ALL'],use_continuity=True,alternative='greater')[1]
+            pvalue= stats.mannwhitneyu( CELL[cell][gene], BACKGROUND,use_continuity=True,alternative='greater')[1]
             #stats.kstest(CELL[cell][gene], 'norm')[1]
         except Exception as e:
             pvalue=1.0
