@@ -7,7 +7,7 @@ PCUSE=1:35
 RES=0.8
 
 
-exp_data=read.table('OUT',header=T,row.names=1)
+exp_data=read.table('var_gene_data.txt.jaspar.result.tmp',header=T,row.names=1)
 exp_data[is.na(exp_data)]=0
 
 
