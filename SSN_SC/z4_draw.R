@@ -65,3 +65,15 @@ dev.off()
 
 
 
+
+load('../images/Seurat_EXP_cluster.Robj')
+EXP_cluster@data=EXP@data
+pdf('TF_SIG.pdf',width=20,height=10)
+i=1
+while(i<=length(EXP_cluster@data[,1])){
+tf_name=rownames(EXP_cluster@data)[i]
+FeaturePlot(object = EXP_cluster, features.plot = c(tf_name), cols.use = c("grey", "red"), reduction.use = "tsne")
+i=i+1}
+dev.off()
+
+
