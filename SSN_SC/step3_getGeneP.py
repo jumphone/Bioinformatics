@@ -76,7 +76,7 @@ subprocess.Popen('mkdir '+OUTDIR,shell=True).wait()
 
 def SINGLE(tmp,gene):
     BACKGROUND=ALL[gene]
-    ramdom.shuffle(BACKGROUND)
+    random.shuffle(BACKGROUND)
     BACKGROUND=BACKGROUND[:1000]
     
     outfile=OUTDIR+'/'+gene+'.pvalue'
