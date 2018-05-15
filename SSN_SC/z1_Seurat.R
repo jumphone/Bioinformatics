@@ -10,6 +10,9 @@ RES=0.8
 STDVAR=function(a){stdvar=sqrt(sum((a-mean(a))^2/(length(a)-1)));return(stdvar)}
 
 exp_data=read.table('var_gene_data.txt.jaspar.result.tmp',header=T,row.names=1)
+
+new_exp_data = -log(exp_data,10)
+
 exp_data[is.na(exp_data)]=0
 
 EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=0)
@@ -26,7 +29,7 @@ EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCU
 save(EXP, file = "SSN_EXP.Robj")
 save(EXP_cluster, file = "SSN_EXP_cluster.Robj")
 
-pdf('SSN_Seurat.pdf',width=30,height=15)
+pdf('TF_SSN_Seurat.pdf',width=30,height=15)
 TSNEPlot(object = EXP)
 TSNEPlot(object = EXP_cluster)
 TSNEPlot(object = EXP_cluster,do.label=T)
