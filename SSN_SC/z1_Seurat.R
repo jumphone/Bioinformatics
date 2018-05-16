@@ -11,11 +11,38 @@ STDVAR=function(a){stdvar=sqrt(sum((a-mean(a))^2/(length(a)-1)));return(stdvar)}
 
 exp_data=read.table('var_gene_data.txt.jaspar.result.tmp',header=T,row.names=1)
 
+
+#FACTOR=c()
+#CNUM=length(exp_data[1,])
+#TNUM=length(exp_data[,1])
+#i=1
+#while(i<=TNUM ){
+#NANUM=length(which(is.na(t(exp_data[i,]))))
+#NAR=NANUM/CNUM
+#factor=(1-NAR)*(1-NAR)
+#FACTOR=c(FACTOR, factor)
+#i=i+1
+#print(i)}
+
+
+load("SSN_EXP.Robj")
+FAC=read.table('tmp.result.factor',header=F)
+new_data=EXP@data * FAC[,2]
+EXP@scale.data=new_data
+all_gene=row.names(EXP@data)
+PCNUM=20
+EXP <- RunPCA(object = EXP, pc.genes = all_gene, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
+
+
+
+
 new_exp_data = -log(exp_data,10)
 
 exp_data[is.na(exp_data)]=0
 
 EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=0)
+
+
 
 stdvar=apply(exp_data,1,STDVAR)
 
