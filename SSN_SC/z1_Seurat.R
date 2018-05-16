@@ -7,6 +7,13 @@ PCUSE=1:35
 RES=0.8
 
 
+
+load('../images/Seurat_EXP_cluster.Robj')
+
+write.table(as.matrix(EXP_cluster@data),file='all_gene_data.txt',quote=F,sep='\t',row.names=T,col.names=T)
+
+
+
 STDVAR=function(a){stdvar=sqrt(sum((a-mean(a))^2/(length(a)-1)));return(stdvar)}
 
 exp_data=read.table('var_gene_data.txt.jaspar.result.tmp',header=T,row.names=1)
