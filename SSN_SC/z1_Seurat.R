@@ -20,10 +20,18 @@ EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=0)
 stdvar=apply(exp_data,1,STDVAR)
 
 all_gene=row.names(exp_data[which(stdvar>0.8),])
-
+all_gene=row.names(exp_data)
+                   
 EXP = ScaleData(object = EXP,vars.to.regress = c("nUMI"), genes.use = all_gene)
+
+EXP = ScaleData(object = EXP, genes.use = all_gene)
+
+PCNUM=10
+PCUSE=1:10
+RES=0.6
+
 EXP <- RunPCA(object = EXP, pc.genes = all_gene, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
-EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE)
+EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
 EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
 
 save(EXP, file = "SSN_EXP.Robj")
