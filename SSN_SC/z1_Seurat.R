@@ -18,6 +18,10 @@ STDVAR=function(a){stdvar=sqrt(sum((a-mean(a))^2/(length(a)-1)));return(stdvar)}
 
 exp_data=read.table('var_gene_data.txt.jaspar.result.tmp',header=T,row.names=1)
 
+library(mice)
+miceMod <- mice(exp_data, method="rf") 
+miceOutput <- complete(miceMod)
+
 
 #FACTOR=c()
 #CNUM=length(exp_data[1,])
