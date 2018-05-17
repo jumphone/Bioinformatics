@@ -16,11 +16,14 @@ write.table(as.matrix(EXP_cluster@data),file='all_gene_data.txt',quote=F,sep='\t
 
 STDVAR=function(a){stdvar=sqrt(sum((a-mean(a))^2/(length(a)-1)));return(stdvar)}
 
-exp_data=read.table('var_gene_data.txt.jaspar.result.tmp',header=T,row.names=1)
 
 library(mice)
-miceMod <- mice(exp_data, method="rf") 
+exp_data=read.table('tmp_result',header=T,row.names=1)
+t_exp_data=t(exp_data)
+miceMod <- mice(t_exp_data, method="rf") 
 miceOutput <- complete(miceMod)
+com_exp_data=t(miceOutput )
+
 
 
 #FACTOR=c()
