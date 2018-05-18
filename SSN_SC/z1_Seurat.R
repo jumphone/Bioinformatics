@@ -121,3 +121,27 @@ dev.off()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exp_data=read.table('test0.2.data.result.b',header=T,row.names=1)
+exp_data_fac=apply(exp_data,2,as.factor)
+t_exp_data_fac=t(exp_data_fac)
+t_exp_data_fac_dis = dist( t_exp_data_fac, method="euclidean")
+t_exp_data_fac_dis_clust = hclust(t_exp_data_fac_dis, method="average")
+
+
+
+
+
