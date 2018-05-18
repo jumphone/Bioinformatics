@@ -142,10 +142,10 @@ t_exp_data_dis = dist( t_exp_data, method="euclidean")
 t_exp_data_dis_clust = hclust(t_exp_data_dis, method="average")
 
 
-exp_data_fac=apply(exp_data,2,as.factor)
-t_exp_data_fac=t(exp_data_fac)
-t_exp_data_fac_dis = dist( t_exp_data_fac, method="euclidean")
-t_exp_data_fac_dis_clust = hclust(t_exp_data_fac_dis, method="average")
+#exp_data_fac=apply(exp_data,2,as.factor)
+#t_exp_data_fac=t(exp_data_fac)
+#t_exp_data_fac_dis = dist( t_exp_data_fac, method="euclidean")
+#t_exp_data_fac_dis_clust = hclust(t_exp_data_fac_dis, method="average")
 
 
 
