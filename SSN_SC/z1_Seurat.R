@@ -129,10 +129,10 @@ dev.off()
 
 
 
+system('locate libSM.6.dylib')
 
-
-
-
+require(fastcluster)
+require(graphics)
 
 
 exp_data=read.table('test0.2.data.result.b',header=T,row.names=1)
@@ -141,6 +141,10 @@ t_exp_data=t(exp_data)
 t_exp_data_dis = dist( t_exp_data, method="euclidean")
 t_exp_data_dis_clust = hclust(t_exp_data_dis, method="average")
 
+groups<- cutree(t_exp_data_dis_clust, k=2)
+
+
+plot(t_exp_data_dis_clust)
 
 #exp_data_fac=apply(exp_data,2,as.factor)
 #t_exp_data_fac=t(exp_data_fac)
