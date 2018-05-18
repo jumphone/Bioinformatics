@@ -7,5 +7,6 @@ SUM=apply(exp_data,2,sum)
 exp_data=exp_data[,which(SUM>0)]
 sce <- SingleCellExperiment(assays = list(counts=as.matrix(exp_data),logcounts=as.matrix(exp_data)), colData=colnames(exp_data))
 plotPCA(sce)
-
+rowData(sce)$feature_symbol <- rownames(sce)
+sce <- sc3(sce, ks = 2:4, biology = TRUE)
 
