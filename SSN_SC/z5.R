@@ -3,7 +3,8 @@ library(Seurat)
 library(dplyr)
 library(Matrix)
 load('../../images/Seurat_EXP_cluster.Robj')
-a=read.table('test0.2.data.result.b.KM_100_SSS_TMP/tmp.6.k')
+
+a=read.table('test0.2.data.result.b.KM_100.K20_TMP/tmp.20.k')
 a=as.factor(t(a))
 names(a)=names(EXP_cluster@ident)
 EXP_cluster@ident=a
