@@ -35,7 +35,8 @@ while(i<=CLUSTER_NUM){
 TMP_COL=rep('grey',length(data[,1]))
 TMP_COL[which(N==i)]=CCC[i]
 MULTI_COL=cbind(MULTI_COL,TMP_COL)
-#heatmap.2(data,scale=c("none"),dendrogram='row',Colv=F,trace='none',col=colorRampPalette(c('grey95','indianred')),RowSideColors=TMP_COL,main=as.character(i) ,margins=c(20,20))
+colnames(MULTI_COL)[length(colnames(MULTI_COL))]=as.character(i)
+heatmap.2(data,scale=c("none"),dendrogram='row',Colv=F,trace='none',col=colorRampPalette(c('grey95','indianred')),RowSideColors=TMP_COL,main=as.character(i) ,margins=c(20,20))
 write.table(data[ rownames(data) %in% rownames(data)[which(N==i)],],paste0('CLUSTER/',as.character(i),'.txt'),quote=F,sep='\t')
 print(i)
 i=i+1
@@ -43,5 +44,7 @@ i=i+1
 
 dev.off()
 
+heatmap.2(data,scale=c("none"),dendrogram='row',Colv=F,trace='none',col=colorRampPalette(c('grey95','indianred')),RowSideColors=MULTI_COL,main=as.character(i) ,margins=c(20,20))
+
 require("heatmap.plus")
-heatmap.plus(data,scale=c("none"),dendrogram='row',Colv=F,trace='none',col=colorRampPalette(c('grey95','indianred')),RowSideColors=MULTI_COL,main=as.character(i) ,margins=c(20,20))
+heatmap.plus(t(data), scale=c("none"),ColSideColors=MULTI_COL,main=as.character(i) ,margins=c(20,20))
