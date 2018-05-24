@@ -61,6 +61,17 @@ TSNEPlot(object = EXP_cluster,do.return = F,colors.use=c(rep('grey',length(table
 i=i+1
 }
 
+ALL=c(1:(length(table(EXP_cluster@ident))))
+
+i=1
+while(i<=length(table(EXP_cluster@ident))){
+print(i)
+TSNEPlot(object = EXP_cluster,do.return = F,colors.use=c(rep('grey',length(table(EXP_cluster@ident))-1),'red'), plot.order=as.character(c(i,ALL[which(! ALL %in% i)])) )
+i=i+1
+}
+
+
+
 dev.off()
 
 
