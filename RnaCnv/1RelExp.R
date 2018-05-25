@@ -12,7 +12,12 @@ exptmm=edgeR::cpm(raw_exp_data, lib.size = tmm * colSums(raw_exp_data))
 logexp <- exptmm #log2(exptmm + 1)
 
 agg=apply(logexp,1,sum)
-gene_analyzed= which( agg > quantile(agg,0.0))
+#gene_analyzed= which( agg > quantile(agg,0.0))
+
+allvar=apply(logexp,1,var)
+gene_analyzed= which( agg > quantile(agg,0.05) & agg < quantile(agg,0.95) &  allvar > quantile(allvar,0.05) & allvar < quantile(allvar,0.95))
+
+
 exp_data=exptmm[gene_analyzed,]
 REL_EXP=t(apply(exp_data,1,scale_center))
 colnames(REL_EXP)=colnames(raw_exp_data)
