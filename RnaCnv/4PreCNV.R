@@ -24,12 +24,16 @@ TPM=c()
 begin=WINDOW/2+1
 end=gene_analyzed_num-WINDOW/2
 i=begin
-while(i <=end){
-sss=(i-WINDOW/2)
+sss=(i-WINDOW/2)  
 eee=(i+WINDOW/2)
+while(i <=end){
 #if(CHROM[sss]!=CHROM[i]){sss= i}
 #if(CHROM[eee]!=CHROM[i]){eee= i}
-CNV=c(CNV,sum(relative_gene_exp[c(sss:eee),j])/(eee-sss+1))
+#this_value=sum(relative_gene_exp[c(sss:eee),j])/(eee-sss+1)
+this_value=sum(relative_gene_exp[c(sss:eee),j])/(WINDOW+1)
+CNV=c(CNV,this_value)
+sss=sss+1
+eee=eee+1
 i=i+1}
 ALLCNV=cbind(ALLCNV,CNV)
 j=j+1
