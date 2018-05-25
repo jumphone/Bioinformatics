@@ -13,8 +13,12 @@ center_ALLCNV=as.matrix(raw_data[,c(5:length(raw_data[1,]))])
 reference_cell_name=as.character(read.delim(REFERENCE_CELL,header=F,sep='\t')[,1])
 reference_cell= which(colnames(center_ALLCNV) %in% reference_cell_name )
 
-max_base_line = apply(center_ALLCNV[,reference_cell],1,max)
-min_base_line = apply(center_ALLCNV[,reference_cell],1,min)
+#max_base_line = apply(center_ALLCNV[,reference_cell],1,max)
+#min_base_line = apply(center_ALLCNV[,reference_cell],1,min)
+
+max_base_line = apply(center_ALLCNV[,reference_cell],1,quantile,0.95)
+min_base_line = apply(center_ALLCNV[,reference_cell],1,quantile,0.05)
+
 #mean_base_line=apply(center_ALLCNV[,reference_cell],1,mean)
 #sd_base_line=apply(center_ALLCNV[,reference_cell],1,sd)
 
