@@ -27,8 +27,8 @@ i=begin
 while(i <=end){
 sss=(i-WINDOW/2)
 eee=(i+WINDOW/2)
-if(CHROM[sss]!=CHROM[i]){sss= i}
-if(CHROM[eee]!=CHROM[i]){eee= i}
+#if(CHROM[sss]!=CHROM[i]){sss= i}
+#if(CHROM[eee]!=CHROM[i]){eee= i}
 CNV=c(CNV,sum(relative_gene_exp[c(sss:eee),j])/(eee-sss+1))
 i=i+1}
 ALLCNV=cbind(ALLCNV,CNV)
