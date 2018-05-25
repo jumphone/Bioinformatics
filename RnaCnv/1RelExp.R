@@ -5,12 +5,6 @@ scale_center=function(x){ return(scale(x,center=T,scale=F)) }
 raw_exp_data=read.delim(TPM_MATRIX, sep='\t', header=T, row.names=1)
 
 raw_exp_data=as.matrix(raw_exp_data)
-#SUM=apply(raw_exp_data, 2,sum)
-#i=1
-#while(i<=length(SUM)){
-#raw_exp_data[,i]=raw_exp_data[,i]/SUM[i]
-#i=i+1}
-
 
 tmm=edgeR::calcNormFactors(raw_exp_data)
 exptmm=edgeR::cpm(raw_exp_data, lib.size = tmm * colSums(raw_exp_data))
