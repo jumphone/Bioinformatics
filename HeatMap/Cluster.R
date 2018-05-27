@@ -55,7 +55,9 @@ heatmap.plus(t(data), scale=c("none"),ColSideColors=MULTI_COL,main=as.character(
 
 library(spatstat)
 set.seed(3)
-X <- rpoispp(10)
+
+mypattern <- ppp(PC[,1], PC[,2], c(-10,10), c(-10,10))
+X <- mypattern
 par(mfrow = c(2,2))
 plot(density(X, 1))
 plot(density(X, 0.1))
