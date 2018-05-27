@@ -63,3 +63,38 @@ plot(density(X, 1))
 plot(density(X, 0.1))
 plot(density(X, 0.05))
 plot(density(X, 0.01))
+
+
+Z <- density(X, 0.1)
+logZ <- eval.im(log(Z))
+bias_palette <- colorRampPalette(c("blue", "magenta", "red", "yellow", "white"), bias=2, space="Lab")
+norm_palette <- colorRampPalette(c("white","red"))
+par(mfrow = c(2,2))
+plot(Z)
+plot(logZ)
+plot(Z, col=bias_palette(256))
+plot(Z, col=norm_palette(5))
+
+
+library(spatstat)
+set.seed(3)
+X <- rpoispp(10)
+Z <- density(X, 0.1)
+A <- rpoispp(100) #points other places than density
+
+
+norm_palette <- colorRampPalette(c("white","red"))
+pal_opaque <- norm_palette(5)
+pal_trans <- norm_palette(5)
+pal_trans[1] <- "#FFFFFF00" #was originally "#FFFFFF" 
+
+par(mfrow = c(1,3))
+plot(A, Main = "Opaque Density")
+plot(Z, add=T, col = pal_opaque)
+plot(A, Main = "Transparent Density")
+plot(Z, add=T, col = pal_trans)
+
+
+pal_trans2 <- paste(pal_opaque,"50",sep = "")
+plot(A, Main = "All slightly transparent")
+plot(Z, add=T, col = pal_trans2)
