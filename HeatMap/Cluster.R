@@ -48,3 +48,16 @@ heatmap.2(data,scale=c("none"),dendrogram='row',Colv=F,trace='none',col=colorRam
 
 require("heatmap.plus")
 heatmap.plus(t(data), scale=c("none"),ColSideColors=MULTI_COL,main=as.character(i) ,margins=c(20,20))
+
+
+
+
+
+library(spatstat)
+set.seed(3)
+X <- rpoispp(10)
+par(mfrow = c(2,2))
+plot(density(X, 1))
+plot(density(X, 0.1))
+plot(density(X, 0.05))
+plot(density(X, 0.01))
