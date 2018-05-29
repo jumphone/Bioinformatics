@@ -56,4 +56,6 @@ Broad Institute Cancer Cell Line: https://portals.broadinstitute.org/ccle
 
 Cancer Genetiv Web: http://www.cancer-genetics.org/
 
-Single Cell database: http://single-cell.clst.riken.jp/, https://portals.broadinstitute.org/single_cell
+Single Cell database: http://single-cell.clst.riken.jp/, https://portals.broadinstitute.org/single_cell'
+
+R mclust: https://cran.r-project.org/web/packages/mclust/index.html
