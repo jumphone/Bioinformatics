@@ -102,6 +102,20 @@ FeaturePlot(object = EXP, features.plot = c('Sox2'),cols.use = c("grey", "red"),
 #FeaturePlot(object = EXP, features.plot = c('Cd133'),cols.use = c("grey", "red"), reduction.use = "tsne")
 
 save(EXP, file = "EXP.Robj")
-save(EXP_cluster, file = "EXP_cluster.Robj")
+
+pbmc=EXP
+library(dplyr)
+pbmc.markers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
+pbmc.markers %>% group_by(cluster) %>% top_n(2, avg_logFC)
+top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+
+
+pdf('Result.pdf',width=20,height=15)
+
+TSNEPlot(object = EXP,do.label=T)
+DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+dev.off()
+
 
 
