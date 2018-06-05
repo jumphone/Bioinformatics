@@ -101,11 +101,12 @@ FeaturePlot(object = EXP, features.plot = c('Sox2'),cols.use = c("grey", "red"),
 
 #FeaturePlot(object = EXP, features.plot = c('Cd133'),cols.use = c("grey", "red"), reduction.use = "tsne")
 
-save(EXP, file = "EXP.Robj")
+#save(EXP, file = "EXP.Robj")
+load('EXP.Robj')
 
 pbmc=EXP
 library(dplyr)
-pbmc.markers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
+pbmc.markers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.1)
 pbmc.markers %>% group_by(cluster) %>% top_n(2, avg_logFC)
 top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
 DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
