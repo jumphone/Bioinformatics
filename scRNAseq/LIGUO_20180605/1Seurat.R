@@ -64,9 +64,9 @@ PrintPCA(object = EXP, pcs.print = 1:5, genes.print = 5, use.full = FALSE)
 
 #Stem_gene=c('Prom1','Nes','Egfr','Cd15','Slc1a3','Sox2','Fabp7','Nr2e1','Id3','Clu','Sox9','Vcam1','Slc1a2','Id2','Sox11','Apoe','Tbr2','Ntsr2')
 
-EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = EXP@var.genes)
+#EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = EXP@var.genes)
 
-#EXP = ScaleData(object = EXP,genes.use = EXP@var.genes)
+EXP = ScaleData(object = EXP,genes.use = EXP@var.genes)
 
 PCNUM=40
 EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
@@ -87,10 +87,10 @@ PrintPCA(object = EXP, pcs.print = 1:20)
 
 
 
-PCUSE=1:9
+PCUSE=1:15
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
 
-RES=1
+RES=0.7
 EXP <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
 
 TSNEPlot(object = EXP,do.label=T)
