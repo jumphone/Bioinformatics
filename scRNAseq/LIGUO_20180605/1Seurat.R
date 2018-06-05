@@ -5,8 +5,8 @@ library(Seurat)
 
 
 #exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
-exp_data=read.table('run1663_5000_dge.txt',header=T,row.names=1)
-
+#exp_data=read.table('run1663_5000_dge.txt',header=T,row.names=1)
+exp_data=read.table('5000_run1663_normalized.txt.rmdup',header=T,row.names=1)
 #exp_data=read.table('N709_6000_picard.bam.clean.bam.dge.txt',header=T,row.names=1)
 
 
@@ -31,8 +31,8 @@ length(EXP@data[1,])
 EXP=NormalizeData(object = EXP, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pdf('Seurat_VarGene.pdf')
-#EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.8)
-EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.6)
+EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+#EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
 dev.off()
 
 length(x=EXP@var.genes)
