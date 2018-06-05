@@ -4,8 +4,8 @@ library(Seurat)
 
 
 
-exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
-
+#exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
+exp_data=read.table('5000_run1663_normalized.txt.rmdup',header=T,row.names=1)
 
 #exp_data=read.table('N709_6000_picard.bam.clean.bam.dge.txt',header=T,row.names=1)
 
@@ -32,7 +32,7 @@ EXP=NormalizeData(object = EXP, normalization.method = "LogNormalize", scale.fac
 
 pdf('Seurat_VarGene.pdf')
 #EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.8)
-EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
+EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.6)
 dev.off()
 
 length(x=EXP@var.genes)
@@ -71,6 +71,10 @@ EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.
 PCNUM=40
 EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
 
+
+PCAPlot(object = EXP, dim.1 = 1, dim.2 = 2)
+
+PCHeatmap(object = EXP, pc.use = 1:12, cells.use = 500, do.balanced = TRUE, label.columns = FALSE, use.full = FALSE)
 #EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = Stem_gene)
 #EXP <- RunPCA(object = EXP, pc.genes = Stem_gene, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
 
@@ -83,7 +87,7 @@ PrintPCA(object = EXP, pcs.print = 1:20)
 
 
 
-PCUSE=1:10
+PCUSE=1:20
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
 
 RES=0.8
