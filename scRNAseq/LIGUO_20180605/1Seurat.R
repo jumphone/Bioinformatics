@@ -1,7 +1,7 @@
 library(Seurat)
 
-PCNUM=20
-PCUSE=1:20
+PCNUM=40
+PCUSE=1:35
 RES=0.8
 
 exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
