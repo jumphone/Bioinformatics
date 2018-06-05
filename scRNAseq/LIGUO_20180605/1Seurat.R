@@ -1,13 +1,13 @@
 library(Seurat)
 
-PCNUM=40
-PCUSE=1:20
+PCNUM=20
+PCUSE=1:15
 RES=0.8
 
 exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
 
 
-exp_data=read.table('N709_6000_picard.bam.clean.bam.dge.txt',header=T,row.names=1)
+#exp_data=read.table('N709_6000_picard.bam.clean.bam.dge.txt',header=T,row.names=1)
 
 
 EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=200)
@@ -29,7 +29,7 @@ EXP=FilterCells(object = EXP, subset.names = c("nGene", "percent.mito"), low.thr
 EXP=NormalizeData(object = EXP, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pdf('Seurat_VarGene.pdf')
-EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.8)
 dev.off()
 
 length(x=EXP@var.genes)
