@@ -24,7 +24,7 @@ EXP=FilterCells(object = EXP, subset.names = c("nGene", "percent.mito"), low.thr
 EXP=NormalizeData(object = EXP, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pdf('Seurat_VarGene.pdf')
-EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.6)
+EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.8)
 dev.off()
 
 length(x=EXP@var.genes)
@@ -49,7 +49,6 @@ length(x=EXP@var.genes)
 'Tbr2' %in% EXP@var.genes
 'Ntsr2' %in% EXP@var.genes
 
-EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
 
 PrintPCA(object = EXP, pcs.print = 1:5, genes.print = 5, use.full = FALSE)
 
@@ -64,6 +63,7 @@ EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE)
 
 
 FeaturePlot(object = EXP, features.plot = c('Sox2','Egfr','Id3','Slc1a2','Sox11','Apoe','Gfap','Slc1a3','Nes'), cols.use = c("grey", "red"), reduction.use = "tsne")
+FeaturePlot(object = EXP, features.plot = c('Sox2'),cols.use = c("grey", "red"), reduction.use = "tsne")
 
 save(EXP, file = "EXP.Robj")
 save(EXP_cluster, file = "EXP_cluster.Robj")
