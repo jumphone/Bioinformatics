@@ -5,7 +5,7 @@ library(Seurat)
 
 
 #exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
-exp_data=read.table('5000_run1663_normalized.txt.rmdup',header=T,row.names=1)
+exp_data=read.table('run1663_5000_dge.txt',header=T,row.names=1)
 
 #exp_data=read.table('N709_6000_picard.bam.clean.bam.dge.txt',header=T,row.names=1)
 
@@ -87,12 +87,13 @@ PrintPCA(object = EXP, pcs.print = 1:20)
 
 
 
-PCUSE=1:20
+PCUSE=1:9
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
 
-RES=0.8
-#EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
+RES=1
+EXP <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
 
+TSNEPlot(object = EXP,do.label=T)
 
 FeaturePlot(object = EXP, features.plot = c('Sox2','Egfr','Id3','Olig2','Zic1','Apoe','Gfap','Slc1a3','Nes'), cols.use = c("grey", "red"), reduction.use = "tsne")
 FeaturePlot(object = EXP, features.plot = c('Sox2'),cols.use = c("grey", "red"), reduction.use = "tsne")
