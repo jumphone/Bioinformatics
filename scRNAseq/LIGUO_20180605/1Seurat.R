@@ -1,8 +1,8 @@
 library(Seurat)
 
 PCNUM=20
-PCUSE=1:15
-RES=0.8
+
+
 
 exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
 
@@ -78,7 +78,7 @@ PCElbowPlot(object = EXP,num.pc=PCNUM)
 PrintPCA(object = EXP, pcs.print = 1:20)
 
 
-
+RES=0.8
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
 #EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
 
