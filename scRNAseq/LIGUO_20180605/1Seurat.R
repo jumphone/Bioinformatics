@@ -87,11 +87,11 @@ PrintPCA(object = EXP, pcs.print = 1:20)
 
 
 
-PCUSE=1:15
+PCUSE=1:6
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
 
-RES=0.7
-EXP <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
+RES=0.5
+EXP <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE,force.recalc =T)
 
 TSNEPlot(object = EXP,do.label=T)
 
