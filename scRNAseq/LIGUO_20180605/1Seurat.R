@@ -1,7 +1,7 @@
 library(Seurat)
 
 PCNUM=20
-PCUSE=1:10
+PCUSE=1:15
 RES=0.8
 
 exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
@@ -30,10 +30,10 @@ dev.off()
 length(x=EXP@var.genes)
 
 'Prom1' %in% rownames(EXP@data)
-'Prom1' %in% EXP@var.genes
+'Prom1' %in% EXP@var.genes #F
 'Nes' %in% EXP@var.genes
 'Egfr' %in% EXP@var.genes
-'Cd15' %in% EXP@var.genes
+'Cd15' %in% EXP@var.genes #F
 'Slc1a3' %in% EXP@var.genes
 'Sox2' %in% EXP@var.genes
 'Fabp7' %in% EXP@var.genes
@@ -48,3 +48,17 @@ length(x=EXP@var.genes)
 'Apoe' %in% EXP@var.genes
 'Tbr2' %in% EXP@var.genes
 'Ntsr2' %in% EXP@var.genes
+
+PrintPCA(object = EXP, pcs.print = 1:5, genes.print = 5, use.full = FALSE)
+
+EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = EXP@var.genes)
+EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
+
+PCElbowPlot(object = EXP,num.pc=PCNUM)
+
+PrintPCA(object = EXP, pcs.print = 1:20)
+EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE)
+EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
+
+save(EXP, file = "EXP.Robj")
+save(EXP_cluster, file = "EXP_cluster.Robj")
