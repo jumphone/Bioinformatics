@@ -66,19 +66,19 @@ Stem_gene=c('Prom1','Nes','Egfr','Cd15','Slc1a3','Sox2','Fabp7','Nr2e1','Id3','C
 EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = EXP@var.genes)
 EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
 
-EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = Stem_gene)
-EXP <- RunPCA(object = EXP, pc.genes = Stem_gene, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
+#EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = Stem_gene)
+#EXP <- RunPCA(object = EXP, pc.genes = Stem_gene, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
 
 
-PCNUM=14
-PCUSE=1:14
-RES=0.8
+
+PCUSE=1:10
 PCElbowPlot(object = EXP,num.pc=PCNUM)
+
 
 PrintPCA(object = EXP, pcs.print = 1:20)
 
 
-PCUSE=1:5
+
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
 #EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
 
