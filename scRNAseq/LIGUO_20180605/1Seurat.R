@@ -26,6 +26,8 @@ dev.off()
 
 EXP=FilterCells(object = EXP, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(3000, 0.05))
 
+length(EXP@data[1,])
+
 EXP=NormalizeData(object = EXP, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pdf('Seurat_VarGene.pdf')
