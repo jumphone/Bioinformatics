@@ -31,7 +31,8 @@ length(EXP@data[1,])
 EXP=NormalizeData(object = EXP, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pdf('Seurat_VarGene.pdf')
-EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+#EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.8)
+EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
 dev.off()
 
 length(x=EXP@var.genes)
@@ -61,11 +62,13 @@ length(x=EXP@var.genes)
 PrintPCA(object = EXP, pcs.print = 1:5, genes.print = 5, use.full = FALSE)
 
 
-Stem_gene=c('Prom1','Nes','Egfr','Cd15','Slc1a3','Sox2','Fabp7','Nr2e1','Id3','Clu','Sox9','Vcam1','Slc1a2','Id2','Sox11','Apoe','Tbr2','Ntsr2')
+#Stem_gene=c('Prom1','Nes','Egfr','Cd15','Slc1a3','Sox2','Fabp7','Nr2e1','Id3','Clu','Sox9','Vcam1','Slc1a2','Id2','Sox11','Apoe','Tbr2','Ntsr2')
 
 EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = EXP@var.genes)
 
-PCNUM=20
+#EXP = ScaleData(object = EXP,genes.use = EXP@var.genes)
+
+PCNUM=40
 EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
 
 #EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = Stem_gene)
@@ -73,15 +76,17 @@ EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print
 
 
 
-PCUSE=1:20
 PCElbowPlot(object = EXP,num.pc=PCNUM)
 
 
 PrintPCA(object = EXP, pcs.print = 1:20)
 
 
-RES=0.8
+
+PCUSE=1:10
 EXP <- RunTSNE(object = EXP, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
+
+RES=0.8
 #EXP_cluster <- FindClusters(object = EXP, reduction.type = "pca", dims.use = PCUSE,  resolution = RES, print.output = 0, save.SNN = TRUE)
 
 
