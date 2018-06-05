@@ -5,6 +5,11 @@ PCUSE=1:20
 RES=0.8
 
 exp_data=read.table('run1642_10000.dge.txt',header=T,row.names=1)
+
+
+exp_data=read.table('N709_6000_picard.bam.clean.bam.dge.txt',header=T,row.names=1)
+
+
 EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=200)
 
 mito.genes <- grep(pattern = "^mt-", x = rownames(x = EXP@data), value = TRUE)
@@ -31,6 +36,7 @@ length(x=EXP@var.genes)
 
 'Prom1' %in% rownames(EXP@data)
 'Prom1' %in% EXP@var.genes #F
+'Fut4' %in% EXP@var.genes
 'Nes' %in% EXP@var.genes
 'Egfr' %in% EXP@var.genes
 'Cd15' %in% EXP@var.genes #F
