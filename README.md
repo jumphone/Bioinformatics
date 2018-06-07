@@ -61,3 +61,5 @@ Single Cell database: http://single-cell.clst.riken.jp/, https://portals.broadin
 R mclust: https://cran.r-project.org/web/packages/mclust/index.html
 
 R princurve: https://cran.r-project.org/web/packages/princurve/index.html
+
+R mixtools: https://cran.r-project.org/web/packages/mixtools/vignettes/mixtools.pdf
