@@ -1,4 +1,4 @@
-# Bioinformatics Workflows
+# Bioinformatics Notes
 
 Enrichr: http://amp.pharm.mssm.edu/Enrichr/
 
