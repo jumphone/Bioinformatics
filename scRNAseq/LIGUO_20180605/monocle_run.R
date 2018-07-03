@@ -1,13 +1,24 @@
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("monocle")
 #biocLite(c("DDRTree", "pheatmap"))
+#expectation   <- data.frame(expectation=model_expectation[cds_exprs$f_id[1], cds_exprs$Cell])
 
 library(monocle)
+library(plyr)
+library(ggplot2)
+
+     
+  
+
+
+
+
+
 
 exp_data=read.table('SUBDATA_var_500.txt',header=T,row.names=1)
 
 exp_data=as.matrix(exp_data)
-all_genes=rownames(exp_data)
+all_genes=rownames(exp_data) 
 col_data=colnames(exp_data)
 names(col_data)=colnames(exp_data)
 col_data=as.data.frame(col_data)
@@ -46,9 +57,16 @@ plot_cell_trajectory(HSMM_myo, color_by = "Pseudotime")
 
 show_genes <- row.names(subset(fData(HSMM_myo), gene_short_name %in% c("Olig1")))
 
-plot_genes_jitter(HSMM_myo[show_genes,], grouping = "State", min_expr = 0.1)
+plot_genes_jitter(HSMM_myo[show_genes,], grouping = "State", min_expr = 0.1, color_by = "State")
 
-plot_genes_in_pseudotime(HSMM_myo[show_genes,], color_by = "State")
+
+
+
+#plot_genes_in_pseudotime(HSMM_myo[show_genes,],color_by = "State")
+
+
+#plot_genes_branched_pseudotime(HSMM_myo[show_genes,], branch_point = 1,color_by = "State",ncol = 1)
+
 
 
 
