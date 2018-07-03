@@ -7,14 +7,6 @@ library(monocle)
 library(plyr)
 library(ggplot2)
 
-     
-  
-
-
-
-
-
-
 exp_data=read.table('SUBDATA_var_500.txt',header=T,row.names=1)
 
 exp_data=as.matrix(exp_data)
@@ -34,23 +26,15 @@ HSMM=newCellDataSet(exp_data, phenoData = pd, featureData = fd)
 HSMM_myo=HSMM
 remove(HSMM)
 
-
-#diff_test_res <- differentialGeneTest(HSMM_myo)
-#ordering_genes <- row.names (subset(diff_test_res, qval < 0.01))
 ordering_genes = all_genes
 #ordering_genes = c('Olig2','Olig1')
+
 HSMM_myo <- estimateSizeFactors(HSMM_myo)
 HSMM_myo = estimateDispersions(HSMM_myo)
 HSMM_myo <- setOrderingFilter(HSMM_myo, ordering_genes)
-#plot_ordering_genes(HSMM_myo)
-
-#HSMM_myo <- reduceDimension(HSMM_myo, max_components = 2, reduction_method = 'ICA')
-#HSMM_myo <- orderCells(HSMM_myo, num_paths=1)
 
 HSMM_myo <- reduceDimension(HSMM_myo, max_components = 2, reduction_method = 'DDRTree')
 HSMM_myo <- orderCells(HSMM_myo)
-
-
 
 plot_cell_trajectory(HSMM_myo, color_by = "State")
 plot_cell_trajectory(HSMM_myo, color_by = "Pseudotime")
@@ -58,15 +42,6 @@ plot_cell_trajectory(HSMM_myo, color_by = "Pseudotime")
 show_genes <- row.names(subset(fData(HSMM_myo), gene_short_name %in% c("Olig1")))
 
 plot_genes_jitter(HSMM_myo[show_genes,], grouping = "State", min_expr = 0.1, color_by = "State")
-
-
-
-
-#plot_genes_in_pseudotime(HSMM_myo[show_genes,],color_by = "State")
-
-
-#plot_genes_branched_pseudotime(HSMM_myo[show_genes,], branch_point = 1,color_by = "State",ncol = 1)
-
 
 
 
