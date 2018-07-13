@@ -15,7 +15,7 @@ bmmsc_magic = magic_op.fit_transform(bmmsc_data, genes='all_genes')
 bmmsc_magic.head()
 
 
-
+bmmsc_magic.to_csv('magic.csv',sep='\t')
 
 
 
