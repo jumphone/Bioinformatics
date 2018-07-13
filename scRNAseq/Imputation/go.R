@@ -1,7 +1,7 @@
 library(Seurat)
 library(dplyr)
 
-GENE_CUTOFF_LOW = 100
+GENE_CUTOFF_LOW = 200
 GENE_CUTOFF_HIGH = 1000
 CELL_CUTOFF_LOW = 10
 MITO_CUTOFF_HIGH = 0.05
@@ -25,7 +25,7 @@ dev.off()
 pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), low.thresholds = c(GENE_CUTOFF_LOW, -Inf), high.thresholds = c(GENE_CUTOFF_HIGH, MITO_CUTOFF_HIGH))
 
 #dim(pbmc@data)
-#[1] 10843  4023
+#[1] 9178 1504
 
 
 save(pbmc, file = "Seurat.Robj")
