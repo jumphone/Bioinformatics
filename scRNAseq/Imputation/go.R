@@ -1,13 +1,14 @@
 library(Seurat)
 library(dplyr)
 
-GENE_CUTOFF_LOW=100
-GENE_CUTOFF_HIGH=1000
-MITO_CUTOFF_HIGH=0.05
+GENE_CUTOFF_LOW = 100
+GENE_CUTOFF_HIGH = 1000
+CELL_CUTOFF_LOW = 10
+MITO_CUTOFF_HIGH = 0.05
 
 
 pbmc.data <- Read10X(data.dir = "./hg19/")
-pbmc <- CreateSeuratObject(raw.data = pbmc.data, min.cells = 3, min.genes = GENE_CUTOFF_LOW,  project = "DIPG")
+pbmc <- CreateSeuratObject(raw.data = pbmc.data, min.cells = CELL_CUTOFF_LOW, min.genes = GENE_CUTOFF_LOW,  project = "DIPG")
 
 mito.genes <- grep(pattern = "^MT-", x = rownames(x = pbmc@data), value = TRUE)
 percent.mito <- Matrix::colSums(pbmc@raw.data[mito.genes, ])/Matrix::colSums(pbmc@raw.data)
@@ -24,7 +25,7 @@ dev.off()
 pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), low.thresholds = c(GENE_CUTOFF_LOW, -Inf), high.thresholds = c(GENE_CUTOFF_HIGH, MITO_CUTOFF_HIGH))
 
 #dim(pbmc@data)
-#[1] 14322  4023
+#[1] 10843  4023
 
 
 
