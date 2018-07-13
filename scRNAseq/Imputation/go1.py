@@ -10,7 +10,7 @@ bmmsc_data = np.sqrt(bmmsc_data)
 bmmsc_data.head()
 
 
-magic_op = magic.MAGIC()
+magic_op = magic.MAGIC(t=4,k=5)
 bmmsc_magic = magic_op.fit_transform(bmmsc_data, genes='all_genes')
 bmmsc_magic.head()
 
