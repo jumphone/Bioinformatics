@@ -5,9 +5,17 @@ import pandas as pd
 bmmsc_data = magic.io.load_csv('MATRIX.txt')
 libsize = bmmsc_data.sum(axis=1)
 
-#plt.hist(libsize, bins=50)
-#plt.axvline(1000, c='r')
-#plt.show()
+bmmsc_data = magic.preprocessing.library_size_normalize(bmmsc_data)
+bmmsc_data = np.sqrt(bmmsc_data)
+bmmsc_data.head()
+
+
+magic_op = magic.MAGIC()
+bmmsc_magic = magic_op.fit_transform(bmmsc_data, genes='all_genes')
+bmmsc_magic.head()
+
+
+
 
 
 
