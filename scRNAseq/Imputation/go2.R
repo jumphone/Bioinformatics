@@ -37,10 +37,22 @@ PCAPlot(object = pbmc, dim.1 = 3, dim.2 = 4)
 PCElbowPlot(object = pbmc)
 dev.off()
 
-pbmc <- FindClusters(object = pbmc, reduction.type = "pca", dims.use = 1:10, resolution = 0.2, print.output = 0, save.SNN = TRUE)
-pbmc <- RunTSNE(object = pbmc, dims.use = 1:10, do.fast = TRUE)
+pbmc <- FindClusters(object = pbmc, reduction.type = "pca", dims.use = 1:8, resolution = 0.2, print.output = 0, save.SNN = TRUE)
+pbmc <- RunTSNE(object = pbmc, dims.use = 1:8, do.fast = TRUE)
 
 pdf('TSNE.pdf')
 TSNEPlot(object = pbmc,do.label = TRUE)
 dev.off()
+
+
+pbmc.markers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25,test.use='t', logfc.threshold=0.001)
+pbmc.markers %>% group_by(cluster) %>% top_n(2, avg_logFC)
+top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+
+pdf('HEAT.pdf',width=15,height=15)
+DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+dev.off()
+
+write.table(top10,file='top10.txt',sep='\t',quote=F,row.names=T,col.names=T)
+write.table(pbmc.markers,file='markers.txt',sep='\t',quote=F,row.names=T,col.names=T)
 
