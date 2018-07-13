@@ -28,6 +28,10 @@ pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), lo
 #[1] 10843  4023
 
 
+save(pbmc, file = "Seurat.Robj")
+output = t(as.matrix(pbmc@data))
+write.table(output,file='MATRIX.txt',quote=F,sep=',',row.names=T,col.names=T)
+
 
 
 
