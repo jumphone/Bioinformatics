@@ -26,7 +26,6 @@ dev.off()
 pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), low.thresholds = c(GENE_CUTOFF_LOW, -Inf), high.thresholds = c(GENE_CUTOFF_HIGH, MITO_CUTOFF_HIGH))
 
 dim(pbmc@data)
-#[1] 10346  1483
 
 
 save(pbmc, file = "Seurat.Robj")
