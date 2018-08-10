@@ -1,4 +1,4 @@
-在原文章中 （http://science.sciencemag.org/content/352/6291/1326）并没有找到 BackSPIN2 的程序，下面的都是用 BackSPIN 的
+在原文章中 （ http://science.sciencemag.org/content/352/6291/1326 ）没有找到 BackSPIN2 的程序，下面的都是用 BackSPIN 的
 
 # 第一部分： Clustering (BackSPIN)
 
