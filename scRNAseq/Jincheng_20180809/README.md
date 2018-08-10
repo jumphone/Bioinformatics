@@ -6,7 +6,7 @@
 
 参考：https://raw.githubusercontent.com/linnarsson-lab/BackSPIN/master/oligos.cef
 
-第二步：按照参考在 RNA 运行 /usr/local/bin/backspin （注意：一定要有 “local”）
+第二步：按照参考在 RNA服务器（运行BackSPIN最好让Lingli帮忙） 运行 /usr/local/bin/backspin （注意：一定要有 “local”）
 
 参考：https://github.com/linnarsson-lab/BackSPIN#tutorial
 
