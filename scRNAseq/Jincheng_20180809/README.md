@@ -6,9 +6,9 @@
 
 参考：https://raw.githubusercontent.com/linnarsson-lab/BackSPIN/master/oligos.cef
 
-第二步：按照参考步骤在 RNA 运行 /usr/local/bin/backspin （注意：一定要有 “local”）
+第二步：按照参考在 RNA 运行 /usr/local/bin/backspin （注意：一定要有 “local”）
 
-参考步骤：https://github.com/linnarsson-lab/BackSPIN#tutorial
+参考：https://github.com/linnarsson-lab/BackSPIN#tutorial
 
 
 # 第二部分：其他分析（包括 BackSPIN 和 PAGODA）
