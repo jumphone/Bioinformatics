@@ -2,9 +2,9 @@
 
 # 第一部分： Clustering (BackSPIN)
 
-第一步：生成 cef 格式文件（tab分隔），参考：
+第一步：生成 cef 格式文件（tab分隔）
 
-https://raw.githubusercontent.com/linnarsson-lab/BackSPIN/master/oligos.cef
+参考：https://raw.githubusercontent.com/linnarsson-lab/BackSPIN/master/oligos.cef
 
 第二步：按照参考步骤在 RNA 运行 /usr/local/bin/backspin （注意：一定要有 “local”）
 
