@@ -1,3 +1,5 @@
+https://cloud.tencent.com/developer/news/180158
+
 
 ##############################################
 #   FASTQ to VCF             #
