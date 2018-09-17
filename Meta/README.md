@@ -31,3 +31,5 @@
 
 
 http://picrust.github.io/picrust/tutorials/metagenome_prediction.html
+
+https://www.cnblogs.com/leezx/p/7053199.html
