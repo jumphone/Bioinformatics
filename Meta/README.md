@@ -10,11 +10,11 @@
 
 5. Multiple_Megahit (https://github.com/voutcn/megahit) 最短contig长度 ≥ 300 bp 拼接组装与基因预测。通过相应的拼接软件，选择拼接效果最佳的序列，对结果进行ORF预测。选择核酸长度大于等于100bp的基因，并将其翻译为氨基酸序列。
 
-6. CD-HIT 基因序列聚类相似度（Identity）≥ 0.95 基因序列聚类覆盖度 （Coverage）≥ 0.9。通过CD-HIT软件对样本预测出来的基因序列进行聚类，构建非冗余基因集，得到非冗余基因集基因的碱基序列。
+6. CD-HIT (http://weizhongli-lab.org/cd-hit/, https://github.com/weizhongli/cdhit) 基因序列聚类相似度（Identity）≥ 0.95 基因序列聚类覆盖度 （Coverage）≥ 0.9。通过CD-HIT软件对样本预测出来的基因序列进行聚类，构建非冗余基因集，得到非冗余基因集基因的碱基序列。
 
 7. SOAPaligner 最大/最小插入片段长度：500/300 bp 基因丰度计算相似度（Identity）≥ 0.95。针对SOAPaligner比对后的信息，统计基因在各个样本中的丰度信息。
 
-8. Diamond 比对类型： blastp E-value ≤ 1E-5，NR物种注释基于基因的物种分类学注释，比对NR数据库获得样本物种的分类学注释信息。
+8. Diamond (https://github.com/bbuchfink/diamond) 比对类型： blastp E-value ≤ 1E-5，NR(non-redundant)物种注释基于基因的物种分类学注释，比对NR数据库获得样本物种的分类学注释信息 (http://www.bioinf.org.uk/teaching/gradtrain/blast.html)。
 
 9. COG功能注释：Diamond 比对类型： blastp E-value ≤ 1E-5，比对EggNOG（evolutionary genealogy of genes: Non-supervised Orthologous Groups ）数据库获得基因对应的COG注释概况并进行统计
 
