@@ -7,7 +7,6 @@ cuffdiff='/home/zhangfeng/disk/project/Cuffdiff/tools/cufflinks-2.2.1.Linux_x86_
 cuffmerge='/home/zhangfeng/disk/project/Cuffdiff/tools/cufflinks-2.2.1.Linux_x86_64/cuffmerge'
 cufflinks='/home/zhangfeng/disk/project/Cuffdiff/tools/cufflinks-2.2.1.Linux_x86_64/cufflinks'
 pc_gtf='/home/zhangfeng/disk/project/data/annotation/mm9.gtf'
-downloaddir='/home/zhangfeng/disk/project/data/download/'
 human_gtf='/home/genomewide/annotation/hg19/Homo_sapiens.GRCh37.75.chr.gtf'
 
 mm10_gtf='/home/genomewide/annotation/mm10/Mus_musculus.GRCm38.87.chr.gtf'
