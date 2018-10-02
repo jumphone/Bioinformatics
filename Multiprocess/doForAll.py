@@ -13,7 +13,7 @@ jobs=[]
 i=1
 
 for line in fa:
-    tag=line.restrip().split('\t')[0]
+    tag=line.rstrip().split('\t')[0]
     if 1==1:
         p=multiprocessing.Process(target=Work, args=(1,tag))
         p.start()
