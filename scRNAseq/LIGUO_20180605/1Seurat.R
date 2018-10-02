@@ -60,7 +60,7 @@ length(x=EXP@var.genes)
 'Ntsr2' %in% EXP@var.genes
 
 
-PrintPCA(object = EXP, pcs.print = 1:5, genes.print = 5, use.full = FALSE)
+#PrintPCA(object = EXP, pcs.print = 1:5, genes.print = 5, use.full = FALSE)
 
 
 #Stem_gene=c('Prom1','Nes','Egfr','Cd15','Slc1a3','Sox2','Fabp7','Nr2e1','Id3','Clu','Sox9','Vcam1','Slc1a2','Id2','Sox11','Apoe','Tbr2','Ntsr2')
