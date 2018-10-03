@@ -1,9 +1,8 @@
 f1=open('ALL.narrowPeak.sort.merged.KO.cov')
-f2=open('ALL.narrowPeak.sort.merged.KI.cov')
 f3=open('ALL.narrowPeak.sort.merged.WT.cov')
 fo=open('CHIP.WT_KO','w')
 
-fo.write('#CHR\tSTART\tEND\tWT\tKO\tKI\tKO_div_WT\tKI_div_WT\tKO_div_KI\tSTART_NEW\tEND_NEW\n')
+fo.write('#CHR\tSTART\tEND\tWT\tKO\tKO_div_WT\tSTART_NEW\tEND_NEW\n')
 
 KO=f1.read().split('\n')
 WT=f3.read().split('\n')
