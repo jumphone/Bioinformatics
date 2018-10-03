@@ -1,6 +1,6 @@
-f1=open('ALL.narrowPeak.sort.merged.KO.cov')
-f3=open('ALL.narrowPeak.sort.merged.WT.cov')
-fo=open('CHIP.WT_KO','w')
+f1=open('ALL.peak.sort.merged.KO.cov')
+f3=open('ALL.peak.sort.merged.WT.cov')
+fo=open('SEQ.WT_KO','w')
 
 fo.write('#CHR\tSTART\tEND\tWT\tKO\tKO_div_WT\tSTART_NEW\tEND_NEW\n')
 
@@ -101,8 +101,8 @@ for one in output:
 
 fo.close()
 
-fo1=open('CHIP.KO_WT_u_KO','w')
-fo4=open('CHIP.KO_WT_u_WT','w')
+fo1=open('SEQ.KO_WT_u_KO','w')
+fo4=open('SEQ.KO_WT_u_WT','w')
 
 
 
