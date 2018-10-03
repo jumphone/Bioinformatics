@@ -1,7 +1,4 @@
 
-
-
-
 library(circlize)
 a=read.table('SEQ.WT_KO')
 CHR=unique(a[,1])
