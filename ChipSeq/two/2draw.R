@@ -1,12 +1,12 @@
 
 library(circlize)
-a=read.table('SEQ.WT_KO')
+a=read.table('SEQ.WT_KO',sep='\t')
 CHR=unique(a[,1])
 Start=c()
 End=c()
 for(chr in  CHR){
-Start=c(Start,min(a[which(a[,1]==chr),10]))
-End=c(End,max(a[which(a[,1]==chr),11]))
+Start=c(Start,min(a[which(a[,1]==chr),7]))
+End=c(End,max(a[which(a[,1]==chr),8]))
 }
 
 Example=data.frame(Gene=CHR,Start=as.numeric(Start), End=as.numeric(End))
