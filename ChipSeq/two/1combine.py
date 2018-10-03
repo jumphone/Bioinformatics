@@ -1,15 +1,15 @@
-f1=open('ALL.peak.sort.merged.KO.cov')
-f3=open('ALL.peak.sort.merged.WT.cov')
+fwt=open('ALL.peak.sort.merged.WT.cov') #WT
+fko=open('ALL.peak.sort.merged.KO.cov') #KO
 fo=open('SEQ.WT_KO','w')
 
 fo.write('#CHR\tSTART\tEND\tWT\tKO\tKO_div_WT\tSTART_NEW\tEND_NEW\n')
 
-KO=f1.read().split('\n')
-WT=f3.read().split('\n')
+KO=fwt.read().split('\n')
+WT=fko.read().split('\n')
 
 
-all_wt = 26540355 / 1000000.0
-all_ko = 25564230 / 1000000.0
+all_wt = 3141421 / 1000000.0
+all_ko = 2901128 / 1000000.0
 
 
 
@@ -28,22 +28,21 @@ def change(ratio):
 
 while i<len(KO):
     ko=KO[i].split('\t')
-    
+
     wt=WT[i].split('\t')
     if len(ko)>3:
         l= float(int(wt[2])-int(wt[1]))/1000.0
 
         rwt=float(wt[3])/l / all_wt
         rko=float(ko[3])/l / all_ko
-       
+
         sss=sum([rwt,rko])
         SSS.append(sss)
 
         ko_div_wt = (rko+1) / (rwt+1)
         ko_div_wt = change(ko_div_wt)
-        
-   
-        
+
+
         output.append([wt[0],int(wt[1]),sss ,wt[0]+'\t'+wt[1]+'\t'+wt[2]+'\t'+str(rwt)+'\t'+str(rko)+'\t'+str(ko_div_wt)+'\n'])
     i+=1
 
@@ -59,6 +58,8 @@ tmp_end=0
 #fo_ko=open('ALL.ATAC.narrowPeak.merged.WT_KO.KO','w')
 KO_WT_u_KO={}
 KO_WT_u_WT={}
+
+
 
 
 CHRR_LIST=[]
@@ -85,7 +86,7 @@ for one in output:
 
             tmp_chrr = chrr
             tmp_end = end_new
-            ko_div_wt=float(seq[6])
+            ko_div_wt=float(seq[5])
 
 
 
@@ -95,7 +96,12 @@ for one in output:
             else:
                 if ko_div_wt > 1:
                     KO_WT_u_KO[chrr]=L
-            
+            if chrr in KO_WT_u_WT:
+                if ko_div_wt < -1:
+                    KO_WT_u_WT[chrr]+=L
+            else:
+                if ko_div_wt < -1:
+                    KO_WT_u_WT[chrr]=L
 
             fo.write(one[3].rstrip()+'\t'+str(start_new)+'\t'+str(end_new)+'\n')
 
@@ -108,17 +114,13 @@ fo4=open('SEQ.KO_WT_u_WT','w')
 
 for chrr in CHRR_LIST:
     fo1.write(chrr+'\t0\t'+str(KO_WT_u_KO[chrr])+'\t1\t'+str(int(KO_WT_u_KO[chrr]/float(CHRR_SUM[chrr])*100))+'\n')
-    
+    #print KO_WT_u_KO[chrr]
+    #print KO_WT_u_WT[chrr]
+
     fo4.write(chrr+'\t'+str(KO_WT_u_KO[chrr])+'\t'+str(KO_WT_u_KO[chrr]+KO_WT_u_WT[chrr])+'\t0\t'+str(int(KO_WT_u_WT[chrr]/float(CHRR_SUM[chrr])*100))+'\n')
-   
 
 
 
 
 
 
-
-
-
-
-        
