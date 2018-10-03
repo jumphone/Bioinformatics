@@ -3,7 +3,7 @@
 
 
 library(circlize)
-a=read.table('data/CHIP.WT_KO')
+a=read.table('SEQ.WT_KO')
 CHR=unique(a[,1])
 Start=c()
 End=c()
@@ -15,8 +15,8 @@ End=c(End,max(a[which(a[,1]==chr),11]))
 Example=data.frame(Gene=CHR,Start=as.numeric(Start), End=as.numeric(End))
 
 
-KO_WT_u_KO = read.table('data/CHIP.KO_WT_u_KO')
-KO_WT_u_WT = read.table('data/CHIP.KO_WT_u_WT')
+KO_WT_u_KO = read.table('SEQ.KO_WT_u_KO')
+KO_WT_u_WT = read.table('SEQ.KO_WT_u_WT')
 
 
 circos.genomicInitialize(Example,tickLabelsStartFromZero = TRUE)
