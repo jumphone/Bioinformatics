@@ -3,7 +3,7 @@ library(dplyr)
 library(Matrix)
 
 
-exp_data=read.table('data.txt',header=T,row.names=1)
+exp_data=read.table('data.txt.rmdup',header=T,row.names=1)
 
 EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 0, min.genes=0)
 
