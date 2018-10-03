@@ -4,8 +4,9 @@ fo=open('SEQ.WT_KO','w')
 
 fo.write('#CHR\tSTART\tEND\tWT\tKO\tKO_div_WT\tSTART_NEW\tEND_NEW\n')
 
-KO=fwt.read().split('\n')
-WT=fko.read().split('\n')
+WT=fwt.read().split('\n')
+KO=fko.read().split('\n')
+
 
 
 all_wt = 3141421 / 1000000.0
