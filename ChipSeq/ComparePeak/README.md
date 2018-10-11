@@ -1,1 +1,1 @@
-ok
+Please see go.sh
