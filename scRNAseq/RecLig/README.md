@@ -1,1 +1,1 @@
-Ref. A draft network of ligand-Sreceptor-mediated multicellular signalling in human
+Ref. A draft network of ligand-receptor-mediated multicellular signalling in human
