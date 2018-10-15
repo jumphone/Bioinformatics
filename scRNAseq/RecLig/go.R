@@ -8,6 +8,8 @@ OUT='exp_LigRec_detail.txt'
 
 RL=read.table('ReceptorLigand.txt.mouse',header=T,sep='\t')
 
+load('Seurat_EXP_mb3076_PCA.Robj')
+
 this_data=EXP@data
 this_CLUSTER=as.character(EXP_cluster@ident)
 CNUM=3
