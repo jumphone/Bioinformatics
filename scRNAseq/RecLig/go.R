@@ -4,12 +4,14 @@ library(Matrix)
 library(gplots)
 
 
+OUT='exp_LigRec_detail.txt'
+
 RL=read.table('ReceptorLigand.txt.mouse',header=T,sep='\t')
 
 this_data=EXP@data
 this_CLUSTER=as.character(EXP_cluster@ident)
 CNUM=3
-OUT='exp_LigRec_detail.txt'
+
 
 ALLINFO=c('Lig','Rec','LigC','RecC','Score')
 
