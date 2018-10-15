@@ -3,16 +3,16 @@ library(dplyr)
 library(Matrix)
 library(gplots)
 
-load('Seurat_EXP_mb3076_PCA.Robj')
+load('2018-07-17_7500.RData')
 OUT='exp_LigRec_detail.txt'
 
 RL=read.table('ReceptorLigand.txt.mouse',header=T,sep='\t')
 
-this_data=mb3076@data
+this_data=mb3076_11@data
 this_data=apply(this_data,1,scale)
 
-this_CLUSTER=as.character(mb3076@ident)
-CNUM=length(this_CLUSTER)
+this_CLUSTER=as.character(mb3076_11@ident)
+CNUM=3
 
 
 ALLINFO=c('Lig','Rec','LigC','RecC','Score')
