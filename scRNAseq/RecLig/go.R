@@ -12,7 +12,7 @@ this_data=mb3076@data
 this_data=apply(this_data,1,scale)
 
 this_CLUSTER=as.character(mb3076@ident)
-CNUM=3
+CNUM=length(this_CLUSTER)
 
 
 ALLINFO=c('Lig','Rec','LigC','RecC','Score')
