@@ -6,25 +6,28 @@ library(gplots)
 load('2018-07-17_7500.RData')
 OUT='exp_LigRec_detail.txt'
 
-RL=read.table('ReceptorLigand.txt.mouse',header=T,sep='\t')
+RL=read.table('ReceptorLigand.txt',header=T,sep='\t')
 
 this_data=mb3076_11@data
 this_data=apply(this_data,1,scale)
+this_data=t(this_data)
+rownames(this_data)=rownames(mb3076_11@data)
+colnames(this_data)=colnames(mb3076_11@data)
 
 this_CLUSTER=as.character(mb3076_11@ident)
-CNUM=3
+CNUM=length(table(this_CLUSTER))
 
 
 ALLINFO=c('Lig','Rec','LigC','RecC','Score')
-
+write.table(t(ALLINFO),file=OUT,sep='\t',quote=F,row.names=F,col.names=F)
 
 rl_row=1
 while(rl_row<=length(RL[,1])){
         L=as.character(RL[rl_row,1])
         R=as.character(RL[rl_row,2])
-        if(L %in% rownames(EXP@data) & R %in% rownames(EXP@data)){
-            Lrow= which(rownames(EXP@data) %in% L)
-            Rrow= which(rownames(EXP@data) %in% R)
+        if(L %in% rownames(this_data) & R %in% rownames(this_data)){
+            Lrow= which(rownames(this_data) %in% L)
+            Rrow= which(rownames(this_data) %in% R)
             Lexp= this_data[Lrow,]
             Rexp= this_data[Rrow,]
             Lscore=c()
@@ -45,9 +48,11 @@ while(rl_row<=length(RL[,1])){
             while(rr<=length(Rscore)){
                 cc=1
                 while(cc<=length(Lscore)){
-                    thisinfo=c(L,R,cc-1,rr-1, (Rscoee[rr]+Lscore[cc])/2)
+                    thisinfo=c(L,R,cc-1,rr-1, (Rscore[rr]+Lscore[cc])/2)
                     write.table(t(thisinfo),file=OUT,sep='\t',quote=F,row.names=F,col.names=F,append=TRUE)
                     cc=cc+1}
                 rr=rr+1}}
         print(rl_row)
         rl_row=rl_row+1}
+
+
