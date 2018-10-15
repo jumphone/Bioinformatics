@@ -4,7 +4,7 @@ library(Matrix)
 library(gplots)
 
 
-RL=read.table('/home/zhangfeng/disk/project/Natalie/data_new/ReceptorLigand.txt.mouse',header=T,sep='\t')
+RL=read.table('ReceptorLigand.txt.mouse',header=T,sep='\t')
 
 this_data=EXP@data
 this_CLUSTER=as.character(EXP_cluster@ident)
