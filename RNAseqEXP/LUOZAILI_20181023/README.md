@@ -1,1 +1,1 @@
-compare RNA-seq (mouse) to microarray (human)
+Compare RNA-seq (mouse) to microarray (human)
