@@ -23,15 +23,7 @@ WNTmean =  as.matrix(apply(b[,WNT],1,mean))
 ALL=cbind(G3mean,G4mean,SHHmean,WNTmean)
 colnames(ALL)=c('G3','G4','SHH','WNT')
 
-
-
-
-
-
-
 c=read.table('NSC-KOCTD.txt.pure',row.names=1,header=T,check.names=F)
-
-
 
 exp_sc_mat=c
 exp_ref_mat=ALL
@@ -79,5 +71,8 @@ library('gplots')
 pdf('HEAT.pdf',width=7,height=7)
 heatmap.2(as.matrix(ALLPCC),scale=c("none"),dendrogram='none',trace='none',col=colorRampPalette(c('blue','grey95','red')),margins=c(10,10))
 dev.off()
+
+
+write.table(ALLPCC,file='ALLPCC.txt',row.names=T,col.names=T,quote=F,sep='\t')
 
 
