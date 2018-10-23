@@ -69,3 +69,8 @@ Gene Fusion FACTERA: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4296148/
 TCGA analysis cbioportal: http://www.cbioportal.org/
 
 http://gdac.broadinstitute.org/#, http://bioinformatics.mdanderson.org/TCGA/NGCHMPortal/
+
+https://bioconductor.org/packages/release/bioc/vignettes/vidger/inst/doc/vidger.html
+
+
+
