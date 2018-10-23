@@ -69,7 +69,7 @@ rownames(ALLPCC)=colname_ref
 colnames(ALLPCC)=colname_sc
 library('gplots')
 pdf('HEAT.pdf',width=7,height=7)
-heatmap.2(as.matrix(ALLPCC),scale=c("none"),dendrogram='none',trace='none',col=colorRampPalette(c('blue','grey95','red')),margins=c(10,10))
+heatmap.2(as.matrix(ALLPCC),scale=c("none"),dendrogram='both',trace='none',col=colorRampPalette(c('blue','grey95','red')),margins=c(10,10))
 dev.off()
 
 
