@@ -38,13 +38,22 @@ save(EXP,file='EXP.RData')
 
 ##################################################################
 
+library(Seurat)
+load('EXP.RData')
+pbmc=EXP
+mito.genes <- grep(pattern = "^mt-", x = rownames(x = pbmc@data), value = TRUE)
+percent.mito <- Matrix::colSums(pbmc@raw.data[mito.genes, ])/Matrix::colSums(pbmc@raw.data)
+pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
+VlnPlot(object = pbmc, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
 
 
+par(mfrow = c(1, 2))
+GenePlot(object = pbmc, gene1 = "nUMI", gene2 = "percent.mito")
+GenePlot(object = pbmc, gene1 = "nUMI", gene2 = "nGene")
 
 
+pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), 
+                    low.thresholds = c(1000, -Inf), high.thresholds = c(2000, 0.2))
 
-
-
-
-
+table(pbmc@ident)
 
