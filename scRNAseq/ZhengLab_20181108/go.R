@@ -1,7 +1,7 @@
 #/ZhengLab/10X_20181030/OUT
 library(Seurat)
 
-
+######Step1 combine###################
 WT291_1.data <- Read10X(data.dir = "./10X_291_WT_20180925_3mm_1_out/raw_gene_bc_matrices/mm10/")
 WT291_2.data <- Read10X(data.dir = "./10X_291_WT_20180925_3mm_2_out/raw_gene_bc_matrices/mm10/")
 WT291_3.data <- Read10X(data.dir = "./10X_291_WT_20180925_3mm_3_out/raw_gene_bc_matrices/mm10/")
@@ -33,3 +33,4 @@ EXP = MergeSeurat(EXP, KO294_2, project = NULL, min.cells = 0, min.genes = 0, is
 EXP = MergeSeurat(EXP, KO294_3, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = "_", add.cell.id1 = NULL, add.cell.id2 = 'KO3')
 EXP = MergeSeurat(EXP, KO294_4, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = "_", add.cell.id1 = NULL, add.cell.id2 = 'KO4')
 
+saveRDS(EXP,file='EXP.RDS')
