@@ -24,14 +24,15 @@ KO294_2=CreateSeuratObject(raw.data = KO294_2.data, min.cells = 0, min.genes = 0
 KO294_3=CreateSeuratObject(raw.data = KO294_3.data, min.cells = 0, min.genes = 0,  project = "ZhengLab")
 KO294_4=CreateSeuratObject(raw.data = KO294_4.data, min.cells = 0, min.genes = 0,  project = "ZhengLab")
 
-EXP = MergeSeurat(WT291_1, WT291_2, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = NULL, add.cell.id1 = 'WT1_', add.cell.id2 = 'WT2_')
-EXP = MergeSeurat(EXP, WT291_3, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = NULL, add.cell.id1 = NULL, add.cell.id2 = 'WT3')
-EXP = MergeSeurat(EXP, WT291_4, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = NULL, add.cell.id1 = NULL, add.cell.id2 = 'WT4')
+WT12 = MergeSeurat(WT291_1, WT291_2, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1, names.delim = "_", add.cell.id1 = 'WT1', add.cell.id2 = 'WT2')
+WT34 = MergeSeurat(WT291_3, WT291_4, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1, names.delim = "_", add.cell.id1 = 'WT3', add.cell.id2 = 'WT4')
+WT = MergeSeurat(WT12, WT34, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = "_", add.cell.id1 = '', add.cell.id2 = '')
 
-EXP = MergeSeurat(EXP, KO294_1, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = NULL, add.cell.id1 = NULL, add.cell.id2 = 'KO1')
-EXP = MergeSeurat(EXP, KO294_2, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = NULL, add.cell.id1 = NULL, add.cell.id2 = 'KO2')
-EXP = MergeSeurat(EXP, KO294_3, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = NULL, add.cell.id1 = NULL, add.cell.id2 = 'KO3')
-EXP = MergeSeurat(EXP, KO294_4, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = NULL, add.cell.id1 = NULL, add.cell.id2 = 'KO4')
+KO12 = MergeSeurat(KO294_1, KO294_2, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1, names.delim = "_", add.cell.id1 = 'KO1', add.cell.id2 = 'KO2')
+KO34 = MergeSeurat(KO294_3, KO294_4, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1, names.delim = "_", add.cell.id1 = 'KO3', add.cell.id2 = 'KO4')
+KO = MergeSeurat(KO12, KO34, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = "_", add.cell.id1 = '', add.cell.id2 = '')
+
+EXP = MergeSeurat(WT, KO, project = NULL, min.cells = 0, min.genes = 0, is.expr = 0, do.normalize = FALSE, do.scale = FALSE, do.center = FALSE, names.field = 1,names.delim = "_", add.cell.id1 = 'WT', add.cell.id2 = 'KO')
 
 save(EXP,file='EXP.RData')
 
