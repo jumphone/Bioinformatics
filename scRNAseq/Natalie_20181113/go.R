@@ -1,27 +1,42 @@
 library(Seurat)
 library(dplyr)
 
-pbmc.data <- read.table('EXP12345678.combined.txt',sep='\t',check.name=F,row.names=1,header=T)
+case.data <- read.table('CASE.txt',sep='\t',check.name=F,row.names=1,header=T)
+case <- CreateSeuratObject(raw.data = case.data, min.cells = 3, min.genes = 200, project = "Natalie")
+mito.genes <- grep(pattern = "^mt-", x = rownames(x = case@data), value = TRUE)
+percent.mito <- Matrix::colSums(case@raw.data[mito.genes, ])/Matrix::colSums(case@raw.data)
+case <- AddMetaData(object = case, metadata = percent.mito, col.name = "percent.mito")
+case <- AddMetaData(object = case, metadata = case@ident, col.name = "batch")
+case@meta.data$stim <- "case"
+case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
+case <- NormalizeData(object = case, normalization.method = "LogNormalize", scale.factor = 10000)
+case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"))
 
-pbmc <- CreateSeuratObject(raw.data = pbmc.data, min.cells = 3, min.genes = 200, project = "Natalie")
-mito.genes <- grep(pattern = "^mt-", x = rownames(x = pbmc@data), value = TRUE)
-percent.mito <- Matrix::colSums(pbmc@raw.data[mito.genes, ])/Matrix::colSums(pbmc@raw.data)
+wt.data <- read.table('WT.txt',sep='\t',check.name=F,row.names=1,header=T)
+wt <- CreateSeuratObject(raw.data = wt.data, min.cells = 3, min.genes = 200, project = "Natalie")
+mito.genes <- grep(pattern = "^mt-", x = rownames(x = wt@data), value = TRUE)
+percent.mito <- Matrix::colSums(wt@raw.data[mito.genes, ])/Matrix::colSums(wt@raw.data)
+wt <- AddMetaData(object = wt, metadata = percent.mito, col.name = "percent.mito")
+wt <- AddMetaData(object = wt, metadata = wt@ident, col.name = "batch")
+wt@meta.data$stim <- "wt"
+wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
+wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.factor = 10000)
+wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"))
 
-pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
-pbmc <- AddMetaData(object = pbmc, metadata = pbmc@ident, col.name = "batch")
+case <- FindVariableGenes(case, do.plot = F)
+wt <- FindVariableGenes(wt, do.plot = F)
 
-pbmc=FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.1))
+g.1 <- head(rownames(case@hvg.info), 1500)
+g.2 <- head(rownames(wt@hvg.info), 1500)
+genes.use <- unique(c(g.1, g.2))
+genes.use <- intersect(genes.use, rownames(case@scale.data))
+genes.use <- intersect(genes.use, rownames(wt@scale.data))
 
-pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 
-pdf('./VarGene.pdf')
-pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.8)
-dev.off()
 
-length(x=pbmc@var.genes)
-#2975
+combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = 30)
 
-pbmc = ScaleData(object = pbmc,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use = pbmc@var.genes)
+
 
 
 PCNUM=40
