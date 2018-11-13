@@ -46,7 +46,7 @@ save(combined_data, file = "./combine.Robj")
 
 
 pdf('./TSNE.pdf',width=20, height=12)
-TSNEPlot(combined_data, do.return = T,  group.by = "stim")
+TSNEPlot(combined_data, do.return = F,  group.by = "stim")
 dev.off()
 
 
