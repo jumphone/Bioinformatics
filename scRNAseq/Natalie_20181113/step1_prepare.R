@@ -23,12 +23,14 @@ wt <- AddMetaData(object = wt, metadata = wt@ident, col.name = "batch")
 wt@meta.data$stim <- "wt"
 wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
 wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.factor = 10000)
-wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"))
+wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
+length(x=wt@var.genes) #6897
+wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=wt@var.genes)
 
 
-case <- FindVariableGenes(object = case, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
+case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
 length(x=case@var.genes) #3609
-wt <- FindVariableGenes(object = wt, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
+wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
 length(x=wt@var.genes) #2983
 
 g.1=case@var.genes
@@ -36,7 +38,7 @@ g.2=wt@var.genes
 genes.use <- unique(c(g.1, g.2)) 
 genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
-length(genes.use) #2563
+length(genes.use) #2087
 
 NUMCC=30
 combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = NUMCC)
