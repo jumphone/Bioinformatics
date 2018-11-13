@@ -34,10 +34,10 @@ length(genes.use)
 
 NUMCC=30
 combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = NUMCC)
-pdf('CCA1.pdf')
+pdf('CCA1.pdf') #1508
 DimPlot(object = combined_data, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
 dev.off()
-combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = 1:20,  do.fast = T)
+
 DIM=1:20
 combined_data <- AlignSubspace(combined_data, reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
 combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = DIM, do.fast = T)
