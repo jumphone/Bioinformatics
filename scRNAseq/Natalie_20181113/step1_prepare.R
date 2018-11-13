@@ -42,21 +42,13 @@ DIM=1:20
 combined_data <- AlignSubspace(combined_data, reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
 combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = DIM, do.fast = T)
 
+save(combined_data, file = "./combine.Robj")
 
-
-
-
-
-PCNUM=40
-pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, genes.print = 5)
-
-PCUSE=1:35
-pbmc=RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
 
 pdf('./TSNE.pdf',width=30,height=15)
-TSNEPlot(object = pbmc)
+TSNEPlot(combined_data, do.return = T, pt.size = 0.5, group.by = "stim")
 dev.off()
 
-save(pbmc, file = "./pbmc.Robj")
+
 
 
