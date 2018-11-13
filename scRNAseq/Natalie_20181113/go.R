@@ -24,4 +24,14 @@ length(x=pbmc@var.genes)
 pbmc = ScaleData(object = pbmc,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use = pbmc@var.genes)
 
 
+PCNUM=40
+pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, genes.print = 5)
+
+PCUSE=1:35
+pbmc=RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
+
+TSNEPlot(object = pbmc)
+
+
+
 
