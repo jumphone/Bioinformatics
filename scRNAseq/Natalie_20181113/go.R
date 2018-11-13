@@ -10,7 +10,9 @@ case <- AddMetaData(object = case, metadata = case@ident, col.name = "batch")
 case@meta.data$stim <- "case"
 case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
 case <- NormalizeData(object = case, normalization.method = "LogNormalize", scale.factor = 10000)
-case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"))
+case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.8)
+length(x=case@var.genes) #2175
+case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use = case@var.genes)
 
 wt.data <- read.table('WT.txt',sep='\t',check.name=F,row.names=1,header=T)
 wt <- CreateSeuratObject(raw.data = wt.data, min.cells = 3, min.genes = 200, project = "Natalie")
@@ -23,18 +25,24 @@ wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thres
 wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.factor = 10000)
 wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"))
 
-case <- FindVariableGenes(case, do.plot = F)
-wt <- FindVariableGenes(wt, do.plot = F)
 
-g.1 <- head(rownames(case@hvg.info), 1500)
-g.2 <- head(rownames(wt@hvg.info), 1500)
-genes.use <- unique(c(g.1, g.2))
+g.1=case@var.genes
+genes.use <- uniqure(c(g.1)) 
 genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
 
+length(genes.use) 
 
 
 combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = 30)
+DimPlot(object = combined_data, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
+
+combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = 1:20,  do.fast = T)
+DIM=1:20
+combined_data <- AlignSubspace(combined_data, reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
+combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = DIM, do.fast = T)
+
+
 
 
 
