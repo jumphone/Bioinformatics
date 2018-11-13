@@ -44,7 +44,7 @@ pdf('CCA1.pdf')
 DimPlot(object = combined_data, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
 dev.off()
 
-DIM=1:20
+DIM=1:30
 combined_data <- AlignSubspace(combined_data, reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
 combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = DIM, do.fast = T)
 
