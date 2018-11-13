@@ -32,6 +32,6 @@ pbmc=RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
 
 TSNEPlot(object = pbmc)
 
-
+save(pbmc, file = "./pbmc.Robj")
 
 
