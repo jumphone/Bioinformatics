@@ -30,7 +30,9 @@ pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.p
 PCUSE=1:35
 pbmc=RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
 
+pdf('./TSNE.pdf',width=30,height=15)
 TSNEPlot(object = pbmc)
+dev.off()
 
 save(pbmc, file = "./pbmc.Robj")
 
