@@ -10,9 +10,9 @@ case <- AddMetaData(object = case, metadata = case@ident, col.name = "batch")
 case@meta.data$stim <- "case"
 case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
 case <- NormalizeData(object = case, normalization.method = "LogNormalize", scale.factor = 10000)
-case <- FindVariableGenes(object = case, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
-length(x=case@var.genes) #3609
-case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use = case@var.genes)
+case <- FindVariableGenes(object = case, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
+length(x=case@var.genes) #10295
+case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=case@var.genes)
 
 wt.data <- read.table('WT.txt',sep='\t',check.name=F,row.names=1,header=T)
 wt <- CreateSeuratObject(raw.data = wt.data, min.cells = 3, min.genes = 200, project = "Natalie")
@@ -26,15 +26,21 @@ wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.fa
 wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"))
 
 
+case <- FindVariableGenes(object = case, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
+length(x=case@var.genes) #3609
+wt <- FindVariableGenes(object = wt, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
+length(x=wt@var.genes) #2983
+
 g.1=case@var.genes
-genes.use <- unique(c(g.1)) 
+g.2=wt@var.genes
+genes.use <- unique(c(g.1, g.2)) 
 genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
-length(genes.use)  
+length(genes.use) #2563
 
 NUMCC=30
 combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = NUMCC)
-pdf('CCA1.pdf') #1508
+pdf('CCA1.pdf') 
 DimPlot(object = combined_data, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
 dev.off()
 
