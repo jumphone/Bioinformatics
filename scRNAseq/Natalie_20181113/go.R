@@ -10,8 +10,8 @@ case <- AddMetaData(object = case, metadata = case@ident, col.name = "batch")
 case@meta.data$stim <- "case"
 case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
 case <- NormalizeData(object = case, normalization.method = "LogNormalize", scale.factor = 10000)
-case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.8)
-length(x=case@var.genes) #2175
+case <- FindVariableGenes(object = case, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
+length(x=case@var.genes) #3609
 case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use = case@var.genes)
 
 wt.data <- read.table('WT.txt',sep='\t',check.name=F,row.names=1,header=T)
@@ -27,16 +27,16 @@ wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"))
 
 
 g.1=case@var.genes
-genes.use <- uniqure(c(g.1)) 
+genes.use <- unique(c(g.1)) 
 genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
+length(genes.use)  
 
-length(genes.use) 
-
-
-combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = 30)
+NUMCC=30
+combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = NUMCC)
+pdf('CCA1.pdf')
 DimPlot(object = combined_data, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
-
+dev.off()
 combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = 1:20,  do.fast = T)
 DIM=1:20
 combined_data <- AlignSubspace(combined_data, reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
