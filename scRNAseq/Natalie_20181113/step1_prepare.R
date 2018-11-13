@@ -45,8 +45,8 @@ combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use 
 save(combined_data, file = "./combine.Robj")
 
 
-pdf('./TSNE.pdf',width=30,height=15)
-TSNEPlot(combined_data, do.return = T, pt.size = 0.5, group.by = "stim")
+pdf('./TSNE.pdf',width=20, height=12)
+TSNEPlot(combined_data, do.return = T,  group.by = "stim")
 dev.off()
 
 
