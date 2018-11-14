@@ -36,7 +36,7 @@ pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dim
 DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F)
 
 TSNE_DIM=1:20
-pbmc  <- RunTSNE(pbmc , reduction.use = "cca", dims.use = TSNE_DIM, do.fast = T)
+pbmc  <- RunTSNE(pbmc , reduction.use = "cca.aligned", dims.use = TSNE_DIM, do.fast = T)
 
 #save(pbmc,file='ALL_tsne.RObj')
 
