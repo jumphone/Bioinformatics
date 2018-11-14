@@ -15,7 +15,7 @@ pbmc=FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), low.t
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pbmc <- FindVariableGenes(object = pbmc, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
-length(x=pbmc@var.genes) #3787
+length(x=pbmc@var.genes) #4388
 pbmc = ScaleData(object = pbmc,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=pbmc@var.genes)
 
 stim=rep('case',length(pbmc@meta.data$batch))
