@@ -9,10 +9,10 @@ case <- AddMetaData(object = case, metadata = percent.mito, col.name = "percent.
 case <- AddMetaData(object = case, metadata = case@ident, col.name = "batch")
 VlnPlot(object = case, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
 case@meta.data$stim <- "case"
-case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(3000, 0.1))
+case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(2500, 0.1))
 case <- NormalizeData(object = case, normalization.method = "LogNormalize", scale.factor = 10000)
 case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
-length(x=case@var.genes) #10787
+length(x=case@var.genes) #10963
 case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=case@var.genes)
 
 
@@ -24,7 +24,7 @@ wt <- AddMetaData(object = wt, metadata = percent.mito, col.name = "percent.mito
 wt <- AddMetaData(object = wt, metadata = wt@ident, col.name = "batch")
 VlnPlot(object = wt, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
 wt@meta.data$stim <- "wt"
-wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(3000, 0.1))
+wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(2500, 0.1))
 wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.factor = 10000)
 wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
 length(x=wt@var.genes) #6846
