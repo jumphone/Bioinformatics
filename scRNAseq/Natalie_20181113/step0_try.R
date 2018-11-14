@@ -32,6 +32,7 @@ pbmc <- RunCCA(pbmc, group1=g1, group2=g2,  genes.use = pbmc@var.genes, num.cc =
 DimPlot(object = pbmc, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
 
 DIM=1:35
+#DIM=1:2
 pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dims.align = DIM, num.possible.genes=5000, num.genes=10)
 DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F)
 
