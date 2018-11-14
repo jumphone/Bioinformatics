@@ -37,3 +37,9 @@ TSNE_DIM=1:35
 pbmc  <- RunTSNE(pbmc , reduction.use = "pca.aligned", dims.use = TSNE_DIM, do.fast = T)
 
 #save(pbmc,file='ALL_tsne.RObj')
+
+
+
+
+
+
