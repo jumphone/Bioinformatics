@@ -7,11 +7,12 @@ mito.genes <- grep(pattern = "^mt-", x = rownames(x = case@data), value = TRUE)
 percent.mito <- Matrix::colSums(case@raw.data[mito.genes, ])/Matrix::colSums(case@raw.data)
 case <- AddMetaData(object = case, metadata = percent.mito, col.name = "percent.mito")
 case <- AddMetaData(object = case, metadata = case@ident, col.name = "batch")
+VlnPlot(object = case, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
 case@meta.data$stim <- "case"
-case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
+case=FilterCells(object = case, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(3000, 0.1))
 case <- NormalizeData(object = case, normalization.method = "LogNormalize", scale.factor = 10000)
-case <- FindVariableGenes(object = case, do.plot = T, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
-length(x=case@var.genes) #10295
+case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
+length(x=case@var.genes) #10787
 case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=case@var.genes)
 
 wt.data <- read.table('WT.txt',sep='\t',check.name=F,row.names=1,header=T)
@@ -20,8 +21,9 @@ mito.genes <- grep(pattern = "^mt-", x = rownames(x = wt@data), value = TRUE)
 percent.mito <- Matrix::colSums(wt@raw.data[mito.genes, ])/Matrix::colSums(wt@raw.data)
 wt <- AddMetaData(object = wt, metadata = percent.mito, col.name = "percent.mito")
 wt <- AddMetaData(object = wt, metadata = wt@ident, col.name = "batch")
+VlnPlot(object = wt, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
 wt@meta.data$stim <- "wt"
-wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(4000, 0.2))
+wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(3000, 0.1))
 wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.factor = 10000)
 wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
 length(x=wt@var.genes) #6897
