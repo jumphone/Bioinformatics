@@ -26,12 +26,13 @@ pbmc@meta.data$stim=stim
 PCNUM=40
 pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.compute=PCNUM, pcs.print = 1:5,  genes.print = 5)
 
-DimPlot(object = combined_data, reduction.use = "pca", group.by = "stim",  pt.size = 0.5, do.return = F)
+DimPlot(object = pbmc, reduction.use = "pca", group.by = "stim",  pt.size = 0.5, do.return = F)
 
 
 DIM=1:35
-pbmc <- AlignSubspace(combined_data, reduction.type = "pca", grouping.var = "stim",  dims.align = DIM)
+pbmc <- AlignSubspace(pbmc , reduction.type = "pca", grouping.var = "stim",  dims.align = DIM)
+DimPlot(object = pbmc, reduction.use = "pca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F)
 
 TSNE_DIM=1:35
-combined_data <- RunTSNE(combined_data, reduction.use = "pca.aligned", dims.use = TSNE_DIM, do.fast = T)
+pbmc  <- RunTSNE(pbmc , reduction.use = "pca.aligned", dims.use = TSNE_DIM, do.fast = T)
 
