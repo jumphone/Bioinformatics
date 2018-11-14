@@ -39,13 +39,15 @@ DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.siz
 dev.off()
 #save(pbmc,file='ALL_cca.RObj')
 
+DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F,dim.1=6,dim.2=7)
+DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F,dim.1=8,dim.2=9)
 
-TSNE_DIM=1:10
+TSNE_DIM=1:9
 pbmc  <- RunTSNE(pbmc , reduction.use = "cca.aligned", dims.use = TSNE_DIM, do.fast = T)
 
 
 
-TSNEPlot(object = pbmc, group.by = "stim")
-
+TSNEPlot(object = pbmc, group.by = "stim", pt.size=0.5)
+#save(pbmc,file='ALL_tSNE.RObj')
 
 
