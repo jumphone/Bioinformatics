@@ -27,21 +27,21 @@ wt@meta.data$stim <- "wt"
 wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(2500, 0.1))
 wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.factor = 10000)
 wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
-length(x=wt@var.genes) #6846
+length(x=wt@var.genes) #6977
 wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=wt@var.genes)
 
 
 case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.2)
-length(x=case@var.genes) #6877
+length(x=case@var.genes) #6851
 wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.2)
-length(x=wt@var.genes) #5530
+length(x=wt@var.genes) #5678
 
 g.1=case@var.genes
 g.2=wt@var.genes
 genes.use <- unique(c(g.1, g.2)) 
 genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
-length(genes.use) #3366
+length(genes.use) #3523
 
 
 rm(case.data)
