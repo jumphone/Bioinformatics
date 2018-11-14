@@ -24,13 +24,15 @@ stim[which(pbmc@meta.data$batch=='WT6')]='wt'
 pbmc@meta.data$stim=stim
 
 NUM=40
-pbmc <- RunCCA(pbmc, genes.use = pbmc@var.genes, num.cc = NUM)
+pbmc <- RunCCA(pbmc, group1=names() genes.use = pbmc@var.genes, num.cc = NUM)
 
 DimPlot(object = pbmc, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
 
+g1=rownames(pbmc@meta.data)[which(pbmc@meta.data$stim=='case')]
+g2=rownames(pbmc@meta.data)[which(pbmc@meta.data$stim=='wt')]
 
 DIM=1:35
-pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
+pbmc <- AlignSubspace(pbmc , group1=g1, group2=g2, reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
 DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F)
 
 TSNE_DIM=1:35
