@@ -24,24 +24,24 @@ wt <- AddMetaData(object = wt, metadata = percent.mito, col.name = "percent.mito
 wt <- AddMetaData(object = wt, metadata = wt@ident, col.name = "batch")
 VlnPlot(object = wt, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
 wt@meta.data$stim <- "wt"
-wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(2500, 0.1))
+wt=FilterCells(object = wt, subset.names = c("nGene", "percent.mito"), low.thresholds = c(500, -Inf), high.thresholds = c(3000, 0.1))
 wt <- NormalizeData(object = wt, normalization.method = "LogNormalize", scale.factor = 10000)
 wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
-length(x=wt@var.genes) #7044
+length(x=wt@var.genes) #6846
 wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=wt@var.genes)
 
 
-case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
-length(x=case@var.genes) #3721
-wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
-length(x=wt@var.genes) #3021
+case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.2)
+length(x=case@var.genes) #6877
+wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.2)
+length(x=wt@var.genes) #5530
 
 g.1=case@var.genes
 g.2=wt@var.genes
 genes.use <- unique(c(g.1, g.2)) 
 genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
-length(genes.use) #2272
+length(genes.use) #3366
 
 
 rm(case.data)
