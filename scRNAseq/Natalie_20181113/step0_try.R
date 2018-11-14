@@ -15,11 +15,19 @@ pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scal
 #save(pbmc,file='ALL_raw.RObj')
 
 pbmc <- FindVariableGenes(object = pbmc, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
-length(x=pbmc@var.genes) #10963
+length(x=pbmc@var.genes) #3787
 pbmc = ScaleData(object = pbmc,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=pbmc@var.genes)
+
+stim=rep('case',length(pbmc@meta.data$batch))
+stim[which(pbmc@meta.data$batch=='WT4to8')]='wt'
+stim[which(pbmc@meta.data$batch=='WT6')]='wt'
+pbmc@meta.data$stim=stim
 
 PCNUM=40
 pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.compute=PCNUM, pcs.print = 1:5,  genes.print = 5)
+
+DimPlot(object = combined_data, reduction.use = "pca", group.by = "stim",  pt.size = 0.5, do.return = F)
+
 
 DIM=1:35
 pbmc <- AlignSubspace(combined_data, reduction.type = "pca", grouping.var = "stim",  dims.align = DIM)
