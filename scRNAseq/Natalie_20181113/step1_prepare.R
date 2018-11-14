@@ -32,16 +32,16 @@ wt = ScaleData(object = wt,vars.to.regress = c("percent.mito", "nUMI", "batch"),
 
 
 case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
-length(x=case@var.genes) #3609
+length(x=case@var.genes) #3721
 wt <- FindVariableGenes(object = wt, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
-length(x=wt@var.genes) #2983
+length(x=wt@var.genes) #3021
 
 g.1=case@var.genes
 g.2=wt@var.genes
 genes.use <- unique(c(g.1, g.2)) 
 genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
-length(genes.use) #2087
+length(genes.use) #2272
 
 NUMCC=30
 combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = NUMCC)
