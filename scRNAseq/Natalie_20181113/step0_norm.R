@@ -37,11 +37,13 @@ pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dim
 pdf('tmp.pdf')
 DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F)
 dev.off()
+#save(pbmc,file='ALL_cca.RObj')
 
-TSNE_DIM=1:35
+
+TSNE_DIM=1:10
 pbmc  <- RunTSNE(pbmc , reduction.use = "cca.aligned", dims.use = TSNE_DIM, do.fast = T)
 
-#save(pbmc,file='ALL_tsne.RObj')
+
 
 TSNEPlot(object = pbmc, group.by = "stim")
 
