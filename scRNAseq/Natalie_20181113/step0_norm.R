@@ -46,8 +46,9 @@ TSNE_DIM=1:9
 pbmc  <- RunTSNE(pbmc , reduction.use = "cca.aligned", dims.use = TSNE_DIM, do.fast = T)
 
 
-
+pdf('TSNE.pdf',width=15,height=10)
 TSNEPlot(object = pbmc, group.by = "stim", pt.size=0.5)
+dev.off()
 #save(pbmc,file='ALL_tSNE.RObj')
 
 
