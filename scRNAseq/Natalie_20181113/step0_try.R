@@ -33,7 +33,7 @@ DimPlot(object = pbmc, reduction.use = "cca", group.by = "stim",  pt.size = 0.5,
 
 DIM=1:35
 #DIM=1:2
-pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dims.align = DIM, num.possible.genes=5000, num.genes=10)
+pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dims.align = DIM, num.possible.genes=5000, num.genes=5)
 DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F)
 
 TSNE_DIM=1:20
