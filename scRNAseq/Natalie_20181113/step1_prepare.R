@@ -14,7 +14,7 @@ case <- NormalizeData(object = case, normalization.method = "LogNormalize", scal
 case <- FindVariableGenes(object = case, do.plot = F, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.0)
 length(x=case@var.genes) #10787
 case = ScaleData(object = case,vars.to.regress = c("percent.mito", "nUMI", "batch"), genes.use=case@var.genes)
-rm(case.data)
+
 
 wt.data <- read.table('WT.txt',sep='\t',check.name=F,row.names=1,header=T)
 wt <- CreateSeuratObject(raw.data = wt.data, min.cells = 3, min.genes = 200, project = "Natalie")
@@ -43,6 +43,10 @@ genes.use <- intersect(genes.use, rownames(case@scale.data))
 genes.use <- intersect(genes.use, rownames(wt@scale.data))
 length(genes.use) #2272
 
+
+rm(case.data)
+rm(wt.data)
+
 NUMCC=30
 combined_data = RunCCA(case, wt, genes.use = genes.use, num.cc = NUMCC)
 pdf('CCA1.pdf') 
@@ -51,7 +55,9 @@ dev.off()
 
 DIM=1:30
 combined_data <- AlignSubspace(combined_data, reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
-combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = DIM, do.fast = T)
+
+TSNE_DIM=1:20
+combined_data <- RunTSNE(combined_data, reduction.use = "cca.aligned", dims.use = TSNE_DIM, do.fast = T)
 
 save(combined_data, file = "./combine.Robj")
 
