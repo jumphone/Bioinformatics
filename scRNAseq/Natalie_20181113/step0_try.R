@@ -32,11 +32,11 @@ pbmc <- RunCCA(pbmc, group1=g1, group2=g2,  genes.use = pbmc@var.genes, num.cc =
 DimPlot(object = pbmc, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
 
 DIM=1:35
-pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dims.align = DIM)
+pbmc <- AlignSubspace(pbmc , reduction.type = "cca", grouping.var = "stim",  dims.align = DIM, num.possible.genes=5000, num.genes=10)
 DimPlot(object = pbmc, reduction.use = "cca.aligned", group.by = "stim",  pt.size = 0.5, do.return = F)
 
-TSNE_DIM=1:35
-pbmc  <- RunTSNE(pbmc , reduction.use = "cca.aligned", dims.use = TSNE_DIM, do.fast = T)
+TSNE_DIM=1:20
+pbmc  <- RunTSNE(pbmc , reduction.use = "cca", dims.use = TSNE_DIM, do.fast = T)
 
 #save(pbmc,file='ALL_tsne.RObj')
 
