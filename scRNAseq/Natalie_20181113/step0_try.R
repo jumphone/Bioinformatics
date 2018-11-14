@@ -24,7 +24,7 @@ stim[which(pbmc@meta.data$batch=='WT6')]='wt'
 pbmc@meta.data$stim=stim
 
 NUM=40
-pbmc <- RunCCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, num.cc = NUM)
+pbmc <- RunCCA(pbmc, genes.use = pbmc@var.genes, num.cc = NUM)
 
 DimPlot(object = pbmc, reduction.use = "cca", group.by = "stim",  pt.size = 0.5, do.return = F)
 
