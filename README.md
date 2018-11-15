@@ -76,4 +76,4 @@ http://www.cistrome.org/
 
 https://deepcognition.ai/products/desktop/
 
-Name: https://www.nameacronym.net/
+Name: https://www.nameacronym.net/, https://acronymify.com/
