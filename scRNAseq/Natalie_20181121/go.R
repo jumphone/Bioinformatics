@@ -95,3 +95,4 @@ DoHeatmap(object = medullo, genes.use = medullo.top10$gene, slim.col.label = TRU
 DoHeatmap(object = nb6, genes.use = nb6.top10$gene, slim.col.label = TRUE, remove.key = TRUE)
 dev.off()
 
+save.image('done.RData')
