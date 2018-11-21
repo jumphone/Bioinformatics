@@ -48,16 +48,50 @@ GBM <- ScaleData(object = GBM, vars.to.regress = c("nUMI"))
 medullo <- ScaleData(object = medullo, vars.to.regress = c("nUMI"))
 nb6 <- ScaleData(object = nb6, vars.to.regress = c("nUMI"))
 
+PCNUM=20
+GBM <- RunPCA(object = GBM, pcs.compute=PCNUM, pc.genes = GBM@var.genes, do.print = TRUE, pcs.print = 1:5, 
+    genes.print = 5)
+medullo <- RunPCA(object = medullo, pcs.compute=PCNUM, pc.genes = medullo@var.genes, do.print = TRUE, pcs.print = 1:5, 
+    genes.print = 5)
+nb6 <- RunPCA(object = nb6, pcs.compute=PCNUM, pc.genes = nb6@var.genes, do.print = TRUE, pcs.print = 1:5, 
+    genes.print = 5)
 
+pdf('PCA.pdf')
+PCElbowPlot(object = GBM)
+PCElbowPlot(object = medullo)
+PCElbowPlot(object = nb6)
+dev.off()
 
+PCUSE=1:20
+GBM <- FindClusters(object = GBM, reduction.type = "pca", dims.use = PCUSE, 
+    resolution = 0.6, print.output = 0, save.SNN = TRUE)
+medullo <- FindClusters(object = medullo, reduction.type = "pca", dims.use = PCUSE, 
+    resolution = 0.6, print.output = 0, save.SNN = TRUE)
+nb6 <- FindClusters(object = nb6, reduction.type = "pca", dims.use = PCUSE, 
+    resolution = 0.6, print.output = 0, save.SNN = TRUE)
 
+GBM <- RunTSNE(object = GBM, dims.use = PCUSE, do.fast = TRUE)
+medullo  <- RunTSNE(object = medullo, dims.use = PCUSE, do.fast = TRUE)
+nb6 <- RunTSNE(object = nb6, dims.use = PCUSE, do.fast = TRUE)
 
+pdf('TSNE.pdf')
+TSNEPlot(object = GBM)
+TSNEPlot(object = medullo)
+TSNEPlot(object = nb6)
+dev.off()
 
+GBM.markers <- FindAllMarkers(object = GBM, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
+medullo.markers <- FindAllMarkers(object = medullo, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
+nb6.markers <- FindAllMarkers(object = nb6, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25)
 
+library(dplyr)
+GBM.top10 <- GBM.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+medullo.top10 <- medullo.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+nb6.top10 <- nb6.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
 
-
-
-
-
-
+pdf('HEAT.pdf',width=10,height=12)
+DoHeatmap(object = GBM, genes.use = GBM.top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+DoHeatmap(object = medullo, genes.use = medullo.top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+DoHeatmap(object = nb6, genes.use = nb6.top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+dev.off()
 
