@@ -12,3 +12,14 @@ medullo <- CreateSeuratObject(raw.data = medullo.data, min.cells = 3, min.genes 
 nb6.data=read.table('./nb6/nb6_out_gene_exon_tagged.dge.txt',header=T,row.names=1)
 nb6 <- CreateSeuratObject(raw.data = nb6.data, min.cells = 3, min.genes = 200, project = "nb6")
 
+##########################################
+rm(GBM.data)
+rm(medullo.data)
+rm(nb6.data)
+save.image('raw.RData')
+##########################################
+
+
+
+
+
