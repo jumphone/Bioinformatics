@@ -3,13 +3,13 @@ library(circlize)
 
 circos.initializeWithIdeogram(species='mm10')
 UPLIMIT=8
-
+LWLIMIT=-2
 ##############
 bed = read.table('NSC3.BedGraph.bed',sep='\t')
 bed[,4][which(bed[,4]>UPLIMIT)]=UPLIMIT
 colnames(bed)=c('chr','start','end','value1','value2')
 
-circos.genomicTrackPlotRegion(bed, ylim = c(0, UPLIMIT), panel.fun = function(region, value, ...) {
+circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = function(region, value, ...) {
     #print(value[,2])
     
    col = rep('grey50',length(value[,2]))
@@ -26,7 +26,7 @@ bed = read.table('NSC4.BedGraph.bed',sep='\t')
 bed[,4][which(bed[,4]>UPLIMIT)]=UPLIMIT
 colnames(bed)=c('chr','start','end','value1','value2')
 
-circos.genomicTrackPlotRegion(bed, ylim = c(0, UPLIMIT), panel.fun = function(region, value, ...) {
+circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = function(region, value, ...) {
     #print(value[,2])
     
    col = rep('grey50',length(value[,2]))
@@ -43,7 +43,7 @@ bed = read.table('NSC7.BedGraph.bed',sep='\t')
 bed[,4][which(bed[,4]>UPLIMIT)]=UPLIMIT
 colnames(bed)=c('chr','start','end','value1','value2')
 
-circos.genomicTrackPlotRegion(bed, ylim = c(0, UPLIMIT), panel.fun = function(region, value, ...) {
+circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = function(region, value, ...) {
     #print(value[,2])
     
    col = rep('grey50',length(value[,2]))
