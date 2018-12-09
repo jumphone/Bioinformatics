@@ -72,6 +72,10 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
 dev.off()
 
 
+######################
+
+BW=0.2
+
 ########################################################
 pdf('CNV_3.pdf',width=7,height=7)
 
@@ -98,7 +102,7 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
    circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
    
-}, track.height = 0.3)
+}, track.height = BW)
 dev.off()
 ########################################################
 
@@ -130,7 +134,7 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
    circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
    
-}, track.height = 0.3)
+}, track.height = BW)
 dev.off()
 ########################################################
 
@@ -161,7 +165,7 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
    circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
    
-}, track.height = 0.3)
+}, track.height = BW)
 dev.off()
 ########################################################
 
