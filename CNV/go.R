@@ -6,6 +6,7 @@ pdf('CNV.pdf',width=14,height=14)
 circos.initializeWithIdeogram(species='mm10')
 UPLIMIT=8
 LWLIMIT=-2
+CEX=1
 ##############
 bed = read.table('NSC3.BedGraph.bed',sep='\t')
 bed[,4][which(bed[,4]>UPLIMIT)]=UPLIMIT
@@ -18,7 +19,7 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    col[which(value[,2]==1)]='red'
    col[which(value[,2]==-1)]='blue'
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
-   circos.genomicPoints(region, value[,1],col = col, cex = 0.1, pch = 16)
+   circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
     
 }, track.height = 0.1)
 
@@ -35,7 +36,7 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    col[which(value[,2]==1)]='red'
    col[which(value[,2]==-1)]='blue'
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
-   circos.genomicPoints(region, value[,1],col = col, cex = 0.1, pch = 16)
+   circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
     
 }, track.height = 0.1)
 
@@ -52,7 +53,7 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    col[which(value[,2]==1)]='red'
    col[which(value[,2]==-1)]='blue'
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
-   circos.genomicPoints(region, value[,1],col = col, cex = 0.1, pch = 16)
+   circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
     
 }, track.height = 0.1)
 
