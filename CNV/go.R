@@ -1,6 +1,8 @@
 
 library(circlize)
 
+pdf('CNV.pdf',width=14,height=14)
+
 circos.initializeWithIdeogram(species='mm10')
 UPLIMIT=8
 LWLIMIT=-2
@@ -54,3 +56,5 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
     
 }, track.height = 0.1)
 
+
+dev.off()
