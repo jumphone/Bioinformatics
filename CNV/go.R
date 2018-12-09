@@ -1,12 +1,14 @@
 
 library(circlize)
 
-pdf('CNV.pdf',width=14,height=14)
+pdf('CNV.pdf',width=7,height=7)
 
 circos.initializeWithIdeogram(species='mm10')
 UPLIMIT=8
 LWLIMIT=-2
-CEX=1
+CEX=0.3
+BCOL='grey50'
+H=2
 ##############
 bed = read.table('NSC3.BedGraph.bed',sep='\t')
 bed[,4][which(bed[,4]>UPLIMIT)]=UPLIMIT
@@ -20,6 +22,9 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    col[which(value[,2]==-1)]='blue'
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
    circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
+   h=H
+   cell.xlim = get.cell.meta.data("cell.xlim")
+   circos.lines(cell.xlim, c(h, h), col = BCOL)
     
 }, track.height = 0.1)
 
@@ -37,6 +42,9 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    col[which(value[,2]==-1)]='blue'
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
    circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
+     h=H
+   cell.xlim = get.cell.meta.data("cell.xlim")
+   circos.lines(cell.xlim, c(h, h), col = BCOL)
     
 }, track.height = 0.1)
 
@@ -54,6 +62,9 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    col[which(value[,2]==-1)]='blue'
     #circos.genomicPoints(region, value, col = col, cex = 0.5, pch = 16)
    circos.genomicPoints(region, value[,1],col = col, cex = CEX, pch = 16)
+     h=H
+   cell.xlim = get.cell.meta.data("cell.xlim")
+   circos.lines(cell.xlim, c(h, h), col = BCOL)
     
 }, track.height = 0.1)
 
