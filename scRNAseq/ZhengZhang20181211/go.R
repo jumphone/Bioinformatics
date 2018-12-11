@@ -20,18 +20,19 @@ pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"),
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", 
     scale.factor = 10000)
 
-#pbmc <- FindVariableGenes(object = pbmc,mean.function = ExpMean, dispersion.function = LogVMR, 
-#    x.low.cutoff = 0.0125, x.high.cutoff = 1, y.cutoff = 0.1)
-#length(x = pbmc@var.genes)
+pbmc <- FindVariableGenes(object = pbmc,mean.function = ExpMean, dispersion.function = LogVMR, 
+    x.low.cutoff = 0.0125, x.high.cutoff = 1, y.cutoff = 0.1)
+length(x = pbmc@var.genes)
 
-all.genes=rownames(pbmc@raw.data)
+#all.genes=rownames(pbmc@raw.data)
 
 pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI", "percent.mito"))
 
 PCNUM=50
-pbmc <- RunPCA(object = pbmc, pc.genes = all.genes,pcs.compute = PCNUM, do.print = F, pcs.print = 1:5, 
+#pbmc <- RunPCA(object = pbmc, pc.genes = all.genes,pcs.compute = PCNUM, do.print = F, pcs.print = 1:5, 
+#    genes.print = 5)
+pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes,pcs.compute = PCNUM, do.print = F, pcs.print = 1:5, 
     genes.print = 5)
-
 pdf('WT_PCA.pdf')
 PCElbowPlot(object = pbmc)
 dev.off()
@@ -44,12 +45,12 @@ pdf('WT_TSNE.pdf')
 TSNEPlot(object = pbmc,pt.size=0.5)
 dev.off()
 
-saveRDS(pbmc,file='WT.RDS')
 
+#saveRDS(pbmc,file='WT.RDS')
 #######################
 
 
-pbmc=readRDS('WT.RDS')
+#pbmc=readRDS('WT.RDS')
 
 ##
 
@@ -76,35 +77,28 @@ for(one in tmp){REF_TAG=c(REF_TAG, one[1])}
 NewRef=.generate_ref(exp_ref_mat, cbind(REF_TAG,REF_TAG), min_cell=1) 
 out=SCREF(exp_sc_mat, NewRef)
 pbmc@meta.data$MCASmallIntest=out$tag2[,2]
+
+pdf('WT_MCASmallIntest.pdf',width=14,height=10)
 TSNEPlot(object = pbmc, do.label=T, group.by ='MCASmallIntest', pt.size = 0.5)
+dev.off()
 
 
-exp_ref_mat=read.table('MCA_FetalIntestine_ref_mouse.txt',header=T,row.names=1,sep='\t')
+
+
+exp_ref_mat=read.table('TM_Large_Intestine_ref_mouse.txt',header=T,row.names=1,sep='\t')
 REF_TAG=colnames(exp_ref_mat)
 tmp=strsplit(REF_TAG, "_")
 REF_TAG=c()
-for(one in tmp){REF_TAG=c(REF_TAG, one[1])}
+for(one in tmp){REF_TAG=c(REF_TAG, one[3])}
 NewRef=.generate_ref(exp_ref_mat, cbind(REF_TAG,REF_TAG), min_cell=1) 
 out=SCREF(exp_sc_mat, NewRef)
-pbmc@meta.data$MCAFetalIntest=out$tag2[,2]
-TSNEPlot(object = pbmc, do.label=T, group.by ='MCAFetalIntest', pt.size = 0.5)
+pbmc@meta.data$TMLargeIntest=out$tag2[,2]
+
+pdf('WT_TMLargeIntest.pdf',width=14,height=10)
+TSNEPlot(object = pbmc, do.label=T, group.by ='TMLargeIntest', pt.size = 0.5)
+dev.off()
 
 
-
-
-
-
-
-exp_ref_mat=read.table('MCA_INTEST.txt',header=T,row.names=1,sep='\t')
-REF_TAG=colnames(exp_ref_mat)
-tmp=strsplit(REF_TAG, "_")
-REF_TAG=c()
-for(one in tmp){REF_TAG=c(REF_TAG, one[1])}
-NewRef=.generate_ref(exp_ref_mat, cbind(REF_TAG,REF_TAG), min_cell=1) 
-out=SCREF(exp_sc_mat, NewRef)
-pbmc@meta.data$MCAIntest=out$tag2[,2]
-TSNEPlot(object = pbmc, do.label=T, group.by ='MCAIntest', pt.size = 0.5)
-
-
+saveRDS(pbmc,file='WT.RDS')
 
 
