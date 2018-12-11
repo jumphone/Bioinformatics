@@ -96,3 +96,23 @@ DoHeatmap(object = nb6, genes.use = nb6.top10$gene, slim.col.label = TRUE, remov
 dev.off()
 
 save.image('done.RData')
+
+
+source('scRef.R')
+pbmc=GBM
+COL=c()
+i=1
+while(i <=length(pbmc@ident)){
+    this_col=which(colnames(pbmc@raw.data)==names(pbmc@ident)[i])
+    COL=c(COL,this_col)
+    i=i+1
+    }      
+exp_sc_mat=as.matrix(pbmc@raw.data)[,COL]
+
+exp_ref_mat=read.table('GBM_PMID_28697342_human_ref.txt',header=T,row.names=1,sep='\t')
+tag=SCREF(exp_sc_mat, exp_ref_mat)$tag2
+pbmc@meta.data$scref=tag[,2]
+pdf('GBM_CLASS.pdf')
+TSNEPlot(object = pbmc, do.label=T, label.size=2.2, group.by ='scref')
+TSNEPlot(object = pbmc, do.label=T, label.size=2.2)
+dev.off()
