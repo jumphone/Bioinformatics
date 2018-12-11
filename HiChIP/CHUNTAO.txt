@@ -1,0 +1,19 @@
+1D Peaks
+The 1D peaks were called using software MACS2, and q-value cut-off was set to 0.05
+
+Notes for 2D loops
+ loops were called by 2 methods, FitHiC and LiMACC, on 5kb-resolution HiChIP data
+
+
+FitHiC is a published algorithm for calling significant loops for HiC data; LiMACC was our under development algorithm
+
+
+FDR cut-off 0.05 was used for both methods.
+.WashU files are interactions in the format for WashU genome browser
+
+About snapshot plot
+
+
+A region of chr1: 150Mb-160Mb was plot at 50kb resolution to show a quick view of the data; the upper diagonal was the HiChIP data of olig2 (noted as control) and the lower diagonal was of H3K27Ac (noted as observed); visualization was done using software Juicebox
+
+.hic files are inputs for Juicebox
