@@ -79,3 +79,6 @@ https://deepcognition.ai/products/desktop/
 Name: https://www.nameacronym.net/, https://acronymify.com/
 
 https://blog.csdn.net/kmd8d5r/article/details/80879161
+
+
+ccRemover: https://cran.r-project.org/web/packages/ccRemover/vignettes/ccRemover_tutorial.html
