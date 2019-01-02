@@ -1,25 +1,29 @@
+#https://cran.r-project.org/web/packages/ccRemover/vignettes/ccRemover_tutorial.html
+
 library(Seurat)
+library(ccRemover)
 
-exp_data=read.table('5000_run1663_normalized.txt.rmdup',header=T,row.names=1)
+exp_data=read.table('5000_run1663_normalized.txt.rmdup',header=T,row.names=1,sep='\t')
+
+#### ccRemover #############
+mean_gene_exp <- rowMeans(exp_data)
+exp_data_cen <- exp_data - mean_gene_exp 
+gene_names <- rownames(exp_data_cen)
+cell_cycle_gene_indices <- gene_indexer(gene_names, species = "mouse", name_type = "symbols" )
+length(cell_cycle_gene_indices)
+#1377
+if_cc <- rep(FALSE,nrow(exp_data_cen)) 
+if_cc[cell_cycle_gene_indices] <- TRUE
+summary(if_cc)
+dat <- list(x=exp_data_cen, if_cc=if_cc)
+xhat <- ccRemover(dat, bar=FALSE)
+xhat <- xhat + mean_gene_exp
+############################
+
+#EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 0, min.genes=0)
+EXP = CreateSeuratObject(raw.data = xhat, min.cells = 0, min.genes=0)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 3, min.genes=200)
-EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 0, min.genes=0)
 
 mito.genes <- grep(pattern = "^mt-", x = rownames(x = EXP@data), value = TRUE)
 percent.mito <- colSums(EXP@data[mito.genes, ]) / colSums(EXP@data)
