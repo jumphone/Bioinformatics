@@ -23,8 +23,6 @@ xhat <- xhat + mean_gene_exp
 #EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 0, min.genes=0)
 EXP = CreateSeuratObject(raw.data = xhat, min.cells = 0, min.genes=0)
 
-
-
 mito.genes <- grep(pattern = "^mt-", x = rownames(x = EXP@data), value = TRUE)
 percent.mito <- colSums(EXP@data[mito.genes, ]) / colSums(EXP@data)
 EXP <- AddMetaData(object = EXP, metadata = percent.mito, col.name = "percent.mito")
