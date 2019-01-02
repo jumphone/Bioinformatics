@@ -1,27 +1,12 @@
 #https://cran.r-project.org/web/packages/ccRemover/vignettes/ccRemover_tutorial.html
 
 library(Seurat)
-library(ccRemover)
+
 
 exp_data=read.table('5000_run1663_normalized.txt.rmdup',header=T,row.names=1,sep='\t')
 
-#### ccRemover #############
-mean_gene_exp <- rowMeans(exp_data)
-exp_data_cen <- exp_data - mean_gene_exp 
-gene_names <- rownames(exp_data_cen)
-cell_cycle_gene_indices <- gene_indexer(gene_names, species = "mouse", name_type = "symbols" )
-length(cell_cycle_gene_indices)
-#1377
-if_cc <- rep(FALSE,nrow(exp_data_cen)) 
-if_cc[cell_cycle_gene_indices] <- TRUE
-summary(if_cc)
-dat <- list(x=exp_data_cen, if_cc=if_cc)
-xhat <- ccRemover(dat, bar=FALSE)
-xhat <- xhat + mean_gene_exp
-############################
-
-#EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 0, min.genes=0)
-EXP = CreateSeuratObject(raw.data = xhat, min.cells = 0, min.genes=0)
+EXP = CreateSeuratObject(raw.data = exp_data, min.cells = 0, min.genes=0)
+#EXP = CreateSeuratObject(raw.data = xhat, min.cells = 0, min.genes=0)
 
 mito.genes <- grep(pattern = "^mt-", x = rownames(x = EXP@data), value = TRUE)
 percent.mito <- colSums(EXP@data[mito.genes, ]) / colSums(EXP@data)
@@ -45,6 +30,7 @@ pdf('Seurat_VarGene.pdf')
 EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
 #EXP <- FindVariableGenes(object = EXP, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff =0, y.cutoff = 0.5)
 dev.off()
+
 
 length(x=EXP@var.genes)
 
@@ -75,9 +61,33 @@ length(x=EXP@var.genes)
 
 #Stem_gene=c('Prom1','Nes','Egfr','Cd15','Slc1a3','Sox2','Fabp7','Nr2e1','Id3','Clu','Sox9','Vcam1','Slc1a2','Id2','Sox11','Apoe','Tbr2','Ntsr2')
 
+#### ccRemover #############
+library(Seurat)
+library(ccRemover)
+var_exp_data=as.matrix(EXP@data[which(rownames(EXP@data) %in% EXP@var.genes),])
+mean_gene_exp <- rowMeans(var_exp_data)
+exp_data_cen <- var_exp_data - mean_gene_exp 
+gene_names <- rownames(exp_data_cen)
+cell_cycle_gene_indices <- gene_indexer(gene_names, species = "mouse", name_type = "symbols" )
+length(cell_cycle_gene_indices)
+#1377
+if_cc <- rep(FALSE,nrow(exp_data_cen)) 
+if_cc[cell_cycle_gene_indices] <- TRUE
+summary(if_cc)
+exp_data_cen=as.matrix(exp_data_cen)
+dat <- list(x=exp_data_cen, if_cc=if_cc)
+xhat <- ccRemover(dat, bar=FALSE)
+xhat <- xhat + mean_gene_exp
+EXP@data[which(rownames(EXP@data) %in% EXP@var.genes),]=xhat
+############################
+
+
 EXP = ScaleData(object = EXP,vars.to.regress = c("percent.mito", "nUMI"), genes.use = EXP@var.genes)
 
 #EXP = ScaleData(object = EXP,genes.use = EXP@var.genes)
+
+
+
 
 PCNUM=40
 EXP <- RunPCA(object = EXP, pc.genes = EXP@var.genes, do.print = TRUE, pcs.print = 1:5,    genes.print = 5, pcs.compute=PCNUM, maxit = 500, weight.by.var = FALSE )
