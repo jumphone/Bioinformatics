@@ -13,6 +13,8 @@ GenePlot(object = pbmc, gene1 = "nUMI", gene2 = "nGene")
 pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), low.thresholds = c(200, -Inf), high.thresholds = c(5000, 0.05)) 
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR,   x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+#pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI", "percent.mito"))
+pbmc <- ScaleData(object = pbmc,genes.use = pbmc@var.genes)
 length(x = pbmc@var.genes)
 
 EXP=pbmc
@@ -53,8 +55,6 @@ EXP@scale.data=pbmc@scale.data
 
 pbmc = EXP
 
-
-pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI", "percent.mito"))
 pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, pcs.compute=100, genes.print = 5)
 PrintPCA(object = pbmc, pcs.print = 1:5, genes.print = 5, use.full = FALSE)
 PCElbowPlot(object = pbmc)
