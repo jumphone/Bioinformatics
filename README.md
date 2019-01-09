@@ -2,6 +2,8 @@
 
 XenaBrowser: https://xenabrowser.net/datapages/
 
+TCGA ATAC: https://gdc.cancer.gov/about-data/publications/ATACseq-AWG
+
 Enrichr: http://amp.pharm.mssm.edu/Enrichr/
 
 The Human Protein Atlas: https://www.proteinatlas.org/
