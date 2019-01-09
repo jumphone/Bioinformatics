@@ -22,4 +22,110 @@ PCElbowPlot(object = pbmc)
 PCUSE=1:15
 pbmc <- RunTSNE(object = pbmc, perplexity=5, dims.use = PCUSE, do.fast = TRUE)
 
-TSNEPlot(object = pbmc,group.by='tag')
+TSNEPlot(object = pbmc,group.by='tag',pt.size=4)
+PCAPlot(object = pbmc,group.by='tag',pt.size=4)
+save.image(file='F1.RData')
+
+################################
+
+SURTAG=read.table('SURTAG.txt',sep='\t',header=F)
+
+PC1=pbmc@dr$pca@cell.embeddings[,1]
+PC1_GENE=pbmc@dr$pca@gene.loadings[,1]
+GBM=which(TAG=='GBMx')
+LGG=which(TAG=='LGGx')
+
+
+D=which(SURTAG[,1]==1)
+TAG_D=TAG[D]
+COL=rep('red',length(D))
+COL[which(TAG_D=='GBMx')]='indianred3'
+COL[which(TAG_D=='LGGx')]='green3'
+
+used=which(!is.na(SURTAG[,1]))
+TAG_U=TAG[used]
+COL_U=rep('red',length(used))
+COL_U[which(TAG_U=='GBMx')]='indianred3'
+COL_U[which(TAG_U=='LGGx')]='green3'
+
+par(mfrow=c(1,2))
+plot(PC1[D],SURTAG[D,2],pch=16,col=COL, xlab='PC1',ylab='OS (days)', cex=1.5)
+plot(PC1[used],SURTAG[used,2],pch=16,col=COL_U, xlab='PC1',ylab='OS (days)', cex=1.5)
+
+
+cor.test(PC1[D],SURTAG[D,2],method='spearman')
+
+
+
+library(survival)
+library(survminer)
+a=read.table('SUR.txt',header=T,sep='\t')
+used=used
+score=PC1[used]
+SUR=SURTAG[used,2]
+SURE=SURTAG[used,1]
+
+TYPE=rep('MED',length(used))
+TYPE[which(score> quantile(score,0.5) )]='High'
+TYPE[which(score<= quantile(score,0.5) )]='Low'
+surtime=SUR[which(TYPE!='MED')]
+surevent=SURE[(which(TYPE!='MED'))]
+surtype=TYPE[which(TYPE!='MED')]
+surtype=as.data.frame(surtype)
+surv_object <- Surv(time = surtime, event = surevent)
+fit <- survfit(surv_object ~ surtype, data=surtype)
+ggsurvplot(fit, pval = TRUE)
+surv_pvalue(fit)
+
+plot(PC1[used],SURTAG[used,2],pch=16,col=COL_U, xlab='PC1',ylab='OS (days)', cex=1.5)
+abline(v=quantile(score,0.5),col='red',lwd=1.5)
+
+#############
+
+
+#PrintPCA(object = pbmc, pcs.print = 1:1, genes.print = 10, use.full = FALSE)
+PC1_PEAK_LOADING=pbmc@dr$pca@gene.loadings[,1]
+PC2_PEAK_LOADING=pbmc@dr$pca@gene.loadings[,2]
+PC3_PEAK_LOADING=pbmc@dr$pca@gene.loadings[,3]
+PC4_PEAK_LOADING=pbmc@dr$pca@gene.loadings[,4]
+HC= 0.002
+LC= -0.002
+
+
+par(mfrow=c(2,2))
+
+plot(density(PC1_PEAK_LOADING))
+abline(v=HC,col='red',lwd=1.5)
+abline(v=LC,col='blue',lwd=1.5)
+
+plot(density(PC2_PEAK_LOADING))
+plot(density(PC3_PEAK_LOADING))
+plot(density(PC4_PEAK_LOADING))
+
+PC1_POS=PC1_GENE[which(PC1_GENE >HC)]
+PC1_NEG=PC1_GENE[which(PC1_GENE <LC)]
+
+PC1_POS_N=names(PC1_POS)
+
+tmp=strsplit(PC1_POS_N, "_")
+PC1_POS_N_S=c()
+for(one in tmp){
+    PC1_POS_N_S = cbind(PC1_POS_N_S, one)
+           }
+PC1_POS_OUT=cbind(t(PC1_POS_N_S),PC1_POS)
+
+
+
+PC1_NEG_N=names(PC1_NEG)
+tmp=strsplit(PC1_NEG_N, "_")
+PC1_NEG_N_S=c()
+for(one in tmp){
+    PC1_NEG_N_S = cbind(PC1_NEG_N_S, one)
+           }
+PC1_NEG_OUT=cbind(t(PC1_NEG_N_S),PC1_NEG)
+
+
+
+
+
+
