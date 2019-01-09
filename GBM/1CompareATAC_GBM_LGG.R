@@ -137,8 +137,10 @@ PC1_POS_OUT=read.delim('PC1_POS_OUT.txt',sep='\t',header=T)
 PC1_NEG_OUT=read.delim('PC1_NEG_OUT.txt',sep='\t',header=T)
 
 
-rawbed = PC1_POS_OUT 
-pc1_loading_scale=as.numeric(rawbed[,9])
+rawbed = t(cbind(t(PC1_POS_OUT),t(PC1_NEG_OUT))) 
+pc1_loading_scale= rep(2,nrow(rawbed))
+pc1_loading_scale[which(as.numeric(rawbed[,9])<0)]= -2
+#scale(as.numeric(rawbed[,9]))[,1]
 bed=rawbed[,1:4]
 colnames(bed)=c('chr','start','end','value')
 bed=as.data.frame(bed)
@@ -166,8 +168,14 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    COL = rep('grey50',length(value[,1]))
    COL[which(value[,1]>0)]='red'
    COL[which(value[,1]<0)]='blue'
-   circos.genomicPoints(region,type='h',col=COL, value[,1], cex = CEX, pch = 16)
+   #circos.genomicPoints(region, type='h',col=COL, value[,1], cex = CEX, pch = 16)
+   X=region[,1]
+   Y=value[,1]
+   print(length(X))
+   print(length(Y))
+   circos.lines(x=X, type='h',col=COL, y=Y,baseline=0)
+   
    #print(region)
    #circos.rect(region[1], 0, region[2], 0.5, col = 'red')
-}, track.height = 0.1)
+}, track.height = 0.2)
 
