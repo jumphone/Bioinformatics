@@ -179,3 +179,15 @@ circos.genomicTrackPlotRegion(bed, ylim = c(LWLIMIT, UPLIMIT), panel.fun = funct
    #circos.rect(region[1], 0, region[2], 0.5, col = 'red')
 }, track.height = 0.2)
 
+
+
+table(PC1_POS_OUT[,7])
+table(PC1_NEG_OUT[,7])
+
+
+par(mfrow=c(1,2))
+pie(table(PC1_POS_OUT[,7]))
+pie(table(PC1_NEG_OUT[,7]))
+
+
+
