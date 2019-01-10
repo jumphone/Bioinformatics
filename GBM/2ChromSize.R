@@ -21,5 +21,5 @@ X='ChromRelativeLocation'
 hist(pc1_pos_loc[,2],breaks=B,density=D, xlab=X,xlim=c(0,1), main='PC1_POS_PEAK')
 hist(pc1_neg_loc[,2],breaks=B,density=D, xlab=X,xlim=c(0,1), main='PC1_NEG_PEAK')
 
-
+ks.test(pc1_pos_loc[,2],pc1_neg_loc[,2])
 
