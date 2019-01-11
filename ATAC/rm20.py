@@ -1,4 +1,4 @@
-fi=open('ALL_PEAK.sorted.merged.named.bed.p5pdRPKM.txt')
+fi=open('ALL_PEAK.sorted.merged.named.bed.kowtRPKM.txt')
 S=[]
 for line in fi:
     seq=line.rstrip().split('\t')
