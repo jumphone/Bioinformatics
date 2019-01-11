@@ -1,14 +1,16 @@
-KO=P5-50K-jincheng.rmdup.bam
-WT=PDGFRa-GFP-50K-E14.5-jincheng.rmdup.bam
+KO=
+WT=
 
-cat *_peaks.* > ALL_PEAK.bed
+/usr/bin/macs2 callpeak -t  $WT $KO -n ./POOL -B -f BAM --shift -75 --extsize 150 --nomodel --call-summits --nolambda --keep-dup all -p 0.01 -g mm
+
+pythonks.* > ALL_PEAK.bed
 bedtools sort -i ALL_PEAK.bed > ALL_PEAK.sorted.bed
 bedtools merge -i ALL_PEAK.sorted.bed > ALL_PEAK.sorted.merged.bed
 samtools stats $KO > $KO\.stats
-samtools stats $WT > $WT\.stats 
+samtools stats $WT > $WT\.stats
 python addname.py
-bedtools coverage -abam $KO -b ALL_PEAK.sorted.merged.named.bed > $KO\.ALLPEAK 
-bedtools coverage -abam $WT -b ALL_PEAK.sorted.merged.named.bed > $WT\.ALLPEAK 
-python combine_peak_RPKM.py
+bedtools coverage -abam $KO -b ALL_PEAK.sorted.merged.named.bed > $KO\.ALLPEAK
+bedtools coverage -abam $WT -b ALL_PEAK.sorted.merged.named.bed > $WT\.ALLPEAK
+python combine_peak_RPKM.py $KO\.ALLPEAK $WT\.ALLPEAK
 python rm20.py
-
+python getgene.py
