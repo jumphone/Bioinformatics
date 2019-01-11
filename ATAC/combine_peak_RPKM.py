@@ -1,6 +1,6 @@
 import sys
-P5=sys.argv[1]#'P5-50K-jincheng.rmdup.bam.ALLPEAK'
-PD=sys.argv[2]#'PDGFRa-GFP-50K-E14.5-jincheng.rmdup.bam.ALLPEAK'
+P5=sys.argv[1] #KO
+PD=sys.argv[2] #WT
 
 P5_reads_in_peaks=0
 PD_reads_in_peaks=0
