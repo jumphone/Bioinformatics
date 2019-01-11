@@ -1,6 +1,6 @@
 import sys
-P5={}
-E14={}
+P5={} #KO
+E14={} #WT
 DISTANCE=5000
 fi=open('ANALYZED_RPKM.txt')
 for line in fi:
