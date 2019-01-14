@@ -56,4 +56,15 @@ H=hclust(D)
 C=cutree(H, k=4) 
 pbmc@meta.data$C=C
 TSNEPlot(object = pbmc,pt.size=3 , do.label=T, group.by ='C')
+save.image('PBTR_Seurat.Robj')
+
+########
+
+HEATDATA=t(table(pbmc@meta.data$C,names(pbmc@ident)))
+library(gplots)
+heatmap.2(HEATDATA,,scale=c("none"),dendrogram='none',Colv=T,trace='none',col=colorRampPalette(c('grey95','indianred')) ,margins=c(10,10))
+library(dplyr)
+
+
+
 
