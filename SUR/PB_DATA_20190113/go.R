@@ -6,6 +6,11 @@ library(survminer)
 
 score=SUR[used,2]
 this_sur=SUR[used,3]
+
+plot(this_sur,score, xlab='OS (month)', ylab='Reponse Rate (%)', pch=16)
+abline(h=0,col='red')
+cor.test(this_sur, score, method='spearman')
+
 highcut=0
 lowcut=0
 
@@ -20,3 +25,7 @@ surv_object <- Surv(time = surtime, event = surevent)
 fit <- survfit(surv_object ~ surtype, data=surtype)
 ggsurvplot(fit, pval = TRUE)
 surv_pvalue(fit)
+
+
+
+####################################
