@@ -94,5 +94,42 @@ fit <- survfit(surv_object ~ surtype, data=surtype)
 ggsurvplot(fit, pval = TRUE)
 surv_pvalue(fit)
 
+used1=which(SUR[used,5]==1)
+used2=which(SUR[used,5]==2)
+used3=which(SUR[used,5]==3)
+used4=which(SUR[used,5]==4)
+t.test(SUR[used,2][used2],SUR[used,2][used4])
+
+
+###########
+
+
+pbmc@meta.data$newC= pbmc@meta.data$C
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Normal_PBTR.0010')]=10
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Tumor_PBTR.0010')]=10
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Normal_PBTR.0050')]=50
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Tumor_PBTR.0050')]=50
+
+
+tmp=pbmc@ident
+pbmc@ident=as.factor(pbmc@meta.data$newC)
+names(pbmc@ident)=names(tmp)
+
+#cluster2.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, 
+#    test.use = "wilcox", only.pos = TRUE)
+#write.table(cluster2.markers,file='C2_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
+pbmc.markers <- FindAllMarkers(object = pbmc,test.use = "wilcox", only.pos = TRUE, min.pct = 0, thresh.use = 0.1)
+
+write.table(pbmc.markers,file='ALL_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
+
+library(dplyr)
+top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+
+DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+this_used=which(!pbmc@meta.data$newC %in% c(10,50))
+boxplot(pbmc@meta.data$nMut[this_used]~ pbmc@meta.data$newC[this_used])
+
+
+
 
 
