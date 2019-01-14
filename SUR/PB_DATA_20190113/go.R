@@ -65,6 +65,34 @@ library(gplots)
 heatmap.2(HEATDATA,,scale=c("none"),dendrogram='none',Colv=T,trace='none',col=colorRampPalette(c('grey95','indianred')) ,margins=c(10,10))
 library(dplyr)
 
+used=which(!is.na(SUR[,5]))
+boxplot(SUR[used,3],pch=16,ylab='OS (month)')$out
+SUR[which(SUR[,3]==32),1]
+SUR[which(SUR[,3]==82),1]
+
+
+used=which((!is.na(SUR[,5])) & (!SUR[,3] %in% c(32,82) ))
+SUR=read.table('SUR.txt',header=T)
+boxplot(SUR[used,3]~SUR[used,5],pch=16,ylab='OS (month)')
+
+
+
+
+library(survival)
+library(survminer)
+
+TYPE=SUR[used,5]
+this_sur=SUR[used,3]
+
+tmp=which(TYPE %in% c(1,2,3,4))
+surtime=this_sur[tmp]
+surevent=rep(1,length(tmp))
+surtype=TYPE[tmp]
+surtype=as.data.frame(surtype)
+surv_object <- Surv(time = surtime, event = surevent)
+fit <- survfit(surv_object ~ surtype, data=surtype)
+ggsurvplot(fit, pval = TRUE)
+surv_pvalue(fit)
 
 
 
