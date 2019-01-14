@@ -132,9 +132,22 @@ c2_used=which(pbmc@meta.data$newC==2)
 
 #c2v_mat=pbmc@raw.data[which(rownames(pbmc@raw.data) %in% pbmc@var.genes),c2_used]
 c2v_mat=pbmc@raw.data[,c2_used]
+
 c2v_mat_bin=as.matrix(c2v_mat)
 c2v_mat_bin[which(c2v_mat_bin>0)]=1
 c2v_mat_bin_num=apply(c2v_mat_bin,1,sum)
-c2v_out=c2v_mat_bin_num[which(c2v_mat_bin_num>=2)]
+
+
+co_used=which(!pbmc@meta.data$newC %in% c(2,10,50))
+cov_mat=pbmc@raw.data[,co_used]
+cov_mat_bin=as.matrix(cov_mat)
+cov_mat_bin[which(cov_mat_bin>0)]=1
+cov_mat_bin_num=apply(cov_mat_bin,1,sum)
+
+
+c2v_out=c2v_mat_bin_num[which(c2v_mat_bin_num>=2 & cov_mat_bin_num==0)]
+
+which(rownames(c2v_mat)=='chr17.7578211.7578212.G>A')
+
 
 write.table(c2v_out,file='C2V.txt',sep='\t',quote=F,row.names=T,col.names=F)
