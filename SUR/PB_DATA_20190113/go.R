@@ -118,18 +118,23 @@ names(pbmc@ident)=names(tmp)
 #cluster2.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, 
 #    test.use = "wilcox", only.pos = TRUE)
 #write.table(cluster2.markers,file='C2_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
-pbmc.markers <- FindAllMarkers(object = pbmc,test.use = "wilcox", only.pos = TRUE, min.pct = 0, thresh.use = 0.1)
+#pbmc.markers <- FindAllMarkers(object = pbmc,test.use = "bimod", only.pos = TRUE, min.pct = 0, thresh.use = 0.1)
 
-write.table(pbmc.markers,file='ALL_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
+#write.table(pbmc.markers,file='ALL_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
+#library(dplyr)
+#top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
 
-library(dplyr)
-top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
-
-DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+#DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
 this_used=which(!pbmc@meta.data$newC %in% c(10,50))
 boxplot(pbmc@meta.data$nMut[this_used]~ pbmc@meta.data$newC[this_used])
 
+c2_used=which(pbmc@meta.data$newC==2)
 
+#c2v_mat=pbmc@raw.data[which(rownames(pbmc@raw.data) %in% pbmc@var.genes),c2_used]
+c2v_mat=pbmc@raw.data[,c2_used]
+c2v_mat_bin=as.matrix(c2v_mat)
+c2v_mat_bin[which(c2v_mat_bin>0)]=1
+c2v_mat_bin_num=apply(c2v_mat_bin,1,sum)
+c2v_out=c2v_mat_bin_num[which(c2v_mat_bin_num>=2)]
 
-
-
+write.table(c2v_out,file='C2V.txt',sep='\t',quote=F,row.names=T,col.names=F)
