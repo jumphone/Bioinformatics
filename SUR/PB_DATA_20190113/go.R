@@ -48,8 +48,12 @@ pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.pr
     genes.print = 5)
 PCElbowPlot(object = pbmc)
 pbmc <- RunTSNE(object = pbmc, dims.use = 1:7, do.fast = TRUE,perplexity=5)
-TSNEPlot(object = pbmc,pt.size=3)
+TSNEPlot(object = pbmc,pt.size=3,group.by='orig.ident')
 
-
-
+TSNE_VEC=pbmc@dr$tsne@cell.embeddings
+D=dist(TSNE_VEC)
+H=hclust(D)
+C=cutree(H, k=4) 
+pbmc@meta.data$C=C
+TSNEPlot(object = pbmc,pt.size=3 , do.label=T, group.by ='C')
 
