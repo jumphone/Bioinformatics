@@ -132,10 +132,8 @@ this_used=which(!pbmc@meta.data$newC %in% c(10,50))
 boxplot(pbmc@meta.data$nMut[this_used]~ pbmc@meta.data$newC[this_used])
 
 c2_used=which(pbmc@meta.data$newC==2)
-
 #c2v_mat=pbmc@raw.data[which(rownames(pbmc@raw.data) %in% pbmc@var.genes),c2_used]
 c2v_mat=pbmc@raw.data[,c2_used]
-
 c2v_mat_bin=as.matrix(c2v_mat)
 c2v_mat_bin[which(c2v_mat_bin>0)]=1
 c2v_mat_bin_num=apply(c2v_mat_bin,1,sum)
@@ -156,6 +154,8 @@ which(rownames(c2v_mat)=='chr17.7578211.7578212.G>A')
 write.table(c2v_out,file='C2V.txt',sep='\t',quote=F,row.names=T,col.names=F)
 
 #####################################
+#####################################
+#####################################
 
 library(dplyr)
 pbmc@meta.data$newC= pbmc@meta.data$C
@@ -173,15 +173,36 @@ names(pbmc@ident)=names(tmp)
 #VlnPlot(object = pbmc, features.plot = c("chr1.226252134.226252135.A>T"))
 #VlnPlot(object = pbmc, features.plot = c("chr1.211906660.211906661.C>CAT"))
 
-#cluster2.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, test.use = "roc", only.pos = F)
+#cluster2.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, test.use = "wilcox", only.pos = T)
 #write.table(cluster2.markers,file='C2_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
-IDENT=as.character(pbmc@ident)
-IDENT[which(IDENT %in% c('10','50'))]=NA
-boxplot(pbmc@dr$pca@cell.embeddings[,1]~IDENT)
-boxplot(pbmc@dr$pca@cell.embeddings[,2]~IDENT)
-boxplot(pbmc@dr$pca@cell.embeddings[,3]~IDENT)
-boxplot(pbmc@dr$pca@cell.embeddings[,4]~IDENT)
-boxplot(pbmc@dr$pca@cell.embeddings[,5]~IDENT)
-boxplot(pbmc@dr$pca@cell.embeddings[,6]~IDENT)
-boxplot(pbmc@dr$pca@cell.embeddings[,7]~IDENT)
+
+#cluster4.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, test.use = "wilcox", only.pos = T)
+#write.table(cluster4.markers,file='C4_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
+
+c4_used=which(pbmc@meta.data$newC==4)
+c4v_mat=pbmc@raw.data[,c4_used]
+c4v_mat_bin=as.matrix(c4v_mat)
+c4v_mat_bin[which(c4v_mat_bin>0)]=1
+c4v_mat_bin_num=apply(c4v_mat_bin,1,sum)
+
+co_used=which(!pbmc@meta.data$newC %in% c(2,10,50))
+cov_mat=pbmc@raw.data[,co_used]
+cov_mat_bin=as.matrix(cov_mat)
+cov_mat_bin[which(cov_mat_bin>0)]=1
+cov_mat_bin_num=apply(cov_mat_bin,1,sum)
+
+
+c4v_out=c4v_mat_bin_num[which(c4v_mat_bin_num>=2 )]
+#which(rownames(c2v_mat)=='chr17.7578211.7578212.G>A')
+#c4v_out=c4v_mat_bin_num
+write.table(c4v_out,file='C4V.txt',sep='\t',quote=F,row.names=T,col.names=F)
+
+
+
+
+
+
+
+
+
 
