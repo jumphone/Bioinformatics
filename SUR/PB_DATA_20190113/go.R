@@ -37,8 +37,10 @@ pbmc <- CreateSeuratObject(raw.data = mut_data, min.cells = 0, min.genes = 0, pr
 pbmc@meta.data$nMut=pbmc@meta.data$nGene
 VlnPlot(object = pbmc, features.plot = c("nMut"), nCol = 1)
 dim(pbmc@data)
+
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", 
     scale.factor = 10000)
+#pbmc@data=pbmc@raw.data
 pbmc <- FindVariableGenes(object = pbmc,do.plot=F, mean.function = ExpMean, dispersion.function = LogVMR, 
     x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
 length(x = pbmc@var.genes)
@@ -173,7 +175,13 @@ names(pbmc@ident)=names(tmp)
 
 #cluster2.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, test.use = "roc", only.pos = F)
 #write.table(cluster2.markers,file='C2_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
-
-
-
+IDENT=as.character(pbmc@ident)
+IDENT[which(IDENT %in% c('10','50'))]=NA
+boxplot(pbmc@dr$pca@cell.embeddings[,1]~IDENT)
+boxplot(pbmc@dr$pca@cell.embeddings[,2]~IDENT)
+boxplot(pbmc@dr$pca@cell.embeddings[,3]~IDENT)
+boxplot(pbmc@dr$pca@cell.embeddings[,4]~IDENT)
+boxplot(pbmc@dr$pca@cell.embeddings[,5]~IDENT)
+boxplot(pbmc@dr$pca@cell.embeddings[,6]~IDENT)
+boxplot(pbmc@dr$pca@cell.embeddings[,7]~IDENT)
 
