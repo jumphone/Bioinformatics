@@ -9,6 +9,8 @@ REF=.simple_combine(T,N)$combine
 REF=REF[,c(1,3,4,5,6,7,8,9)]
 library(Seurat)
 
+T=TRUE
+F=FALSE
 
 #######################################################
 
