@@ -57,13 +57,13 @@ out=.get_cor(exp_sc_mat, exp_ref_mat, method='pearson',CPU=4, print_step=10)
 tag=.get_tag_max(out)
 pbmc@meta.data$tag_p=tag[,2]
 TOUT_P=table(pbmc@meta.data$tag_p, pbmc@ident)
-write.table(TOUT_P,file='10X_pearson.txt', quote=F,row.names=TRUE,col.names=TRUE,sep='\t')
+write.table(TOUT_P,file='Dropseq_pearson.txt', quote=F,row.names=TRUE,col.names=TRUE,sep='\t')
 
 out=.get_cor(exp_sc_mat, exp_ref_mat, method='spearman',CPU=4, print_step=10)
 tag=.get_tag_max(out)
 pbmc@meta.data$tag_s=tag[,2]
 TOUT_S=table(pbmc@meta.data$tag_s, pbmc@ident)
-write.table(TOUT_S,file='10X_spearman.txt', quote=F,row.names=TRUE,col.names=TRUE,sep='\t')
+write.table(TOUT_S,file='Dropseq_spearman.txt', quote=F,row.names=TRUE,col.names=TRUE,sep='\t')
 
 
 ############################################################
