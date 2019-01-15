@@ -48,7 +48,7 @@ PCNUM=20
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, 
     genes.print = 5)
 PCElbowPlot(object = pbmc)
-pbmc <- RunTSNE(object = pbmc, dims.use = 1:7, do.fast = TRUE,perplexity=5)
+pbmc <- RunTSNE(object = pbmc, dims.use = 1:7, do.fast = TRUE,perplexity=5,check_duplicates=F)
 TSNEPlot(object = pbmc,pt.size=3,group.by='orig.ident')
 
 TSNE_VEC=pbmc@dr$tsne@cell.embeddings
@@ -167,8 +167,10 @@ tmp=pbmc@ident
 pbmc@ident=as.factor(pbmc@meta.data$newC)
 names(pbmc@ident)=names(tmp)
 
-pbmc@data=pbmc@raw.data
-VlnPlot(object = pbmc, features.plot = c("chr1.226252134.226252135.A>T"))
+#pbmc@data=pbmc@raw.data
+#VlnPlot(object = pbmc, features.plot = c("chr1.226252134.226252135.A>T"))
+#VlnPlot(object = pbmc, features.plot = c("chr1.211906660.211906661.C>CAT"))
+
 #cluster2.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, test.use = "roc", only.pos = F)
 #write.table(cluster2.markers,file='C2_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
 
