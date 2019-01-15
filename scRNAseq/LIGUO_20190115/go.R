@@ -8,7 +8,21 @@ N=read.table('Reference_expression.txt',sep='\t',row.names=1,header=TRUE)
 REF=.simple_combine(T,N)$combine
 
 
+load('10xEXP.Robj')
+   
+COL=c()
+i=1
+while(i <=length(pbmc@ident)){
+    this_col=which(colnames(pbmc@raw.data)==names(pbmc@ident)[i])
+    COL=c(COL,this_col)
+    i=i+1
+    }      
+exp_sc_mat=as.matrix(pbmc@raw.data)[,COL]
+exp_ref_mat=REF 
+out=.get_cor(exp_sc_mat, exp_ref_mat, method='spearman',CPU=4, print_step=10)
+tag=.get_tag_max(out)
 
-
+pbmc@meta.data$tag=tag[,2]
+TSNEPlot(pbmc,group.by='tag')
 
 
