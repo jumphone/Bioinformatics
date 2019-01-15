@@ -30,7 +30,7 @@ dev.off()
 
 #######################################################
 load('DropseqEXP.Robj')
-  
+pbmc=EXP
 COL=c()
 i=1
 while(i <=length(pbmc@ident)){
