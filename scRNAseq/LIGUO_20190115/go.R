@@ -6,11 +6,20 @@ T=.simple_combine(cbind(T1,T1),cbind(T2,T2))$combine
 T=T[,c(1,3)]
 N=read.table('Reference_expression.txt',sep='\t',row.names=1,header=TRUE)
 REF=.simple_combine(T,N)$combine
-REF=REF[,c(1,3,4,5,6,7,8,9)]
-library(Seurat)
-
 T=TRUE
 F=FALSE
+REF=REF[,c(1,3,4,5,6,7,8,9)]
+
+library(Seurat)
+pbmc_ref=CreateSeuratObject(raw.data =REF, min.cells = 0, min.genes = 0, project = "10X_PBMC")
+pbmc_ref <- NormalizeData(object = pbmc_ref, normalization.method = "LogNormalize", scale.factor = 10000)
+pbmc_ref <- ScaleData(object = pbmc_ref, vars.to.regress = c("nUMI"))
+pbmc_ref <- RunPCA(object = pbmc_ref, pcs.compute=5,pc.genes = rownames(pbmc@data), do.print = TRUE, pcs.print = 1:5, 
+    genes.print = 5)
+pbmc_ref@meta.data$name=names(pbmc_ref@ident)
+PCAPlot(object = pbmc_ref, dim.1 = 1, dim.2 = 2,group.by='name')
+
+
 
 #######################################################
 
