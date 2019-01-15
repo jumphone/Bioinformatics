@@ -32,6 +32,7 @@ surv_pvalue(fit)
 
 mut_data=read.table('COM.txt',header=T,sep='\t',row.names=1)
 library(Seurat)
+library(dplyr)
 pbmc <- CreateSeuratObject(raw.data = mut_data, min.cells = 0, min.genes = 0, project = "PBTR")
 pbmc@meta.data$nMut=pbmc@meta.data$nGene
 VlnPlot(object = pbmc, features.plot = c("nMut"), nCol = 1)
@@ -151,3 +152,26 @@ which(rownames(c2v_mat)=='chr17.7578211.7578212.G>A')
 
 
 write.table(c2v_out,file='C2V.txt',sep='\t',quote=F,row.names=T,col.names=F)
+
+#####################################
+
+library(dplyr)
+pbmc@meta.data$newC= pbmc@meta.data$C
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Normal_PBTR.0010')]=10
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Tumor_PBTR.0010')]=10
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Normal_PBTR.0050')]=50
+pbmc@meta.data$newC[which(names(pbmc@ident)=='Tumor_PBTR.0050')]=50
+
+
+tmp=pbmc@ident
+pbmc@ident=as.factor(pbmc@meta.data$newC)
+names(pbmc@ident)=names(tmp)
+
+pbmc@data=pbmc@raw.data
+VlnPlot(object = pbmc, features.plot = c("chr1.226252134.226252135.A>T"))
+#cluster2.markers <- FindMarkers(object = pbmc, ident.1 = 2, thresh.use = 0.25, test.use = "roc", only.pos = F)
+#write.table(cluster2.markers,file='C2_marker.txt',sep='\t',quote=F,row.names=T,col.names=T)
+
+
+
+
