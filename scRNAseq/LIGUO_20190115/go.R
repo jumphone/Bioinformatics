@@ -39,6 +39,11 @@ write.table(TOUT_S,file='10X_spearman.txt', quote=F,row.names=TRUE,col.names=TRU
 #pdf('10X.pdf',width=7,height=5)
 #TSNEPlot(pbmc,group.by='tag')
 #dev.off()
+scref_out=SCREF(exp_sc_mat, exp_ref_mat, min_cell=1,CPU=4, print_step=10)
+scref_tag=scref_out$tag2
+pbmc@meta.data$tag_scref=scref_tag[,2]
+table(pbmc@meta.data$tag_scref, pbmc@ident)
+TSNEPlot(pbmc,group.by='tag_scref')
 
 #######################################################
 load('dropEXP.Robj')
@@ -53,6 +58,7 @@ while(i <=length(pbmc@ident)){
 exp_sc_mat=as.matrix(pbmc@raw.data)[,COL]
 exp_ref_mat=REF 
 
+
 out=.get_cor(exp_sc_mat, exp_ref_mat, method='pearson',CPU=4, print_step=10)
 tag=.get_tag_max(out)
 pbmc@meta.data$tag_p=tag[,2]
@@ -66,6 +72,12 @@ TOUT_S=table(pbmc@meta.data$tag_s, pbmc@ident)
 write.table(TOUT_S,file='Dropseq_spearman.txt', quote=F,row.names=TRUE,col.names=TRUE,sep='\t')
 
 
+
+scref_out=SCREF(exp_sc_mat, exp_ref_mat, min_cell=1,CPU=4, print_step=10)
+scref_tag=scref_out$tag2
+pbmc@meta.data$tag_scref=scref_tag[,2]
+table(pbmc@meta.data$tag_scref, pbmc@ident)
+TSNEPlot(pbmc,group.by='tag_scref')
 ############################################################
 
 
