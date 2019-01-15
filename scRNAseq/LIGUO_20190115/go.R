@@ -47,3 +47,7 @@ pbmc@meta.data$tag=tag[,2]
 pdf('Dropseq.pdf',width=7,height=5)
 TSNEPlot(pbmc,group.by='tag')
 dev.off()
+
+############################################################
+
+
