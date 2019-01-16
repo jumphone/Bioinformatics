@@ -29,10 +29,13 @@ pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI", "percent.mito"))
 PCNUM=50
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
 PCElbowPlot(object = pbmc)
-
-
+####
+pbmc@meta.data$cls=cls_tag[used_index]
+pbmc@meta.data$com=com_tag[used_index,2]
+pbmc@meta.data$inj=inj_tag[used_index,2]
+pbmc@meta.data$age=pbmc@meta.data$orig.ident
+####
 PCUSE=1:20
-
-
+pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
 
 
