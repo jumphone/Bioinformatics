@@ -25,7 +25,7 @@ pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  sca
 pbmc@data=tmp_data
 pbmc <- FindVariableGenes(object = pbmc,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
 length(x = pbmc@var.genes)
-allgene=rownames(pbmc@data)
+#allgene=rownames(pbmc@data)
 #4901
 #############
 pbmc@meta.data$cls=cls_tag[used_index]
@@ -41,8 +41,8 @@ pbmc@meta.data$age=pbmc@meta.data$orig.ident
 ############
 pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI", "percent.mito"))
 PCNUM=150
-#pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
-pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = allgene, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
+pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
+#pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = allgene, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
 #PCElbowPlot(object = pbmc)
 ####
 
@@ -50,11 +50,12 @@ pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = allgene, do.print = 
 PCUSE=1:35
 
 #pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
-
-#DimPlot(pbmc, reduction.use = "tsne",group.by='cls',pt.size=0.5,do.label=TRUE)
+pdf('OUT.pdf',width=14,height=10)
+DimPlot(pbmc, reduction.use = "tsne",group.by='cls',pt.size=0.5,do.label=TRUE)
 DimPlot(pbmc, reduction.use = "tsne",group.by='age',pt.size=0.5,do.label=TRUE)
-#DimPlot(pbmc, reduction.use = "tsne",group.by='com',pt.size=0.5,do.label=TRUE)
-#DimPlot(pbmc, reduction.use = "tsne",group.by='inj',pt.size=0.5,do.label=TRUE)
+DimPlot(pbmc, reduction.use = "tsne",group.by='com',pt.size=0.5,do.label=TRUE)
+DimPlot(pbmc, reduction.use = "tsne",group.by='inj',pt.size=0.5,do.label=TRUE)
+DimPlot(pbmc, reduction.use = "tsne",group.by='allm',pt.size=0.5,do.label=TRUE)
 
 #pbmc <- RunUMAP(object = pbmc, dims.use = PCUSE)
 DimPlot(pbmc, reduction.use = "umap",group.by='cls',pt.size=0.5,do.label=TRUE)
@@ -62,3 +63,10 @@ DimPlot(pbmc, reduction.use = "umap",group.by='age',pt.size=0.5,do.label=TRUE)
 DimPlot(pbmc, reduction.use = "umap",group.by='com',pt.size=0.5,do.label=TRUE)
 DimPlot(pbmc, reduction.use = "umap",group.by='inj',pt.size=0.5,do.label=TRUE)
 DimPlot(pbmc, reduction.use = "umap",group.by='allm',pt.size=0.5,do.label=TRUE)
+dev.off()
+
+
+
+
+
+
