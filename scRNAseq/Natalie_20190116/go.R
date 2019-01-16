@@ -11,7 +11,7 @@ cls_tag=as.numeric(as.character(EXP_cluster@ident))
 
 used_cluster=c(2,9,14,17,19,23)
 pbmc_old=EXP_cluster
-used_index=which(cls_tag %in% used_cluster)
+used_index=which(cls_tag %in% used_cluster & (!com_tag[,2] %in% c('Macrophage_Lyz2.high.Brain.','B.cell_Igkc.high.Bone.Marrow.','T.cell_Ms4a4b.high.Bone.Marrow.')))
 
 
 pbmc_data=as.matrix(pbmc_old@data[,used_index])
@@ -25,22 +25,24 @@ pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  sca
 pbmc@data=tmp_data
 pbmc <- FindVariableGenes(object = pbmc,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
 length(x = pbmc@var.genes)
-#4619
+allgene=rownames(pbmc@data)
+#4901
 #############
 pbmc@meta.data$cls=cls_tag[used_index]
 pbmc@meta.data$com=com_tag[used_index,2]
 pbmc@meta.data$inj=inj_tag[used_index,2]
 pbmc@meta.data$all=as.character(all_tag[used_index,2])
-
+#############
 pbmc@meta.data$allm=pbmc@meta.data$all
 lname=names(table(pbmc@meta.data$allm))[which(table(pbmc@meta.data$allm)<50)]
 pbmc@meta.data$allm[which(pbmc@meta.data$allm %in% lname)]='NA'
-
+#############
 pbmc@meta.data$age=pbmc@meta.data$orig.ident
 ############
 pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI", "percent.mito"))
 PCNUM=150
-pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
+#pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
+pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = allgene, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
 #PCElbowPlot(object = pbmc)
 ####
 
