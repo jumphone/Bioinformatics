@@ -65,7 +65,7 @@ DimPlot(pbmc, reduction.use = "umap",group.by='inj',pt.size=0.5,do.label=TRUE)
 DimPlot(pbmc, reduction.use = "umap",group.by='allm',pt.size=0.5,do.label=TRUE)
 dev.off()
 
-
+save.image('OK.RData')
 
 
 
