@@ -160,14 +160,14 @@ saveRDS(pbmc,file='BT311_umap.RDS')
 ################################################################################
 ################################################################################
 
-BT310.data <- Read10X(data.dir = "BT310 _filtered_gene_bc_matrices/filtered_feature_bc_matrix/GRCh38")
+BT310.data <- Read10X(data.dir = "BT310_filtered_gene_bc_matrices/filtered_gene_bc_matrices/GRCh38")
 
 pbmc <- CreateSeuratObject(raw.data = BT310.data, min.cells = 3, min.genes = 200, 
     project = "10X_PBMC")
 mito.genes <- grep(pattern = "^MT-", x = rownames(x = pbmc@data), value = TRUE)
 percent.mito <- Matrix::colSums(pbmc@raw.data[mito.genes, ])/Matrix::colSums(pbmc@raw.data)
 pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
-VlnPlot(object = pbmc, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
+#VlnPlot(object = pbmc, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
 pbmc <- FilterCells(object = pbmc, subset.names = c("nGene", "percent.mito"), 
     low.thresholds = c(200, -Inf), high.thresholds = c(5000, 0.05))
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", 
@@ -179,7 +179,7 @@ pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI", "percent.mito"))
 PCNUM=20
 pbmc <- RunPCA(object = pbmc, pcs.compute = PCNUM, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, 
     genes.print = 5)
-PCElbowPlot(object = pbmc)
+#PCElbowPlot(object = pbmc)
 PCUSE=1:15
 pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
 pbmc=RunUMAP(pbmc, reduction.use = "pca", dims.use = PCUSE)
