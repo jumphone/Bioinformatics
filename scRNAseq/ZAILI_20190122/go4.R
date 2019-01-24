@@ -6,6 +6,9 @@ pbmc <- CreateSeuratObject(raw.data = pbmc.data, min.cells = 0, min.genes = 0, p
 
 mito.genes <- grep(pattern = "^mt-", x = rownames(x = pbmc@data), value = TRUE)
 percent.mito <- Matrix::colSums(pbmc@raw.data[mito.genes, ])/Matrix::colSums(pbmc@raw.data)
+pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
+
+
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, 
