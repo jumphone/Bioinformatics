@@ -31,6 +31,10 @@ pbmc@meta.data$dev=as.character(meta.data[,4])
 pbmc@meta.data$clust=meta.data[,14]
 
 saveRDS(pbmc,'cb_seurat.RDS')
+########################################
+
+
+pbmc=readRDS('cb_seurat.RDS')
 
 pdf('CellType.pdf',width=20,height=18)
 TSNEPlot(pbmc,group.by='tag',do.label=TRUE)
