@@ -34,6 +34,7 @@ saveRDS(pbmc,'cb_seurat.RDS')
 ########################################
 
 pbmc=readRDS('cb_seurat.RDS')
+pbmc@meta.data$clust=paste0('C',pbmc@meta.data$clust)
 
 TAB=table(pbmc@meta.data$clust,pbmc@meta.data$tag)
 write.table(TAB,file='Sup1_CellTypeAndClust.txt',sep='\t',quote=F,row.names=T,col.names=T)
@@ -59,6 +60,9 @@ LocalRef= .generate_ref(exp_ref_mat, ref_tag, min_cell = 10 )
 write.table(LocalRef,'Sup3_ClustRef.txt',sep='\t',quote=F,row.names=T,col.names=T)
 saveRDS(exp_ref_mat,'./Sup4_projection/exp_ref_mat.RDS')
 saveRDS(ref_tag,'./Sup4_projection/ref_tag.RDS')
+
+
+
 ################################################################################
 ################################################################################
 ########################################
@@ -69,7 +73,6 @@ TAB=read.table('Sup1_CellTypeAndClust.txt',sep='\t',row.names=1,header=T)
 LocalRef=read.table('Sup3_ClustRef.txt',sep='\t',row.names=1,header=T)
 
 
-
 ########################################
 ########################################
 TAG='R4'
@@ -77,6 +80,8 @@ TAG='R4'
 scdata=readRDS(paste0(TAG,'_umap.RDS'))
 exp_sc_mat=as.matrix(scdata@raw.data) 
 sc_tag=SCREF(exp_sc_mat, LocalRef)$tag2
+###
+###sc_tag[,2]=gsub('X',x=sc_tag[,2],replacement='C')
 ################
 this_tab=table(sc_tag[,2])
 this_lab=c()
@@ -90,7 +95,7 @@ colnames(this_stat)=c('cluster','cell_type','cell_num')
 write.table(this_stat,paste0('./Sup4_projection/',TAG,'_stat.txt'),sep='\t',quote=F,row.names=F,col.names=F)
 ################
 out =.vec_projection(exp_sc_mat, sc_tag, exp_ref_mat, ref_tag, ref_vec, 
-        method='kendall', nearest_cell=1, alpha=0.5, random_size=300, 
+        method='kendall', nearest_cell=1, alpha=0.5, random_size=50, 
         random_seed=123, CPU=4, print_step=10)
 ################
 saveRDS(exp_sc_mat,paste0('./Sup4_projection/',TAG,'_exp_sc_mat.RDS'))
@@ -126,7 +131,7 @@ colnames(this_stat)=c('cluster','cell_type','cell_num')
 write.table(this_stat,paste0('./Sup4_projection/',TAG,'_stat.txt'),sep='\t',quote=F,row.names=F,col.names=F)
 ################
 out =.vec_projection(exp_sc_mat, sc_tag, exp_ref_mat, ref_tag, ref_vec, 
-        method='kendall', nearest_cell=1, alpha=0.5, random_size=300, 
+        method='kendall', nearest_cell=1, alpha=0.5, random_size=50, 
         random_seed=123, CPU=4, print_step=10)
 ################
 saveRDS(exp_sc_mat,paste0('./Sup4_projection/',TAG,'_exp_sc_mat.RDS'))
@@ -162,7 +167,7 @@ colnames(this_stat)=c('cluster','cell_type','cell_num')
 write.table(this_stat,paste0('./Sup4_projection/',TAG,'_stat.txt'),sep='\t',quote=F,row.names=F,col.names=F)
 ################
 out =.vec_projection(exp_sc_mat, sc_tag, exp_ref_mat, ref_tag, ref_vec, 
-        method='kendall', nearest_cell=1, alpha=0.5, random_size=300, 
+        method='kendall', nearest_cell=1, alpha=0.5, random_size=50, 
         random_seed=123, CPU=4, print_step=10)
 ################
 saveRDS(exp_sc_mat,paste0('./Sup4_projection/',TAG,'_exp_sc_mat.RDS'))
@@ -198,7 +203,7 @@ colnames(this_stat)=c('cluster','cell_type','cell_num')
 write.table(this_stat,paste0('./Sup4_projection/',TAG,'_stat.txt'),sep='\t',quote=F,row.names=F,col.names=F)
 ################
 out =.vec_projection(exp_sc_mat, sc_tag, exp_ref_mat, ref_tag, ref_vec, 
-        method='kendall', nearest_cell=1, alpha=0.5, random_size=300, 
+        method='kendall', nearest_cell=1, alpha=0.5, random_size=50, 
         random_seed=123, CPU=4, print_step=10)
 ################
 saveRDS(exp_sc_mat,paste0('./Sup4_projection/',TAG,'_exp_sc_mat.RDS'))
