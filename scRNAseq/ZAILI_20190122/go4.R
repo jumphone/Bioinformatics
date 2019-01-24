@@ -49,18 +49,24 @@ ref_tag=cbind(names(pbmc@ident), as.character(pbmc@meta.data$clust))
 exp_ref_mat=as.matrix(pbmc@raw.data)
 rownames(exp_ref_mat)=toupper(rownames(exp_ref_mat))
 
+#####remove dup gene name###
 tmp_tab=table(rownames(exp_ref_mat))
 tmp_gene=names(which(tmp_tab>1))
 exp_ref_mat=exp_ref_mat[which(!rownames(exp_ref_mat) %in% tmp_gene),]
-
+########################################
 
 LocalRef= .generate_ref(exp_ref_mat, ref_tag, min_cell = 10 )  
 write.table(LocalRef,'Sup3_ClustRef.txt',sep='\t',quote=F,row.names=T,col.names=T)
-
 saveRDS(exp_ref_mat,'./Sup4_projection/exp_ref_mat.RDS')
 saveRDS(ref_tag,'./Sup4_projection/ref_tag.RDS')
-
+################################################################################
+################################################################################
 ########################################
+source('scRef.R')
+exp_ref_mat=readRDS('./Sup4_projection/exp_ref_mat.RDS')
+ref_tag=readRDS('./Sup4_projection/ref_tag.RDS')
+TAB=read.table('Sup1_CellTypeAndClust.txt',sep='\t',row.names=1,header=T)
+LocalRef=read.table('Sup3_ClustRef.txt',sep='\t',row.names=1,header=T)
 ########################################
 TAG='R4'
 ################
