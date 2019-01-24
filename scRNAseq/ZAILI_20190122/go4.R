@@ -17,7 +17,7 @@ pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.fun
 length(x = pbmc@var.genes)
 #4602
 
-pbmc <- ScaleData(object = pbmc, genes.use =pbmc@var.genes, vars.to.regress = c("nUMI", "percent.mito"),num.cores =4)
+pbmc <- ScaleData(object = pbmc, genes.use =pbmc@var.genes, vars.to.regress = c("nUMI", "percent.mito"),num.cores =4,do.par=TRUE)
 
 pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, genes.print = 5)
 pbmc <- RunTSNE(object = pbmc, dims.use = 1:10, do.fast = TRUE)
