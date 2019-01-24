@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+WashU browser: http://epigenomegateway.wustl.edu/legacy/
+
 XenaBrowser: https://xenabrowser.net/datapages/
 
 TCGA ATAC: https://gdc.cancer.gov/about-data/publications/ATACseq-AWG
