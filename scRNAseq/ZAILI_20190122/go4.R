@@ -47,6 +47,8 @@ source('scRef.R')
 ref_vec=pbmc@dr$tsne@cell.embeddings
 ref_tag=cbind(names(pbmc@ident), as.character(pbmc@meta.data$clust))    
 exp_ref_mat=as.matrix(pbmc@raw.data)
+rownames(exp_ref_mat)=toupper(rownames(exp_ref_mat))
+
 LocalRef= .generate_ref(exp_ref_mat, ref_tag, min_cell = 10 )  
 write.table(LocalRef,'Sup3_ClustRef.txt',sep='\t',quote=F,row.names=T,col.names=T)
 
