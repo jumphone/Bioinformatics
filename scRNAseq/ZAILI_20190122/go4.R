@@ -60,7 +60,7 @@ LocalRef= .generate_ref(exp_ref_mat, ref_tag, min_cell = 10 )
 write.table(LocalRef,'Sup3_ClustRef.txt',sep='\t',quote=F,row.names=T,col.names=T)
 saveRDS(exp_ref_mat,'./Sup4_projection/exp_ref_mat.RDS')
 saveRDS(ref_tag,'./Sup4_projection/ref_tag.RDS')
-
+saveRDS(ref_vec,'./Sup4_projection/ref_vec.RDS')
 
 
 ################################################################################
@@ -69,6 +69,7 @@ saveRDS(ref_tag,'./Sup4_projection/ref_tag.RDS')
 source('scRef.R')
 exp_ref_mat=readRDS('./Sup4_projection/exp_ref_mat.RDS')
 ref_tag=readRDS('./Sup4_projection/ref_tag.RDS')
+ref_vec=readRDS('./Sup4_projection/ref_vec.RDS')
 TAB=read.table('Sup1_CellTypeAndClust.txt',sep='\t',row.names=1,header=T)
 LocalRef=read.table('Sup3_ClustRef.txt',sep='\t',row.names=1,header=T)
 
