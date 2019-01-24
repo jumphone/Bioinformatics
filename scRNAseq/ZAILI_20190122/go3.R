@@ -261,8 +261,8 @@ rm(E12)
 
 
 B1=.simple_combine(A1,A2)$combine
-B2=.simple_combine(A3,A2)$combine
-B3=.simple_combine(A1,A2)$combine
+B2=.simple_combine(A3,A4)$combine
+B3=.simple_combine(A5,A6)$combine
 
 
 rm(A1)
