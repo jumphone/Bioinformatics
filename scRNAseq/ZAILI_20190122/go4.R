@@ -195,3 +195,10 @@ plot(ref_vec,xlim=XLIM,ylim=YLIM,pch=16,col='grey70',cex=0.5)
 par(new=T)
 plot(out$vec,xlim=XLIM,ylim=YLIM,pch=16,col='red',cex=0.3)
 dev.off()
+
+
+
+
+
+
+
