@@ -19,6 +19,8 @@ length(x = pbmc@var.genes)
 
 pbmc <- ScaleData(object = pbmc, genes.use =pbmc@var.genes, vars.to.regress = c("nUMI", "percent.mito"),num.cores =4)
 
+pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, genes.print = 5)
+pbmc <- RunTSNE(object = pbmc, dims.use = 1:10, do.fast = TRUE)
 
-
+meta.data=read.table('cerebellum_cell_metadata.tsv',sep='\t',header=T)
 
