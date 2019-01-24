@@ -279,6 +279,29 @@ rm(B2)
 
 EXP=.simple_combine(C1,B3)$combine
 
+rm(C1)
+rm(B3)
+
+
+
+CN=colnames(EXP)
+MCN=meta.data[,3]
+O=c()
+i=1
+for(one in MCN){
+   O=c(O,which(CN ==one ))
+   print(i);i=i+1
+}
+
+EXP=EXP[,O]
+
+saveRDS(EXP,file='cerebullum_dev.RDS')
+
+
+
+
+
+
 
 
 
