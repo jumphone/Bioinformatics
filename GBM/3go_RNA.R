@@ -52,7 +52,6 @@ COL_U[which(TAG_U=='GBM')]='indianred3'
 COL_U[which(TAG_U=='LGG')]='green3'
 
 pdf('figure1.pdf')
-par(mfrow=c(1,2))
 plot(PC1[D],SURTAG[D,2],pch=16,col=COL, xlab='PC1',ylab='OS (days)', cex=1.5)
 plot(PC1[used],SURTAG[used,2],pch=16,col=COL_U, xlab='PC1',ylab='OS (days)', cex=1.5)
 dev.off()
@@ -69,6 +68,7 @@ score=PC1[used]
 SUR=SURTAG[used,2]
 SURE=SURTAG[used,1]
 
+pdf('figure2.pdf')
 TYPE=rep('MED',length(used))
 TYPE[which(score> quantile(score,0.5) )]='High'
 TYPE[which(score<= quantile(score,0.5) )]='Low'
@@ -78,10 +78,12 @@ surtype=TYPE[which(TYPE!='MED')]
 surtype=as.data.frame(surtype)
 surv_object <- Surv(time = surtime, event = surevent)
 fit <- survfit(surv_object ~ surtype, data=surtype)
-ggsurvplot(fit, pval = TRUE)
+gp=ggsurvplot(fit, pval = TRUE)
+print(gp)
 surv_pvalue(fit)
+dev.off()
 
-pdf('figure2.pdf')
+pdf('figure3.pdf')
 plot(PC1[used],SURTAG[used,2],pch=16,col=COL_U, xlab='PC1',ylab='OS (days)', cex=1.5)
 abline(v=quantile(score,0.5),col='red',lwd=1.5)
 dev.off()
