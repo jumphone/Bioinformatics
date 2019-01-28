@@ -17,7 +17,7 @@ length(x = pbmc@var.genes)
 pbmc <- ScaleData(object = pbmc)
 
 
-PCNUM=20
+PCNUM=15
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = F, pcs.print = 1:5, genes.print = 5)
 
 PCElbowPlot(object = pbmc)
@@ -42,19 +42,20 @@ LGG=which(TAG=='LGGx')
 D=which(SURTAG[,1]==1)
 TAG_D=TAG[D]
 COL=rep('red',length(D))
-COL[which(TAG_D=='GBMx')]='indianred3'
-COL[which(TAG_D=='LGGx')]='green3'
+COL[which(TAG_D=='GBM')]='indianred3'
+COL[which(TAG_D=='LGG')]='green3'
 
 used=which(!is.na(SURTAG[,1]))
 TAG_U=TAG[used]
 COL_U=rep('red',length(used))
-COL_U[which(TAG_U=='GBMx')]='indianred3'
-COL_U[which(TAG_U=='LGGx')]='green3'
+COL_U[which(TAG_U=='GBM')]='indianred3'
+COL_U[which(TAG_U=='LGG')]='green3'
 
+pdf('figure1.pdf')
 par(mfrow=c(1,2))
 plot(PC1[D],SURTAG[D,2],pch=16,col=COL, xlab='PC1',ylab='OS (days)', cex=1.5)
 plot(PC1[used],SURTAG[used,2],pch=16,col=COL_U, xlab='PC1',ylab='OS (days)', cex=1.5)
-
+dev.off()
 
 cor.test(PC1[D],SURTAG[D,2],method='spearman')
 
@@ -80,9 +81,10 @@ fit <- survfit(surv_object ~ surtype, data=surtype)
 ggsurvplot(fit, pval = TRUE)
 surv_pvalue(fit)
 
+pdf('figure2.pdf')
 plot(PC1[used],SURTAG[used,2],pch=16,col=COL_U, xlab='PC1',ylab='OS (days)', cex=1.5)
 abline(v=quantile(score,0.5),col='red',lwd=1.5)
-
+dev.off()
 #############
 
 
