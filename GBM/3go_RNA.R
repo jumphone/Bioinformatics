@@ -26,7 +26,9 @@ PCUSE=1:15
 pbmc <- RunTSNE(object = pbmc, perplexity=5, dims.use = PCUSE, do.fast = TRUE)
 
 TSNEPlot(object = pbmc,group.by='tag',pt.size=4)
+pdf('PCA.pdf')
 PCAPlot(object = pbmc,group.by='tag',pt.size=4)
+dev.off()
 save.image(file='F1.RData')
 
 ################################
