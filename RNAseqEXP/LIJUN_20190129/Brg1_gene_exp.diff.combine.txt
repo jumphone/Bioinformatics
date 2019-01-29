@@ -1,0 +1,63 @@
+Gene	Whole	Sample1	Sample2	Exp1	Exp2	Pvalue	Qvalue	OPC	NFOL	MOL
+Stat1	signal transducer and activator of transcription 1	Control	Brg1_iko	25.9909	9.39528	5e-05	0.0131802	0	0	0
+Hhipl2	hedgehog interacting protein-like 2	Control	Brg1_iko	3.40365	9.78551	0.00025	0.0486654	0	0	0
+Cd24a	CD24a antigen	Control	Brg1_iko	33.7263	15.8852	5e-05	0.0131802	0	0	0
+Phlda1	"pleckstrin homology-like domain, family A, member 1"	Control	Brg1_iko	235.956	387.869	0.00015	0.0332974	0	0	0
+Pisd-ps1	"phosphatidylserine decarboxylase, pseudogene 1"	Control	Brg1_iko	39.1779	18.4242	5e-05	0.0131802	0	0	0
+Myh10	"myosin, heavy polypeptide 10, non-muscle"	Control	Brg1_iko	37.8171	21.4614	5e-05	0.0131802	0	0	0
+Grb10	growth factor receptor bound protein 10	Control	Brg1_iko	19.6119	6.7518	5e-05	0.0131802	0	0	0
+Pttg1	pituitary tumor-transforming gene 1	Control	Brg1_iko	139.365	50.4632	5e-05	0.0131802	0	0	0
+Cd68	CD68 antigen	Control	Brg1_iko	9.68409	26.3127	5e-05	0.0131802	0	0	0
+Dbpht2	DNA binding protein with his-thr domain	Control	Brg1_iko	11.0169	5.13575	5e-05	0.0131802	1	0	0
+Acp1	"acid phosphatase 1, soluble"	Control	Brg1_iko	4.64834	12.2607	5e-05	0.0131802	0	0	0
+Ccdc88c	coiled-coil domain containing 88C	Control	Brg1_iko	8.2015	3.75214	5e-05	0.0131802	0	0	0
+Paip1	polyadenylate binding protein-interacting protein 1	Control	Brg1_iko	13.6853	24.2461	0.0001	0.0238736	0	0	0
+4833420G17Rik	RIKEN cDNA 4833420G17 gene	Control	Brg1_iko	25.5652	12.3055	5e-05	0.0131802	0	0	0
+F13a1	"coagulation factor XIII, A1 subunit"	Control	Brg1_iko	1.28429	4.67282	0.0001	0.0238736	0	0	0
+Irf9	interferon regulatory factor 9	Control	Brg1_iko	18.0262	5.67165	5e-05	0.0131802	0	0	0
+Cma1	"chymase 1, mast cell"	Control	Brg1_iko	2.27044	0	5e-05	0.0131802	0	0	0
+Rtp4	receptor transporter protein 4	Control	Brg1_iko	21.3585	8.19762	5e-05	0.0131802	0	0	0
+Retnla	resistin like alpha	Control	Brg1_iko	7.04613	113.598	5e-05	0.0131802	0	0	0
+Apod	apolipoprotein D	Control	Brg1_iko	27.4718	104.588	5e-05	0.0131802	0	0	1
+Tpsb2	tryptase beta 2	Control	Brg1_iko	2.09621	0	5e-05	0.0131802	0	0	0
+Dll1	delta-like 1 (Drosophila)	Control	Brg1_iko	43.2979	25.4036	0.0002	0.0408161	1	0	0
+Vegfa	vascular endothelial growth factor A	Control	Brg1_iko	21.2724	37.6874	5e-05	0.0131802	0	0	0
+Cyp1b1	"cytochrome P450, family 1, subfamily b, polypeptide 1"	Control	Brg1_iko	3.30091	8.0364	0.0002	0.0408161	0	0	0
+Ttr	transthyretin	Control	Brg1_iko	38.2555	10.6527	5e-05	0.0131802	0	0	0
+Sncaip	"synuclein, alpha interacting protein (synphilin)"	Control	Brg1_iko	22.6861	11.6499	5e-05	0.0131802	0	0	0
+Lmnb1	lamin B1	Control	Brg1_iko	77.1189	41.7453	5e-05	0.0131802	0	0	0
+Hbegf	heparin-binding EGF-like growth factor	Control	Brg1_iko	9.27953	20.1079	0.00015	0.0332974	0	0	0
+Traf6	TNF receptor-associated factor 6	Control	Brg1_iko	9.99569	5.23353	5e-05	0.0131802	0	0	0
+Gm14005	predicted gene 14005	Control	Brg1_iko	0	3.07784	0.0001	0.0238736	0	0	0
+Gbp3	guanylate binding protein 3	Control	Brg1_iko	16.7889	3.96249	5e-05	0.0131802	0	0	0
+Cpa3	"carboxypeptidase A3, mast cell"	Control	Brg1_iko	2.16162	0	5e-05	0.0131802	0	0	0
+A930005H10Rik	RIKEN cDNA A930005H10 gene	Control	Brg1_iko	38.5075	89.9648	0.00015	0.0332974	0	0	0
+Megf6	multiple EGF-like-domains 6	Control	Brg1_iko	4.51517	1.51714	0.0002	0.0408161	0	0	0
+Hes5	hairy and enhancer of split 5 (Drosophila)	Control	Brg1_iko	1885.47	590.84	5e-05	0.0131802	0	0	0
+Vcp	valosin containing protein	Control	Brg1_iko	11.2172	36.203	5e-05	0.0131802	0	0	0
+Tnc	tenascin C	Control	Brg1_iko	5.04068	15.2401	5e-05	0.0131802	0	0	0
+Fam167b	"family with sequence similarity 167, member B"	Control	Brg1_iko	0	1.25863	0.00015	0.0332974	0	0	0
+C1qb	"complement component 1, q subcomponent, beta polypeptide"	Control	Brg1_iko	47.4362	165.955	5e-05	0.0131802	0	0	0
+C1qc	"complement component 1, q subcomponent, C chain"	Control	Brg1_iko	59.1139	169.243	5e-05	0.0131802	0	0	0
+C1qa	"complement component 1, q subcomponent, alpha polypeptide"	Control	Brg1_iko	31.6632	86.5444	5e-05	0.0131802	0	0	0
+Vwa1	von Willebrand factor A domain containing 1	Control	Brg1_iko	12.7502	23.4309	0.0002	0.0408161	0	0	0
+Insig1	insulin induced gene 1	Control	Brg1_iko	56.8488	28.6803	5e-05	0.0131802	0	0	0
+Dpysl5	dihydropyrimidinase-like 5	Control	Brg1_iko	8.36038	3.67292	5e-05	0.0131802	0	0	0
+Crmp1	collapsin response mediator protein 1	Control	Brg1_iko	132.883	80.0823	5e-05	0.0131802	0	0	0
+N4bp2	NEDD4 binding protein 2	Control	Brg1_iko	5.98519	2.48807	5e-05	0.0131802	0	0	0
+Tmem132b	transmembrane protein 132B	Control	Brg1_iko	26.49	13.6356	5e-05	0.0131802	1	1	0
+Kdelr2	KDEL (Lys-Asp-Glu-Leu) endoplasmic reticulum protein retention receptor 2	Control	Brg1_iko	42.2917	72.9423	0.00025	0.0486654	0	0	0
+Rasl11a	"RAS-like, family 11, member A"	Control	Brg1_iko	133.704	235.679	0.0001	0.0238736	0	0	0
+Hopx	HOP homeobox	Control	Brg1_iko	27.5048	77.3848	5e-05	0.0131802	0	0	0
+Ncor2	nuclear receptor co-repressor 2	Control	Brg1_iko	14.4787	6.80772	5e-05	0.0131802	0	0	0
+Bhlhe40	"basic helix-loop-helix family, member e40"	Control	Brg1_iko	10.053	21.908	5e-05	0.0131802	0	0	0
+Usp18	ubiquitin specific peptidase 18	Control	Brg1_iko	29.8412	7.58251	5e-05	0.0131802	0	0	0
+Ctsc	cathepsin C	Control	Brg1_iko	6.8195	17.1275	5e-05	0.0131802	0	0	0
+Zfp36	zinc finger protein 36	Control	Brg1_iko	19.1443	47.2131	5e-05	0.0131802	0	0	0
+Crym	"crystallin, mu"	Control	Brg1_iko	1.08464	0	0.0002	0.0408161	0	0	0
+Igf2	insulin-like growth factor 2	Control	Brg1_iko	17.2701	31.5792	0.00025	0.0486654	1	0	0
+D8Ertd82e	"DNA segment, Chr 8, ERATO Doi 82, expressed"	Control	Brg1_iko	15.4293	6.46251	5e-05	0.0131802	0	0	0
+Pard3	par-3 (partitioning defective 3) homolog (C. elegans)	Control	Brg1_iko	20.3993	10.1991	5e-05	0.0131802	0	0	0
+Smarca4	"SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily a, member 4"	Control	Brg1_iko	35.8537	14.5068	5e-05	0.0131802	0	0	0
+Rpl29	ribosomal protein L29	Control	Brg1_iko	92.8668	257.556	5e-05	0.0131802	0	0	0
+Nrgn	neurogranin	Control	Brg1_iko	13.8314	43.2096	5e-05	0.0131802	0	0	0
