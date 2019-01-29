@@ -9,8 +9,12 @@ bedtools merge -i ALL_PEAK.sorted.bed > ALL_PEAK.sorted.merged.bed
 python addname.py
 bedtools coverage -abam $KO -b ALL_PEAK.sorted.merged.named.bed > $KO\.ALLPEAK 
 bedtools coverage -abam $WT -b ALL_PEAK.sorted.merged.named.bed > $WT\.ALLPEAK 
-bedtools intersect -wa -wb -b $KO\.ALLPEAK -a Mus_musculus.GRCm38.87.chr.gtf.combined.pc.bed.sort  > $KO\.ALLPEAK.gene
-bedtools intersect -wa -wb -b $WT\.ALLPEAK -a Mus_musculus.GRCm38.87.chr.gtf.combined.pc.bed.sort  > $WT\.ALLPEAK.gene
+
+python rmNA.py $KO\.ALLPEAK
+python rmNA.py $WT\.ALLPEAK
+
+bedtools intersect -wa -wb -b $KO\.ALLPEAK.rmNa -a Mus_musculus.GRCm38.87.chr.gtf.combined.pc.bed.sort  > $KO\.ALLPEAK.gene
+bedtools intersect -wa -wb -b $WT\.ALLPEAK.rmNa -a Mus_musculus.GRCm38.87.chr.gtf.combined.pc.bed.sort  > $WT\.ALLPEAK.gene
 python getRPKM.py $KO\.ALLPEAK.gene $KO\.ALLPEAK.gene.rpkm
 python getRPKM.py $WT\.ALLPEAK.gene $WT\.ALLPEAK.gene.rpkm
 
