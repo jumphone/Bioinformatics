@@ -8,7 +8,10 @@ vlm = vcy.VelocytoLoom("picard_KA4FM.loom")
 
 
 vlm.filter_cells(bool_array=vlm.initial_Ucell_size > np.percentile(vlm.initial_Ucell_size, 0.5))
-#vlm.set_clusters(vlm.ca["ClusterName"])
+vlm.ca["ClusterName"]=['TMP'] * len(vlm.ca['CellID'])
+
+
+vlm.set_clusters(vlm.ca["ClusterName"])
 vlm.score_detection_levels(min_expr_counts=40, min_cells_express=30)
 vlm.filter_genes(by_detection_levels=True)
 vlm.score_cv_vs_mean(3000, plot=True, max_expr_avg=35)
@@ -29,18 +32,25 @@ vlm.predict_U()
 vlm.calculate_velocity()
 vlm.calculate_shift(assumption="constant_velocity")
 vlm.extrapolate_cell_at_t(delta_t=1.)
-vlm.calculate_shift(assumption="constant_unspliced", delta_t=10)
-vlm.extrapolate_cell_at_t(delta_t=1.)
+
 from sklearn.manifold import TSNE
 bh_tsne = TSNE()
 vlm.ts = bh_tsne.fit_transform(vlm.pcs[:, :25])
 
+vlm.estimate_transition_prob(hidim="Sx_sz", embed="ts", transform="sqrt", psc=1,
+                             n_neighbors=2000, knn_random=True, sampled_fraction=0.5)
+vlm.calculate_embedding_shift(sigma_corr = 0.05, expression_scaling=True)
+
 vlm.calculate_grid_arrows(smooth=0.8, steps=(40, 40), n_neighbors=300)
+
+import matplotlib.pyplot as plt
+
+
 plt.figure(None,(20,10))
 vlm.plot_grid_arrows(quiver_scale=0.6,
                     scatter_kwargs_dict={"alpha":0.35, "lw":0.35, "edgecolor":"0.4", "s":38, "rasterized":True}, min_mass=24, angles='xy', scale_units='xy',
                     headaxislength=2.75, headlength=5, headwidth=4.8, minlength=1.5,
                     plot_random=True, scale_type="absolute")
-
+plt.savefig('foo.png')
 
 
