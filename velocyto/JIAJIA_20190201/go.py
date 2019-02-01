@@ -100,6 +100,30 @@ for i, gene in enumerate(gene_list):
 
 plt.savefig('gene.pdf')
 
+#############
+
+
+plt.figure(None, (5,8))
+gs = plt.GridSpec(3,2)
+gene_list = ['Pdgfra', 'Cspg4', 
+             'Olig1', 'Olig2',
+              "Chd8", "Smarca4",]
+
+for i, gene in enumerate(gene_list):
+    plt.subplot(gs[i]);this_colorandum=S_sz[np.where(genenames == gene)[0][0], :];vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=this_colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True);plt.title(gene);plt.axis("off")
+    
+#plt.savefig("../figures/Haber_cellcycle_genes.pdf")
+
+plt.savefig('gene_ori.pdf')
+
+#########################
+
+
+
+
+
+
+
 
 
 plt.figure(None, (5,5))
