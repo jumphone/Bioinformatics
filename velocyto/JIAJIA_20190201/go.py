@@ -94,13 +94,7 @@ gene_list = ['Pdgfra', 'Cspg4',
               "Chd8", "Smarca4",]
 
 for i, gene in enumerate(gene_list):
-  
-    plt.subplot(gs[i])
-    
-    colorandum = Sx_sz[np.where(genenames == gene)[0][0], :]   
-    vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True)
-    plt.title(gene)
-    plt.axis("off")
+    plt.subplot(gs[i]);this_colorandum=Sx_sz[np.where(genenames == gene)[0][0], :];vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=this_colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True);plt.title(gene);plt.axis("off")
     
 #plt.savefig("../figures/Haber_cellcycle_genes.pdf")
 
@@ -108,7 +102,7 @@ plt.savefig('gene.pdf')
 
 
 
-plt.figure(None, (3,3))
+plt.figure(None, (5,5))
 gene='Pdgfra'
 colorandum = Sx_sz[np.where(genenames == gene)[0][0], :]
 vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True)
@@ -117,7 +111,7 @@ plt.axis("off")
 plt.savefig('Pdgfra.pdf')
 
 
-plt.figure(None, (3,3))
+plt.figure(None, (5,5))
 gene='Cspg4'
 colorandum = Sx_sz[np.where(genenames == gene)[0][0], :]
 vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True)
