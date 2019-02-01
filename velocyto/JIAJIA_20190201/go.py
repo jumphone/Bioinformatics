@@ -1,4 +1,6 @@
 import velocyto as vcy
+import numpy as np
+
 vlm = vcy.VelocytoLoom("picard_KA4FM.loom")
 #vlm.normalize("S", size=True, log=True)
 #vlm.dump_hdf5("my_velocyto_analysis")
@@ -6,7 +8,7 @@ vlm = vcy.VelocytoLoom("picard_KA4FM.loom")
 
 
 vlm.filter_cells(bool_array=vlm.initial_Ucell_size > np.percentile(vlm.initial_Ucell_size, 0.5))
-vlm.set_clusters(vlm.ca["ClusterName"])
+#vlm.set_clusters(vlm.ca["ClusterName"])
 vlm.score_detection_levels(min_expr_counts=40, min_cells_express=30)
 vlm.filter_genes(by_detection_levels=True)
 vlm.score_cv_vs_mean(3000, plot=True, max_expr_avg=35)
