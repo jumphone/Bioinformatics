@@ -47,10 +47,87 @@ import matplotlib.pyplot as plt
 
 
 plt.figure(None,(20,10))
-vlm.plot_grid_arrows(quiver_scale=0.6,
-                    scatter_kwargs_dict={"alpha":0.35, "lw":0.35, "edgecolor":"0.4", "s":38, "rasterized":True}, min_mass=24, angles='xy', scale_units='xy',
-                    headaxislength=2.75, headlength=5, headwidth=4.8, minlength=1.5,
-                    plot_random=True, scale_type="absolute")
-plt.savefig('foo.png')
+#vlm.plot_grid_arrows(quiver_scale=0.6,
+#                    scatter_kwargs_dict={"alpha":0.35, "lw":0.35, "edgecolor":"0.4", "s":38, "rasterized":True}, min_mass=24, angles='xy', scale_units='xy',
+#                    headaxislength=2.75, headlength=5, headwidth=4.8, minlength=1.5,
+#                    plot_random=True, scale_type="absolute")
+
+vlm.plot_grid_arrows(quiver_scale=1.4,
+                     scatter_kwargs_dict={"alpha":0.35, "lw":0.35, "edgecolor":"0.4", "s":38, "rasterized":True},
+                     min_mass=5.5, angles='xy', scale_units='xy',
+                     headaxislength=2.75, headlength=5, headwidth=4.8, minlength=1.5,
+                     plot_random=False, scale_type="relative")
+
+
+plt.savefig('foo.pdf')
+
+
+import loompy
+
+ds = loompy.connect("picard_KA4FM.loom")
+S = np.array(ds["spliced"][:])
+cellids = np.array(ds.ca.CellID)
+genenames = np.array(ds.ra.Gene)
+ds.close()
+
+
+mask = np.in1d(cellids, vlm.ca["CellID"])
+cellids = cellids[mask]
+S = S[:, mask]
+
+mask = (S.sum(1) > 20) & ((S>0).sum(1) > 15)
+genenames = genenames[mask]
+S = S[mask, :]
+
+np.alltrue(cellids == vlm.ca["CellID"])
+
+# Size normalize
+S_sz = S / S.sum(0)
+# Impute
+Sx_sz = vcy.convolve_by_sparse_weights(S_sz, vlm.knn_smoothing_w)
+
+
+plt.figure(None, (5,8))
+gs = plt.GridSpec(3,2)
+gene_list = ['Pdgfra', 'Cspg4', 
+             'Olig1', 'Olig2',
+              "Chd8", "Smarca4",]
+
+for i, gene in enumerate(gene_list):
+  
+    plt.subplot(gs[i])
+    
+    colorandum = Sx_sz[np.where(genenames == gene)[0][0], :]   
+    vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True)
+    plt.title(gene)
+    plt.axis("off")
+    
+#plt.savefig("../figures/Haber_cellcycle_genes.pdf")
+
+plt.savefig('gene.pdf')
+
+
+
+plt.figure(None, (3,3))
+gene='Pdgfra'
+colorandum = Sx_sz[np.where(genenames == gene)[0][0], :]
+vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True)
+plt.title(gene)
+plt.axis("off")
+plt.savefig('Pdgfra.pdf')
+
+
+plt.figure(None, (3,3))
+gene='Cspg4'
+colorandum = Sx_sz[np.where(genenames == gene)[0][0], :]
+vcy.scatter_viz(vlm.ts[:,0], vlm.ts[:, 1], c=colorandum, cmap="magma_r", alpha=0.35, s=3, rasterized=True)
+plt.title(gene)
+plt.axis("off")
+plt.savefig('Cspg4.pdf')
+
+
+
+
+
 
 
