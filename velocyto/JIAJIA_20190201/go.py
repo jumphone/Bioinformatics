@@ -21,7 +21,7 @@ vlm._normalize_U(relative_size=vlm.U.sum(0),
 
 
 vlm.perform_PCA()
-vlm.knn_imputation(n_pca_dims=20, k=500, balanced=True, b_sight=3000, b_maxl=1500, n_jobs=16)
+vlm.knn_imputation(n_pca_dims=20, k=500, balanced=True, b_sight=2000, b_maxl=1500, n_jobs=16)
 
 
 vlm.fit_gammas()
