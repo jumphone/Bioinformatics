@@ -27,5 +27,10 @@ tag=.get_tag_max(out)
 
 
 
+exp_sc_mat=data_6678 #smart
+exp_ref_mat=data_6701 #drop
+out=.get_cor(exp_sc_mat, exp_ref_mat, method='kendall',CPU=4, print_step=10)
+tag=.get_tag_max(out)
+
 
 
