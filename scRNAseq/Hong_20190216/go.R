@@ -1,13 +1,24 @@
 library(Seurat)
 library(dplyr)
 
-
+#smart
 data_6678 <- read.table('ref_6678_pure.txt',header=T,row.names=1,sep='\t',check.names=F)
+#############
+gene_info=read.table('Homo_sapiens.GRCh38.87.chr.gtf.combined.pc.bed',header=F,sep='\t',check.names=F)
+used=which(rownames(data_6678) %in% gene_info[,5])
+data_6678=data_6678[used,]
+i=1
+while(i<=nrow(data_6678)){
+    this_id=which(gene_info[,5]==rownames(data_6678)[i])
+    data_6678[i,]=data_6678[i,]/(gene_info[this_id,3]-gene_info[this_id,2])
+    i=i+1
+    if(i%%10==1){print(i)}}
+################
 data_6678[1:3,1:3]
 colnames(data_6678)=paste0('cluster',colnames(data_6678))
 data_6678[1:3,1:3]
 
-
+#drop
 data_6701 <- read.table('ref_6701_pure.txt',header=T,row.names=1,sep='\t',check.names=F)
 data_6701[1:3,1:3]
 colnames(data_6701)=paste0('cluster',colnames(data_6701))
