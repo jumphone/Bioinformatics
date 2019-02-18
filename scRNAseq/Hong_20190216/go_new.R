@@ -43,7 +43,9 @@ pbmc <- FindClusters(object = pbmc, reduction.type = "pca", dims.use = PCUSE, re
 TSNEPlot(object = pbmc)
 #DimPlot(pbmc, reduction.use = "umap")
 
+saveRDS(pbmc,file='orig_decidua.RDS')
 
-
+#########################
+source
 
 
