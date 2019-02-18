@@ -50,5 +50,5 @@ DimPlot(pbmc, reduction.use = "umap",pt.size=0.1,group.by='C')
 DimPlot(pbmc, reduction.use = "umap",pt.size=0.1,group.by='L')
 dev.off()
 
-#saveRDS(pbmc,file='13Nature.RDS')
+#saveRDS(pbmc,file='13Nature_10X.RDS')
 
