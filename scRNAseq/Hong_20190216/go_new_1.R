@@ -80,7 +80,7 @@ pdf('placenta_MCA.pdf',width=12,height=10)
 DimPlot(pbmc, reduction.use = "umap",group.by='scref', do.label=T, pt.size=3, label.size=5)
 dev.off()
 
-
+#saveRDS(out,file='13Nature_10X_scref_out.RDS')
 
 
 
