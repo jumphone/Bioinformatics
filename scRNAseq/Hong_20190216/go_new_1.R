@@ -77,7 +77,6 @@ pbmc@meta.data$scref=tag2[,2]
 pbmc@meta.data$tmp=tag1[,2]
 
 pdf('placenta_MCA.pdf',width=12,height=10)
-TSNEPlot(object = pbmc, do.label=T, pt.size=3, label.size=5, group.by ='scref')
 DimPlot(pbmc, reduction.use = "umap",group.by='scref', do.label=T, pt.size=3, label.size=5)
 dev.off()
 
