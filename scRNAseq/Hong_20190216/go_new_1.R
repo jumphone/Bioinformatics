@@ -54,7 +54,7 @@ dev.off()
 
 
 #########################
-
+#pbmc=readRDS('13Nature_10X.RDS')
 
 source('scRef.R')
 exp_ref_mat=read.table('MCA_combined_human.txt',header=T,row.names=1,sep='\t')
