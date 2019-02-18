@@ -29,8 +29,26 @@ pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.pr
 PCElbowPlot(object = pbmc,num.pc=PCNUM)
 
 
+
+
 PCUSE=1:50
 #pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
 pbmc <- RunUMAP(pbmc, dims.use = PCUSE)
-DimPlot(pbmc, reduction.use = "umap")
+DimPlot(pbmc, reduction.use = "umap",pt.size=0.1)
+
+
+tag=read.table('E6701_cluster.txt',sep='\t')
+tag=tag[which(tag[,1] %in% colnames(pbmc@data)),]
+
+pbmc@meta.data$F=tag[,2]
+pbmc@meta.data$C=tag[,3]
+pbmc@meta.data$L=tag[,4]
+
+pdf('13Nature.pdf',width=12,height=8)
+DimPlot(pbmc, reduction.use = "umap",pt.size=0.1,group.by='F')
+DimPlot(pbmc, reduction.use = "umap",pt.size=0.1,group.by='C')
+DimPlot(pbmc, reduction.use = "umap",pt.size=0.1,group.by='L')
+dev.off()
+
+#saveRDS(pbmc,file='13Nature.RDS')
 
