@@ -24,4 +24,13 @@ length(x = pbmc@var.genes)
 pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI", "percent.mito"))
 
 
+PCNUM=50
+pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, pcs.compute=PCNUM, genes.print = 5)
+PCElbowPlot(object = pbmc,num.pc=PCNUM)
+
+
+PCUSE=1:50
+#pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
+pbmc <- RunUMAP(pbmc, dims.use = PCUSE)
+DimPlot(pbmc, reduction.use = "umap")
 
