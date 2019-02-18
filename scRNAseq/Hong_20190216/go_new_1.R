@@ -52,3 +52,41 @@ dev.off()
 
 #saveRDS(pbmc,file='13Nature_10X.RDS')
 
+
+#########################
+
+
+source('scRef.R')
+exp_ref_mat=read.table('MCA_combined_human.txt',header=T,row.names=1,sep='\t')
+
+
+COL=c()
+i=1
+while(i <=length(pbmc@ident)){
+    this_col=which(colnames(pbmc@raw.data)==names(pbmc@ident)[i])
+    COL=c(COL,this_col)
+    i=i+1
+    }      
+exp_sc_mat=as.matrix(pbmc@raw.data)[,COL]
+
+out=SCREF(exp_sc_mat, exp_ref_mat, min_cell=100, CPU=4,print_step=10)
+tag1=out$tag1
+tag2=out$tag2
+
+pbmc@meta.data$scref=tag2[,2]
+pbmc@meta.data$tmp=tag1[,2]
+
+pdf('placenta_MCA.pdf',width=12,height=10)
+TSNEPlot(object = pbmc, do.label=T, pt.size=3, label.size=5, group.by ='scref')
+DimPlot(pbmc, reduction.use = "umap",group.by='scref', do.label=T, pt.size=3, label.size=5)
+dev.off()
+
+
+
+
+
+
+
+
+
+
