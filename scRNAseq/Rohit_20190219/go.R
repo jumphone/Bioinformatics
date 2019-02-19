@@ -71,3 +71,21 @@ out =.vec_projection(exp_sc_mat, sc_tag, exp_ref_mat, ref_tag, ref_vec,
         method='kendall', nearest_cell=1, alpha=0.5, random_size=1000, 
         random_seed=123, CPU=4, print_step=10)
 
+
+
+
+
+
+pdf('ALL.pdf',width=12,height=10)
+
+DimPlot(pbmc, reduction.use = "umap",pt.size=0.5,group.by='tag')
+XLIM=c(min(ref_vec[,1]-1),max(ref_vec[,1]+1))
+YLIM=c(min(ref_vec[,2]-1),max(ref_vec[,2]+1))
+plot(ref_vec,xlim=XLIM,ylim=YLIM,pch=16,col='grey70')
+par(new=T)
+plot(out$vec,xlim=XLIM,ylim=YLIM,pch=16,col='red')
+
+dev.off()
+
+
+
