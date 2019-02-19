@@ -72,7 +72,7 @@ out =.vec_projection(exp_sc_mat, sc_tag, exp_ref_mat, ref_tag, ref_vec,
         random_seed=123, CPU=4, print_step=10)
 
 
-
+save.image(file='ALL.RData')
 
 
 
