@@ -60,7 +60,7 @@ PCNUM=200
 pbmc <- RunPCA(object = pbmc, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, pcs.compute=PCNUM, genes.print = 5)
 PCElbowPlot(object = pbmc,num.pc=PCNUM)
 
-PCUSE=1:10
+PCUSE=1:24
 #pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
 pbmc <- RunUMAP(pbmc, dims.use = PCUSE)
 
@@ -70,7 +70,7 @@ DimPlot(pbmc, reduction.use = "umap", pt.size=0.2)
 TSNE_VEC=pbmc@dr$umap@cell.embeddings
 D=dist(TSNE_VEC)
 H=hclust(D)
-C=cutree(H, k=10) 
+C=cutree(H, k=12) 
 pbmc@meta.data$C=C
 
 
@@ -92,18 +92,18 @@ while(i <=length(pbmc@ident)){
     }      
 exp_sc_mat=as.matrix(pbmc@raw.data)[,COL]
 
-#LocalAgg=.generate_ref(exp_sc_mat, cbind(names(pbmc@ident),as.character(pbmc@meta.data$C)), min_cell = 1 )
+LocalAgg=.generate_ref(exp_sc_mat, cbind(names(pbmc@ident),as.character(pbmc@meta.data$C)), min_cell = 1 )
 
-#out=.get_cor(LocalAgg, NatureRef, method='kendall',CPU=4, print_step=10)
-#tag=.get_tag_max(out)
+out=.get_cor(LocalAgg, NatureRef, method='kendall',CPU=4, print_step=10)
+tag=.get_tag_max(out)
 
-#tag_all=c()
-#for(one in pbmc@meta.data$C){
-#   tag_all=c(tag_all, tag[which(tag[,1]==as.character(one)),2] )
-#}
+tag_all=c()
+for(one in pbmc@meta.data$C){
+   tag_all=c(tag_all, tag[which(tag[,1]==as.character(one)),2] )
+}
 
-out=SCREF(exp_sc_mat,NatureRef,min_cell=10)
-tag_all=out$tag2[,2]
+#out=SCREF(exp_sc_mat,NatureRef,min_cell=10)
+#tag_all=out$tag2[,2]
 
 pbmc@meta.data$scref=as.character(tag_all)
 DimPlot(pbmc, reduction.use = "umap",group.by='scref', do.label=T, pt.size=2, label.size=5)
@@ -116,12 +116,26 @@ DimPlot(pbmc, reduction.use = "umap", pt.size=2, do.label=T, group.by='C')
 DimPlot(pbmc, reduction.use = "umap",group.by='scref', do.label=T, pt.size=2, label.size=5)
 dev.off()
 
-#CD56 ~ NCAM1
-#CD39 ~ ENTPD1
-#CD16 ~ FCGR3A
+tmp=pbmc@ident
+pbmc@ident=as.factor(pbmc@meta.data$scref)
+names(pbmc@ident)=names(tmp)
 
-GENE=c('KLRB1','CD69','FCGR3A')
-VlnPlot(object = pbmc, features.plot = GENE[3], group.by='scref')
+
+pbmc.markers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, 
+    thresh.use = 0.25)
+top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+
+
+pdf('HongFangZi_withmarker.pdf',width=15,height=12)
+DimPlot(pbmc, reduction.use = "umap", pt.size=2, do.label=T, group.by='orig.ident')
+DimPlot(pbmc, reduction.use = "umap", pt.size=2, do.label=T, group.by='C')
+DimPlot(pbmc, reduction.use = "umap",group.by='scref', do.label=T, pt.size=2, label.size=5)
+DoHeatmap(object = pbmc, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+dev.off()
+
+
+saveRDS(pbmc.markers,'HongFangZi_marker.RDS')
+
 
 
 
