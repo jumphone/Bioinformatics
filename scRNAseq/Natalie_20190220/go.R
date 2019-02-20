@@ -37,22 +37,13 @@ tag=.get_tag_max(out)
 
 
 pbmc@meta.data$injmech=tag[,2]
-TSNEPlot(object = pbmc, group.by ='injmech', do.label=TRUE)
 
 
+write.table(tag,file='injmec_tag.txt',quote=F,row.names=F,col.names=T,sep='\t') 
 
-
-
-
-
-
-pbmc@meta.data$cluster=pbmc@ident
-
-used_cluster=c(2,9,14,17,19,23)
-pbmc_old=EXP_cluster
-used_index=which(cls_tag %in% used_cluster & (!com_tag[,2] %in% c('Macrophage_Lyz2.high.Brain.','B.cell_Igkc.high.Bone.Marrow.','T.cell_Ms4a4b.high.Bone.Marrow.')))
-
-
-
+pdf('INJMECH.pdf',width=25,height=20)
+TSNEPlot(object = pbmc, group.by ='injmech', do.label=TRUE,label.size=2)
+TSNEPlot(object = pbmc, group.by ='injmech', do.label=F)
+dev.off()
 
 
