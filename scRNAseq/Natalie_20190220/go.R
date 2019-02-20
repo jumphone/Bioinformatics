@@ -4,7 +4,6 @@ load('./MouseSciaticNerve-master/inst/Inj9dBeads/Inj9dBeads.RData')
 load('./MouseSciaticNerve-master/inst/Inj9dBeads/Inj9dBeads_savedRes.RData')
 plot(data_for_scClustViz$dr_viz,col=as.factor(data_for_scClustViz$cl$res.3.2),pch=16)
 
-plot
 TAG=as.numeric(as.character(data_for_scClustViz$cl$res.3.2))
 LABEL=rep('NA',length(TAG))
 
@@ -29,4 +28,47 @@ saveRDS(this_Ref,file='Inj9dBeads_Ref.RDS')
 
 load('./MouseSciaticNerve-master/inst/Inj9dBeadsMesenchymal/Inj9dBeadsMesenchymal.RData')
 load('./MouseSciaticNerve-master/inst/Inj9dBeadsMesenchymal/Inj9dBeadsMesenchymal_savedRes.RData')
+plot(data_for_scClustViz$dr_viz,col=as.factor(data_for_scClustViz$cl$res.0.8),pch=16)
+
+TAG=as.numeric(as.character(data_for_scClustViz$cl$res.0.8))
+LABEL=rep('NA',length(TAG))
+
+LABEL[which(TAG %in% c(1,3))]='Differentiating.mesenchymal.cells'
+LABEL[which(TAG %in% c(2,5))]='Endoneurial.cells'
+LABEL[which(TAG %in% c(4,7))]='Epineurial.cells'
+LABEL[which(TAG %in% c(6))]='Dividing.mesenchymal.cells'
+LABEL[which(TAG %in% c(8))]='Perineurial.cells'
+
+source('scRef.R')
+this_Ref=.generate_ref(data_for_scClustViz$nge, cbind(LABEL,LABEL), min_cell=1)
+saveRDS(this_Ref,file='Inj9dBeadsMesenchymal_Ref.RDS')
+
+########
+
+
+load('./MouseSciaticNerve-master/inst/UninjMesenchymal/UninjMesenchymal.RData')
+load('./MouseSciaticNerve-master/inst/UninjMesenchymal/UninjMesenchymal_savedRes.RData')
+plot(data_for_scClustViz$dr_viz,col=as.factor(data_for_scClustViz$cl$res.0.4),pch=16)
+
+
+TAG=as.numeric(as.character(data_for_scClustViz$cl$res.0.4))
+LABEL=rep('NA',length(TAG))
+
+LABEL[which(TAG %in% c(5))]='Perineurial.cells'
+LABEL[which(TAG %in% c(3,1))]='Endoneurial.cells'
+LABEL[which(TAG %in% c(2,4))]='Epineurial.cells'
+
+
+source('scRef.R')
+this_Ref=.generate_ref(data_for_scClustViz$nge, cbind(LABEL,LABEL), min_cell=1)
+saveRDS(this_Ref,file='UninjMesenchymal_Ref.RDS')
+
+#################
+
+
+
+
+
+
+
 
