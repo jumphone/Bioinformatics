@@ -173,3 +173,109 @@ heatmap.2(data,scale=c("none"),labCol = F,dendrogram='none',Colv=F,trace='none',
 plot(1:length(unique(OT)),col=CCC,pch=16,cex=3)
 text(1:length(unique(OT)),labels=unique(OT),pos=3)
 dev.off()
+
+
+
+######################################################
+
+#install.packages("ggcorrplot")
+library('ggcorrplot')
+tmp=cor(as.matrix(pbmc@data))
+ggcorrplot(tmp[1:10,1:10], method = "circle")
+
+LR=read.table('LR.txt',sep='\t')
+GENE=rownames(pbmc@data)
+V=c()
+i=1
+while(i<=length(LR[,1])){
+if(LR[i,1] %in% GENE && LR[i,2] %in% GENE){V=c(V,i)}
+i=i+1
+}
+
+VLR=LR[V,]
+
+library('survcomp')
+LRG=c(as.character(VLR[,1]),as.character(VLR[,2]))
+
+TAG=pbmc@meta.data$scref
+EXP=pbmc@data
+G=rownames(pbmc@data)
+
+EXPV=as.matrix(EXP[which(G %in% LRG),])
+
+UT=unique(TAG)
+
+
+PVM=c()
+for(one in UT){
+ V=which(TAG==one)
+ N=which(TAG!=one)
+ pvs=c()
+ i=1
+ while(i <=nrow(EXPV)){
+   #gene=rownames(EXPV)[i]
+   pv=wilcox.test(EXPV[i,V] , EXPV[i,N], alternative='greater')$p.value
+   pvs=c(pvs,pv)
+   i=i+1}
+ PVM=cbind(PVM,pvs)
+}
+
+colnames(PVM)=UT
+rownames(PVM)=rownames(EXPV)
+
+VLR[,1]=as.character(VLR[,1])
+VLR[,2]=as.character(VLR[,2])
+
+
+OUT=c()
+i=1
+while(i<=nrow(VLR)){
+   
+    R=VLR[i,1]
+    L=VLR[i,2]
+   
+    dNKR=PVM[which(rownames(PVM)==R),which(colnames(PVM)=='dNK')]
+    dNKL=PVM[which(rownames(PVM)==L),which(colnames(PVM)=='dNK')]
+   
+    tmp=c()
+    for(one in UT){
+        thisL=PVM[which(rownames(PVM)==L),which(colnames(PVM)==one)]
+        thisR=PVM[which(rownames(PVM)==R),which(colnames(PVM)==one)]
+        dNKR_P=combine.test(c(dNKR, thisL), method ='fisher')
+        dNKL_P=combine.test(c(dNKL, thisR), method ='fisher')
+        tmp=c(tmp,dNKR_P,dNKL_P)
+    }
+   
+   OUT=cbind(OUT,tmp)
+   
+    i=i+1}
+
+tmp1=paste0(UT,'_2')
+tmp2=paste0(UT,'_1')
+
+
+
+rownames(OUT)=as.character(t(cbind(tmp1,tmp2)))
+
+
+
+colnames(OUT)=paste0(VLR[,1],'_',VLR[,2])
+
+#NEWOUT=apply(OUT,2,p.adjust,'fdr')
+NEWOUT=OUT
+NEWOUT=-log(NEWOUT,10)
+NEWOUT=apply(NEWOUT,2,scale)
+
+NEWOUT[which(NEWOUT>2)]=2
+NEWOUT[which(NEWOUT< -2)]=-2
+
+colnames(NEWOUT)=colnames(OUT)
+rownames(NEWOUT)=rownames(OUT)
+
+library('gplots')
+heatmap.2(t(NEWOUT),scale=c("none"),dendrogram='none',Colv=F,trace='none',col=colorRampPalette(c('royalblue','grey95','indianred')) ,margins=c(10,10))
+
+
+
+
+
