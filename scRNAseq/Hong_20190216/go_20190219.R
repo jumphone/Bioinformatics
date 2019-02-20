@@ -136,9 +136,40 @@ dev.off()
 
 saveRDS(pbmc.markers,'HongFangZi_marker.RDS')
 
+G102=read.table('102G.txt',sep='\t')
+
+exp_data=as.matrix(pbmc@data)
+
+#exp_data=as.matrix(pbmc@scale.data)
+
+#LIM=1.5
+#exp_data[which(exp_data>LIM)]=LIM
+#exp_data[which(exp_data< -LIM)]= -LIM
+
+V=which(rownames(exp_data) %in% as.character(G102[,1]))
+O=order(pbmc@meta.data$scref)
+OT=pbmc@meta.data$scref[O]
+data=as.matrix(exp_data[V,O])
+CLUSTER_NUM=length(unique(pbmc@meta.data$scref))
 
 
+CCC=rainbow(CLUSTER_NUM)
+COL=rep('red',length(data[1,]))
+tmp=''
+i=0
+j=1
+for(one in OT){
+   if(one !=tmp){i=i+1}
+   COL[j]=CCC[i]
+   tmp=one
+   j=j+1
+}
 
 
+pdf('HEATMAP.pdf',width=10,height=12)
+heatmap.2(data,scale=c("none"),labCol = F,dendrogram='none',Colv=F,trace='none',ColSideColors=COL,
+          col=colorRampPalette(c('blue3','grey95','red3')),main=as.character(i) ,margins=c(10,10))
 
-
+plot(1:length(unique(OT)),col=CCC,pch=16,cex=3)
+text(1:length(unique(OT)),labels=unique(OT),pos=3)
+dev.off()
