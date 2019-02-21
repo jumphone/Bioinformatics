@@ -92,3 +92,5 @@ https://blog.csdn.net/kmd8d5r/article/details/80879161
 ccRemover: https://cran.r-project.org/web/packages/ccRemover/vignettes/ccRemover_tutorial.html
 
 RNASeqPower: https://bioconductor.org/packages/release/bioc/manuals/RNASeqPower/man/RNASeqPower.pdf
+
+Motif compare: http://rsat.sb-roscoff.fr/
