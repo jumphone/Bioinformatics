@@ -94,3 +94,6 @@ ccRemover: https://cran.r-project.org/web/packages/ccRemover/vignettes/ccRemover
 RNASeqPower: https://bioconductor.org/packages/release/bioc/manuals/RNASeqPower/man/RNASeqPower.pdf
 
 Motif compare: http://rsat.sb-roscoff.fr/
+
+CNN Motif: https://github.com/davek44/Basset
+
