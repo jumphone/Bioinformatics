@@ -97,4 +97,6 @@ Motif compare: http://rsat.sb-roscoff.fr/
 
 CNN Motif: https://github.com/davek44/Basset
 
-https://blog.csdn.net/emaste_r/article/details/19560321
+Github: https://blog.csdn.net/emaste_r/article/details/19560321
+
+Github RM : https://wodewone.github.io/2016/11/27/git%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%A4%B9%E5%92%8C%E6%96%87%E4%BB%B6/
