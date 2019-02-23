@@ -16,7 +16,7 @@ while(i<=END){
   d2=sample(c,5) 
   this_stat=t.test(d2,d1,paired=T)$statistic
   stat_list=c(stat_list,this_stat)  
-print(i)
+  if(i%%100==1){print(i)}
 i=i+1}
 
 
