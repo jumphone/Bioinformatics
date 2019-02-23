@@ -26,11 +26,17 @@ PV=length(which(stat_list>true_stat))/length(stat_list)
 save.image(file='data.RData')
 #PV=0.0466828
 
-pdf('permutation_test.pdf',width=7,height=7)
-plot(density(stat_list),main='',xlab='Value of statistic',xlim=c(-4,4))
+pdf('permutation_test.pdf',width=12,height=6)
+#barplot(b[,1],b[,2])
+par(mfrow=c(1,2))
+M=c(mean(b[,1]),mean(b[,2]))
+names(M)=c('primary','recurrence')
+bp=barplot(M,ylim=c(0,20))
+
+plot(density(stat_list),main='',xlab='Statistic',xlim=c(-4,4))
 abline(v=true_stat,lwd=1.5,col='red')
-text(true_stat,0.2,'p.value=0.04668',pos=4,col='red')
-text(0,0.1,'100,000 permutations',pos=1,col='black')
+text(true_stat,0.2,'p.value=0.046',pos=4,col='red')
+#text(0,0.1,'100,000 permutations',pos=1,col='black')
 dev.off()
 
 
