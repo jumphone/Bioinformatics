@@ -3,13 +3,13 @@ b=a[which(!is.na(a[,1]*a[,2])),]
 tmp=t.test(b[,2],b[,1],paired=T)
 true_stat=tmp$statistic
 
-c=c(a[,1],a[,2])
+c=c(b[,1],b[,2])
 c=c[which(!is.na(c))]
 
 END=100000
 stat_list=c()
 
-set.seed(123)
+set.seed(12345)
 i=1
 while(i<=END){
   d1=sample(c,5)
