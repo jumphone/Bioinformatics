@@ -30,8 +30,14 @@ pdf('permutation_test.pdf',width=12,height=6)
 #barplot(b[,1],b[,2])
 par(mfrow=c(1,2))
 M=c(mean(b[,1]),mean(b[,2]))
+SD=c(sd(b[,1]),sd(b[,2]))
 names(M)=c('primary','recurrence')
-bp=barplot(M,ylim=c(0,20))
+barCenters =barplot(M,ylim=c(0,40))
+arrows(barCenters, M,
+       barCenters, M+SD,angle=90,code=3)
+
+points(barCenters[2],(M+SD)[2],pch=8,col='black')
+
 
 plot(density(stat_list),main='',xlab='Statistic',xlim=c(-4,4))
 abline(v=true_stat,lwd=1.5,col='red')
