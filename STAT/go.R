@@ -22,6 +22,6 @@ i=i+1}
 
 PV=length(which(stat_list>true_stat))/END
 
-
+save.image(file='data.RData')
 #PV=0.04668
 
