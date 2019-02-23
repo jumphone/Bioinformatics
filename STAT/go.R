@@ -32,3 +32,11 @@ abline(v=true_stat,lwd=1.5,col='red')
 text(true_stat,0.2,'p.value=0.04668',pos=4,col='red')
 text(0,0.1,'100,000 permutations',pos=1,col='black')
 dev.off()
+
+
+
+
+
+
+
+
