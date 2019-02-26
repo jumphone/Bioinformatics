@@ -30,7 +30,11 @@ pbmc@meta.data$paper.condition=tag_data[,3]
 PCUSE=1:20
 pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE,do.fast=T)
 
+library(kBET)
+batch.estimate <- kBET(as.matrix(pbmc@data), pbmc@meta.data$paper.condition)
 
+
+saveRDS(pbmc,file='CCA.RDS')
 
 DimPlot(pbmc, group.by='orig.ident', reduction.use='tsne')
 DimPlot(pbmc, group.by='paper.type', reduction.use='tsne')
