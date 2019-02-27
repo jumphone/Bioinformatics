@@ -127,19 +127,46 @@ plt.hist(vis_x, color = 'blue', edgecolor = 'black',
 plt.show()
 #####
 
+vis_x=CT_x
+plt.hist(vis_x, color = 'blue', edgecolor = 'black',
+         bins = int(180/5))
+plt.show()
+######## 
     
 
+##############
+#np.save('MSexp', MSexp)
+#np.save('CTexp', CTexp)
+#np.save('MS_x', MS_x)
+#np.save('CT_x', CT_x)
+##############
+##############
+
+import numpy as np
+
+##############
+MSexp=np.load('MSexp')
+CTexp=np.load('CTexp')
+MS_x=np.load('MS_x')
+CT_x=np.load('CT_x')
+######################## 
+MS_o=np.argsort(MS_x)
+CT_o=np.argsort(CT_x)
 
 
+fo=open('MS_x.txt','w')
+for one in MS_x:
+    fo.write(str(one)+'\n')
+fo.close()
 
 
+fo=open('CT_x.txt','w')
+for one in MS_x:
+    fo.write(str(one)+'\n')
+fo.close()
 
 
-
-
-
-
-
+########################
 CT_embeddings = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS).fit_transform(CTexp)
 CT_x = CT_embeddings[:, 0]
 
