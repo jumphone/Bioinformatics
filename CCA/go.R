@@ -6,28 +6,41 @@ tag_data=read.table('GSE118257_MSCtr_snRNA_FinalAnnotationTable.txt',sep='\t',ro
 
 
 pbmc.data=read.table('GSE118257_MSCtr_snRNA_ExpressionMatrix_R.txt',sep='\t',row.names=1,header=T)
-pbmc <- CreateSeuratObject(raw.data = pbmc.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
-pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", 
-    scale.factor = 10000)
+#saveRDS(pbmc.data,'ALL.RDS')
 
-pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, 
-    x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+MS=pbmc.data[,which(tag_data[,3]=='MS')]
+CT=pbmc.data[,which(tag_data[,3]=='Ctrl')]
 
-length(x = pbmc@var.genes)
+saveRDS(MS,'MS.RDS')
+saveRDS(CT,'CT.RDS')
 
-pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI"))
+CPU=6
+PCNUM=50
+PCUSE=1:PCNUM
 
-PCNUM=100
-pbmc <- RunPCA(object = pbmc,pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, 
-    genes.print = 5)
+##########
+MSD = CreateSeuratObject(raw.data = MS, min.cells = 0, min.genes = 0, project = "MS") 
+MSD <- NormalizeData(object = MSD, normalization.method = "LogNormalize", scale.factor = 10000)
+MSD <- ScaleData(object = MSD, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
+MSD <- RunPCA(object = MSD, pcs.compute=PCNUM, pc.genes = rownames(MSD@data), do.print = FALSE)
+MSD <- RunTSNE(object = MSD, dims.use = PCUSE, do.fast=TRUE,dim.embed = 1)
+MSX=MSD@dr$tsne@cell.embeddings
+saveRDS(MSX,file='MSX.RDS')
+##########
+CTD = CreateSeuratObject(raw.data = CT, min.cells = 0, min.genes = 0, project = "CT") 
+CTD <- NormalizeData(object = CTD, normalization.method = "LogNormalize", scale.factor = 10000)
+CTD <- ScaleData(object = CTD, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
+CTD <- RunPCA(object = CTD, pcs.compute=PCNUM, pc.genes = rownames(MSD@data), do.print = FALSE)
+CTD <- RunTSNE(object = CTD, dims.use = PCUSE, do.fast=TRUE,dim.embed = 1)
+CTX=CTD@dr$tsne@cell.embeddings
+saveRDS(CTX,file='CTX.RDS')
+##########
+##########
+MSX=readRDS(MSX)
+CTX=readRDS(CTX)
 
-pbmc@meta.data$paper.type=tag_data[,6]
-pbmc@meta.data$paper.cluster=tag_data[,5]
-pbmc@meta.data$paper.condition=tag_data[,3]
 
 
-PCUSE=1:20
-pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE,do.fast=T)
 
 saveRDS(pbmc,file='CCA.RDS')
 
