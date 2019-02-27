@@ -104,25 +104,22 @@ while(t<=nrow(VP)){
     C=c(C,this_c)
     t=t+1}
 plot(C)
-
-VVP=VP[which(C>0.7),]
-
-t=1
-plot(MSRC[,which(colnames(MSRC)==VVP[t,1])], CTRC[,which(colnames(CTRC)==VVP[t,2])] )
-
-t=2
-plot(MSRC[,which(colnames(MSRC)==VVP[t,1])], CTRC[,which(colnames(CTRC)==VVP[t,2])] )
-
-t=3
-plot(MSRC[,which(colnames(MSRC)==VVP[t,1])], CTRC[,which(colnames(CTRC)==VVP[t,2])] )
-
-t=4
-plot(MSRC[,which(colnames(MSRC)==VVP[t,1])], CTRC[,which(colnames(CTRC)==VVP[t,2])] )
-
-t=5
-plot(MSRC[,which(colnames(MSRC)==VVP[t,1])], CTRC[,which(colnames(CTRC)==VVP[t,2])] )
-
 ##########
+VVP=VP[which(C>0.7),]
+##########
+
+
+X=c()
+Y=c()
+t=1
+while(t<=nrow(VVP)){
+    this_X=MSRC[,which(colnames(MSRC)==VVP[t,1])]
+    this_Y=CTRC[,which(colnames(CTRC)==VVP[t,2])]
+    X=cbind(X,this_X)
+    Y=cbind(Y,this_Y)
+    t=t+1}
+
+
 
 
 
