@@ -58,7 +58,7 @@ NT=8
 RS=123
 PP=30
 NC=1
-PCP=0.95
+PCP=100
 exp=np.load('exp.npy')
 ###########
 
@@ -89,12 +89,22 @@ np.shape(MSexp)
 
 pt = preprocessing.PowerTransformer(method='box-cox', standardize=True)
 PT_MSexp=pt.fit_transform((MSexp+1))
-
-PCA_PT_MSexp=PCA(n_components=PCP).fit_transform(PT_MSexp)
-
+#np.save('PT_MSexp', PT_MSexp)
+#PT_MSexp=np.load('PT_MSexp.npy')
+#PCA_PT_MSexp=PCA(n_components=PCP,random_state=RS).fit_transform(PT_MSexp)
+PCA_PT_MSexp=PCA(n_components=PCP,random_state=RS).fit_transform(PT_MSexp)
 
 MS_embeddings = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS).fit_transform(PCA_PT_MSexp)
 MS_x = MS_embeddings[:, 0]
+
+
+
+
+
+
+
+
+
 
 CT_embeddings = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS).fit_transform(CTexp)
 CT_x = CT_embeddings[:, 0]
