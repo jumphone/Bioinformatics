@@ -78,12 +78,18 @@ pca = PCA(n_components=PCP,random_state=RS)
 tsne = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS)
 
 def raw2tsne(X):
+    print('Start')
+    print('1.Removing unexpressed genes ...')
     tmp=np.apply_along_axis(np.var, 0, X)
     used=np.where(tmp>0)[0]
     X=X[:,used]
+    print('2.Box-cox transforming & Standardize ...')
     X=pt.fit_transform((X+1))
+    print('3.PCA ...')
     X=pca.fit_transform(X)
+    print('4.tSNE ...')
     X=tsne.fit_transform(X)
+    print('End')
     return(X)
 
 ###########
