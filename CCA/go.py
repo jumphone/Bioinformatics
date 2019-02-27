@@ -1,6 +1,7 @@
 ##########################
 
 from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
 from MulticoreTSNE import MulticoreTSNE as TSNE
 from matplotlib import pyplot as plt
 import numpy as np
@@ -9,6 +10,7 @@ NT=8
 RS=123
 PP=30
 NC=1
+PCP=0.95
 
 ##########################
 
@@ -42,13 +44,16 @@ exp=np.array(exp)
 np.shape(exp)
 exp=np.transpose(exp)
 np.shape(exp)
-
+#np.save('exp', exp)
+#########################
 MSexp=exp[:,MSI]
 CTexp=exp[:,CTI]
 np.shape(MSexp)
 np.shape(CTexp)
 
 #####################
+MS_pca=PCA(n_components=PCP).fit_transform(MSexp)
+
 
 MS_embeddings = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS).fit_transform(MSexp)
 MS_x = MS_embeddings[:, 0]
