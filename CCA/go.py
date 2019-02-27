@@ -8,9 +8,9 @@ import numpy as np
 
 NT=8
 RS=123
+PCP=100
 PP=30
 NC=1
-PCP=100
 
 ##########################
 
@@ -66,8 +66,8 @@ from sklearn import preprocessing
 
 NT=8
 RS=123
-PP=30
 PCP=100
+PP=30
 NC=1
 
 
