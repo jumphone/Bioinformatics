@@ -1,7 +1,7 @@
 system('curl https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R > scRef.R')
 
 library(Seurat)
-source('scRef')
+source('scRef.R')
 
 tag_data=read.table('GSE118257_MSCtr_snRNA_FinalAnnotationTable.txt',sep='\t',row.names=1,header=T)
 
@@ -30,6 +30,11 @@ pbmc@meta.data$paper.condition=tag_data[,3]
 PCUSE=1:20
 pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE,do.fast=T)
 
+saveRDS(pbmc,file='CCA.RDS')
+
+
+
+
 library(kBET)
 batch.estimate <- kBET(as.matrix(pbmc@data), pbmc@meta.data$paper.condition)
 
@@ -48,7 +53,7 @@ DimPlot(pbmc, group.by='paper.condition', reduction.use='tsne')
 #pbmc <- RunUMAP(object = pbmc, dims.use = PCUSE)
 #DimPlot(pbmc, group.by='orig.ident', reduction.use='umap')
 #pbmc <- FindClusters(object = pbmc, reduction.type = "pca", dims.use = PCUSE, 
-    resolution = 0.6, print.output = 0, save.SNN = TRUE)
+#    resolution = 0.6, print.output = 0, save.SNN = TRUE)
 
 
 
