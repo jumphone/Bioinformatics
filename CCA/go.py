@@ -47,20 +47,47 @@ np.shape(exp)
 #np.save('exp', exp)
 #########################
 ########################
+########################
+########################
+########################
+########################
+########################
+########################
+
+
+exp=np.load('exp.npy')
 
 from sklearn.datasets import load_digits
 from sklearn.decomposition import PCA
 from MulticoreTSNE import MulticoreTSNE as TSNE
 from matplotlib import pyplot as plt
 import numpy as np
+from sklearn import preprocessing
 
 NT=8
 RS=123
 PP=30
-NC=1
 PCP=100
-exp=np.load('exp.npy')
+NC=1
+
+
 ###########
+
+pt = preprocessing.PowerTransformer(method='box-cox', standardize=True)
+pca = PCA(n_components=PCP,random_state=RS)
+tsne = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS)
+
+def raw2tsne(X):
+    tmp=np.apply_along_axis(np.var, 0, X)
+    used=np.where(tmp>0)[0]
+    X=X[:,used]
+    X=pt.fit_transform((X+1))
+    X=pca.fit_transform(X)
+    X=tsne.fit_transform(X)
+    return(X)
+
+###########
+
 
 fi=open('GSE118257_MSCtr_snRNA_FinalAnnotationTable.txt')
 header=fi.readline()
@@ -80,22 +107,15 @@ np.shape(MSexp)
 np.shape(CTexp)
 
 #####################
-from sklearn import preprocessing
 
-tmp=np.apply_along_axis(np.var, 0, MSexp)
-used=np.where(tmp>0)[0]
-MSexp=MSexp[:,used]
-np.shape(MSexp)
+tsne_MS = raw2tsne(MSexp)
 
-pt = preprocessing.PowerTransformer(method='box-cox', standardize=True)
-PT_MSexp=pt.fit_transform((MSexp+1))
-#np.save('PT_MSexp', PT_MSexp)
-#PT_MSexp=np.load('PT_MSexp.npy')
-#PCA_PT_MSexp=PCA(n_components=PCP,random_state=RS).fit_transform(PT_MSexp)
-PCA_PT_MSexp=PCA(n_components=PCP,random_state=RS).fit_transform(PT_MSexp)
 
-MS_embeddings = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS).fit_transform(PCA_PT_MSexp)
-MS_x = MS_embeddings[:, 0]
+
+
+    
+
+
 
 
 
@@ -110,11 +130,15 @@ CT_embeddings = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS).fi
 CT_x = CT_embeddings[:, 0]
 
 #####################
-
-plt.scatter(vis_x,vis_x,c=digits.target, cmap=plt.cm.get_cmap("jet", 10), marker='.')
-plt.colorbar(ticks=range(10))
-plt.clim(-0.5, 9.5)
+vis_x=MS_x
+plt.hist(vis_x, color = 'blue', edgecolor = 'black',
+         bins = int(180/5))
 plt.show()
+
+#plt.scatter(vis_x,vis_x, cmap=plt.cm.get_cmap("jet", 10), marker='.')
+#plt.colorbar(ticks=range(10))
+#plt.clim(-0.5, 9.5)
+#plt.show()
 
 
 vis_x = embeddings[:, 0]
