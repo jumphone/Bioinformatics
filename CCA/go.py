@@ -79,7 +79,7 @@ tsne = TSNE(n_jobs=NT,n_components=NC,perplexity=PP,random_state=RS)
 
 def raw2tsne(X):
     print('Start')
-    print('1.Removing unexpressed genes ...')
+    print('1.Removing unexpressed & unchanged genes ...')
     tmp=np.apply_along_axis(np.var, 0, X)
     used=np.where(tmp>0)[0]
     X=X[:,used]
@@ -115,9 +115,17 @@ np.shape(CTexp)
 #####################
 
 tsne_MS = raw2tsne(MSexp)
+MS_x = tsne_MS[:,0]
 
+tsne_CT = raw2tsne(CTexp)
+CT_x = tsne_CT[:,0]
 
-
+#####
+vis_x=MS_x
+plt.hist(vis_x, color = 'blue', edgecolor = 'black',
+         bins = int(180/5))
+plt.show()
+#####
 
     
 
