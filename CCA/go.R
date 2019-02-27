@@ -51,9 +51,9 @@ CT=readRDS("CT.RDS")
 CTX=readRDS("CTX.RDS")
 
 
-GNUM=1000
 
-.getGroup=function(X){
+
+.getGroup=function(X,GNUM){
     DR=X
     RANK=rank(DR,ties.method='random')
     CUTOFF=round(max(RANK)/GNUM)
@@ -70,13 +70,15 @@ GNUM=1000
 
 
 #####
-MSG=.getGroup(MSX)
-CTG=.getGroup(CTX)
+GNUM=100
+MSG=.getGroup(MSX,GNUM)
+CTG=.getGroup(CTX,GNUM)
 ########
-
 MSR=.generate_ref(MS, cbind(MSG,MSG), min_cell=1) 
 CTR=.generate_ref(CT, cbind(CTG,CTG), min_cell=1) 
 
+saveRDS(MSR,file='MSR.RDS')
+saveRDS(CTR,file='CTR.RDS')
 ########
 
 out = .get_cor( MSR, CTR, method='kendall',CPU=4, print_step=10)
