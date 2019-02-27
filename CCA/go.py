@@ -83,7 +83,7 @@ def raw2tsne(X):
     tmp=np.apply_along_axis(np.var, 0, X)
     used=np.where(tmp>0)[0]
     X=X[:,used]
-    print('2.Box-cox transforming & Standardize ...')
+    print('2.Box-cox transforming & standardizing ...')
     X=pt.fit_transform((X+1))
     print('3.PCA ...')
     X=pca.fit_transform(X)
