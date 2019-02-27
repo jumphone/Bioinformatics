@@ -14,7 +14,7 @@ CT=pbmc.data[,which(tag_data[,3]=='Ctrl')]
 saveRDS(MS,'MS.RDS')
 saveRDS(CT,'CT.RDS')
 
-CPU=6
+CPU=3
 PCNUM=50
 PCUSE=1:PCNUM
 
@@ -30,7 +30,7 @@ saveRDS(MSX,file='MSX.RDS')
 CTD = CreateSeuratObject(raw.data = CT, min.cells = 0, min.genes = 0, project = "CT") 
 CTD <- NormalizeData(object = CTD, normalization.method = "LogNormalize", scale.factor = 10000)
 CTD <- ScaleData(object = CTD, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
-CTD <- RunPCA(object = CTD, pcs.compute=PCNUM, pc.genes = rownames(MSD@data), do.print = FALSE)
+CTD <- RunPCA(object = CTD, pcs.compute=PCNUM, pc.genes = rownames(CTD@data), do.print = FALSE)
 CTD <- RunTSNE(object = CTD, dims.use = PCUSE, do.fast=TRUE,dim.embed = 1)
 CTX=CTD@dr$tsne@cell.embeddings
 saveRDS(CTX,file='CTX.RDS')
