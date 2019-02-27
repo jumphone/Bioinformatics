@@ -54,6 +54,7 @@ CTX=readRDS("CTX.RDS")
 
 
 .getGroup=function(X,GNUM){
+    GNUM=GNUM
     DR=X
     RANK=rank(DR,ties.method='random')
     CUTOFF=round(max(RANK)/GNUM)
