@@ -51,19 +51,18 @@ CT=readRDS("CT.RDS")
 CTX=readRDS("CTX.RDS")
 
 
+GNUM=100
 
-
-.getGroup=function(X,GNUM){
-    GNUM=GNUM
+.getGroup=function(X){
     DR=X
     RANK=rank(DR,ties.method='random')
     CUTOFF=round(max(RANK)/GNUM)
     GROUP=rep('NA',length(RANK))
     i=1
     j=1
-    while(i<=length(MSR)){
+    while(i<=length(RANK)){
         GROUP[which(RANK==i)]=paste0('G_',as.character(j))
-        if(i%%CUTOFF==1){j=j+1}
+        if(i%%CUTOFF==1){j=j+1;print(j)}
         i=i+1}
     return(GROUP)
 }
@@ -71,9 +70,8 @@ CTX=readRDS("CTX.RDS")
 
 
 #####
-GNUM=100
-MSG=.getGroup(MSX,GNUM)
-CTG=.getGroup(CTX,GNUM)
+MSG=.getGroup(MSX)
+CTG=.getGroup(CTX)
 ########
 MSR=.generate_ref(MS, cbind(MSG,MSG), min_cell=1) 
 CTR=.generate_ref(CT, cbind(CTG,CTG), min_cell=1) 
