@@ -76,6 +76,10 @@ CTG=.getGroup(CTX,'CT')
 MSR=.generate_ref(MS, cbind(MSG,MSG), min_cell=1) 
 CTR=.generate_ref(CT, cbind(CTG,CTG), min_cell=1) 
 
+COM=.simple_combine(MSR,CTR)
+MSRC=COM$exp_sc_mat1
+CTRC=COM$exp_sc_mat2
+
 saveRDS(MSR,file='MSR.RDS')
 saveRDS(CTR,file='CTR.RDS')
 ########
@@ -92,6 +96,23 @@ while(i<=nrow(tag1)){
     if(tag2[which(tag2[,1]==t2),2]==t1){V=c(V,i)}           
     i=i+1}
 VP=tag1[V,]
+
+C=c()
+t=1
+while(t<=nrow(VP)){
+    this_c=out[which(rownames(out)==VP[t,2]),which(colnames(out)==VP[t,1])]
+    C=c(C,this_c)
+    t=t+1}
+
+which(C>0.7)
+
+
+t=1
+plot(MSRC[,which(colnames(MSRC)==VP[t,1])], CTRC[,which(colnames(CTRC)==VP[t,2])] )
+
+t=2
+plot(MSRC[,which(colnames(MSRC)==VP[t,1])], CTRC[,which(colnames(CTRC)==VP[t,2])] )
+
 
 ##########
 
