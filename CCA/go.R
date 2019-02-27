@@ -81,14 +81,19 @@ saveRDS(CTR,file='CTR.RDS')
 ########
 
 out = .get_cor( MSR, CTR, method='kendall',CPU=4, print_step=10)
+tag1=.get_tag_max(out)
+tag2=.get_tag_max(t(out))
 
+V=c()
+i=1
+while(i<=nrow(tag1)){
+    t1=tag1[i,1]
+    t2=tag1[i,2]
+    if(tag2[which(tag2[,1]==t2),2]==t1){V=c(V,i)}           
+    i=i+1}
+VP=tag1[V,]
 
-
-
-
-
-
-
+##########
 
 
 
