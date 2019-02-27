@@ -34,37 +34,24 @@ CTD <- RunPCA(object = CTD, pcs.compute=PCNUM, pc.genes = rownames(CTD@data), do
 CTD <- RunTSNE(object = CTD, dims.use = PCUSE, do.fast=TRUE,dim.embed = 1)
 CTX=CTD@dr$tsne@cell.embeddings
 saveRDS(CTX,file='CTX.RDS')
+
+
 ##########
 ##########
-MSX=readRDS(MSX)
-CTX=readRDS(CTX)
+##########
+##########
+##########
+##########
+library(Seurat)
+source('scRef.R')
+
+MS=readRDS("MS.RDS")
+MSX=readRDS("MSX.RDS")
+CT=readRDS("CT.RDS")
+CTX=readRDS("CTX.RDS")
 
 
 
 
-saveRDS(pbmc,file='CCA.RDS')
-
-
-
-
-library(kBET)
-batch.estimate <- kBET(as.matrix(pbmc@data), pbmc@meta.data$paper.condition)
-
-
-saveRDS(pbmc,file='CCA.RDS')
-
-DimPlot(pbmc, group.by='orig.ident', reduction.use='tsne')
-DimPlot(pbmc, group.by='paper.type', reduction.use='tsne')
-DimPlot(pbmc, group.by='paper.cluster', reduction.use='tsne')
-DimPlot(pbmc, group.by='paper.condition', reduction.use='tsne')
-
-
-
-
-
-#pbmc <- RunUMAP(object = pbmc, dims.use = PCUSE)
-#DimPlot(pbmc, group.by='orig.ident', reduction.use='umap')
-#pbmc <- FindClusters(object = pbmc, reduction.type = "pca", dims.use = PCUSE, 
-#    resolution = 0.6, print.output = 0, save.SNN = TRUE)
 
 
