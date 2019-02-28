@@ -119,6 +119,22 @@ while(t<=nrow(VVP)){
     Y=cbind(Y,this_Y)
     t=t+1}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###################
 library('pcaPP')
 cor.fk(X[,1],Y[,1])
 
@@ -154,6 +170,7 @@ while(i<=length(tmpX)){
     thisC2=cor.fk(LY,tmpX)
     thisdC=(thisC1+thisC2)/2-tmpC
     deltaC=c(deltaC,thisdC)
+    print(i)
     i=i+1}
  
 
