@@ -51,12 +51,13 @@ CT=readRDS("CT.RDS")
 CTX=readRDS("CTX.RDS")
 
 
-GNUM=100
+#GNUM=100
+CNUM=100
 
 .getGroup=function(X,TAG){
     DR=X
     RANK=rank(DR,ties.method='random')
-    CUTOFF=round(max(RANK)/GNUM)
+    CUTOFF=CNUM #round(max(RANK)/GNUM)
     GROUP=rep('NA',length(RANK))
     i=1
     j=1
@@ -120,9 +121,18 @@ while(t<=nrow(VVP)){
     t=t+1}
 
 
+INTER=c()
+COEF=c()
 
-
-
+i=1
+while(i<=nrow(X)){
+    fit=lm(Y[i,]~X[i,])
+    this_inter=fit$coefficients[1]
+    this_coef=fit$coefficients[2]
+    INTER=c(INTER, this_inter)
+    COEF=c(COEF, this_coef)
+    print(i)
+    i=i+1}
 
 
 
