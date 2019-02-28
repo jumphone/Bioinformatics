@@ -119,6 +119,56 @@ while(t<=nrow(VVP)){
     Y=cbind(Y,this_Y)
     t=t+1}
 
+library('pcaPP')
+cor.fk(X[,1],Y[,1])
+
+plot(rank(X[,1],ties.method='random'),rank(Y[,1],ties.method='random'))
+
+
+.getRankRatio=function(X){
+    R=(rank(X,ties='min')-1)/max(rank(X,ties='min')-1)
+    return(R)
+    }
+
+tmpX=.getRankRatio(X[,1])
+tmpY=.getRankRatio(Y[,1])
+
+
+
+
+RR=apply(cbind(tmpX,tmpY),1,max)
+
+
+tmpC=cor.fk(tmpX,tmpY)
+
+deltaC=c()
+i=1
+while(i<=length(tmpX)){
+    thisX=tmpX[i]
+    thisY=tmpY[i]
+    LX=tmpX
+    LY=tmpY
+    LX[i]=thisY
+    LY[i]=thisX
+    thisC1=cor.fk(LX,tmpY)
+    thisC2=cor.fk(LY,tmpX)
+    thisdC=(thisC1+thisC2)/2-tmpC
+    deltaC=c(deltaC,thisdC)
+    i=i+1}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
