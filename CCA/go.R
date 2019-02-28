@@ -121,7 +121,6 @@ while(t<=nrow(VVP)){
     t=t+1}
 
 
-
 plot(X[,1],Y[,1])
 
 
@@ -133,6 +132,38 @@ plot(X[,1],Y[,1])
 
 
 
+
+
+################
+.getRankRatio=function(X){
+    R=(rank(X,ties='min')-1)/max(rank(X,ties='min')-1)
+    return(R)
+    }
+
+RX=apply(X,2,.getRankRatio)
+RY=apply(Y,2,.getRankRatio)
+
+X=RX
+Y=RY
+
+plot(X[,1],Y[,1])
+
+
+
+D=Y-X
+TD=t(D)
+
+rownames(TD)=paste0(VVP[,1],'_',VVP[,2])
+
+
+S=apply(TD,2,sd)
+M=apply(TD,2,mean)
+
+plot(S,M,pch=16)
+plot(S,abs(M),pch=16)
+
+
+XX=(X+M)
 
 
 
