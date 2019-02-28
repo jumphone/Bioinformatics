@@ -121,7 +121,7 @@ while(t<=nrow(VVP)){
     t=t+1}
 
 
-plot(X[,1],Y[,1])
+plot(X[,1],Y[,1],pch=16)
 
 
 
