@@ -120,6 +120,38 @@ while(t<=nrow(VVP)){
     Y=cbind(Y,this_Y)
     t=t+1}
 
+
+
+plot(X[,1],Y[,1])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########
+
+.getRankRatio=function(X){
+    R=(rank(X,ties='min')-1)/max(rank(X,ties='min')-1)
+    return(R)
+    }
+
+RX=apply(X,2,.getRankRatio)
+RY=apply(Y,2,.getRankRatio)
+
+##########
+
+X=RX
+Y=RY
+
 INTER_PCUT=0.05
 COEF_PCUT=0.05
 
@@ -152,9 +184,9 @@ while(i<=nrow(X)){
 
 XX=X*COEF+INTER
 library('pcaPP')
-
-cor.fk(X[,1],Y[,1])
-cor.fk(XX[,1],Y[,1])
+i=3
+cor.fk(X[,i],Y[,i])
+cor.fk(XX[,i],Y[,i])
 
 
 
@@ -163,9 +195,6 @@ cor.fk(XX[,1],Y[,1])
 
 ###################
 library('pcaPP')
-cor.fk(X[,1],Y[,1])
-
-plot(rank(X[,1],ties.method='random'),rank(Y[,1],ties.method='random'))
 
 
 .getRankRatio=function(X){
@@ -173,8 +202,8 @@ plot(rank(X[,1],ties.method='random'),rank(Y[,1],ties.method='random'))
     return(R)
     }
 
-tmpX=.getRankRatio(X[,1])
-tmpY=.getRankRatio(Y[,1])
+RX=apply(X,2,.getRankRatio)
+RY=apply(Y,2,.getRankRatio)
 
 
 
