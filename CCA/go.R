@@ -120,6 +120,8 @@ while(t<=nrow(VVP)){
     Y=cbind(Y,this_Y)
     t=t+1}
 
+INTER_PCUT=0.05
+COEF_PCUT=0.05
 
 INTER=c()
 COEF=c()
@@ -127,17 +129,32 @@ COEF=c()
 i=1
 while(i<=nrow(X)){
     fit=lm(Y[i,]~X[i,])
+    this_sum=summary(fit)   
     this_inter=fit$coefficients[1]
     this_coef=fit$coefficients[2]
-    INTER=c(INTER, this_inter)
-    COEF=c(COEF, this_coef)
+    this_inter_p=1
+    this_coef_p=1
+    if(!is.na(this_inter) & this_inter!=0){
+        this_inter_p=this_sum$coefficients[1,4]}
+    if(!is.na(this_coef) & this_coef!=0 ){
+        this_coef_p=this_sum$coefficients[2,4]}
+    out_inter=0
+    out_coef=1
+    if((!is.na(this_inter)) & (this_inter_p<INTER_PCUT) ){out_inter=this_inter}
+    if((!is.na(this_coef)) & (this_coef_p<COEF_PCUT) ){out_coef=this_coef}
+    INTER=c(INTER, out_inter)
+    COEF=c(COEF, out_coef)
     print(i)
     i=i+1}
 
 
 
 
+XX=X*COEF+INTER
+library('pcaPP')
 
+cor.fk(X[,1],Y[,1])
+cor.fk(XX[,1],Y[,1])
 
 
 
