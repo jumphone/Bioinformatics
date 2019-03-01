@@ -213,6 +213,11 @@ out=.change_distribution(exp_mat1, mapped_exp_mat1, mapped_exp_mat2, CPU=4, prin
 
 
 
+A=apply(out,2,.getRankRatio)
+B=rank_matchedCT
+
+
+
 
 
 
