@@ -152,7 +152,7 @@ while(i<=nrow(rank_matchedMS)){
     j=1
     while(j<=ncol(rank_matchedMS)){
         this_p=ECDF(rank_matchedMS[i,j])
-        this_out=quantile(to_dist,this_p)
+        this_out= quantile(to_dist,this_p)
         OUT[i,j]=this_out
         j=j+1}
     print(i)
@@ -161,14 +161,46 @@ while(i<=nrow(rank_matchedMS)){
 
 
 
+.change_distribution <- function(exp_mat1, mapped_exp_mat1, mapped_exp_mat2, CPU=4, print_step=10){
+    ##########
+    library(parallel)
+    #########
+    print_step=print_step
+    CPU=CPU
+    exp_mat1=exp_mat1
+    mapped_exp_mat1=mapped_exp_mat1
+    mapped_exp_mat2=mapped_exp_mat2
+    #######
+    SINGLE <- function(i){
+        from_dist=mapped_exp_mat1[i,]
+        to_dist=mapped_exp_mat2[i,]
+        ECDF=ecdf(from_dist) 
+        out=c()
+        j=1
+        while(j<=ncol(exp_mat1)){
+            this_p=ECDF(exp_mat1[i,j])
+            this_out= quantile(to_dist,this_p)
+            out=c(out,this_out)
+            j=j+1}
+        if(i%%print_step==1){print(i)}
+        return(out)
+        }
+    ########
+    cl= makeCluster(CPU,outfile='')
+    RUN = parLapply(cl=cl,1:nrow(exp_mat1), SINGLE)
+    stopCluster(cl)
+    out = c()
+    for(this_out in RUN){
+        out=cbind(out, this_out)}
+   return(out)
+}
 
 
+exp_mat1=rank_matchedMS
+mapped_exp_mat1=rank_mappedMS
+mapped_exp_mat2=rank_mappedCT
 
-.change_distribution <- function(exp_mat1, mapped_exp_mat1, mapped_exp_mat2){}
-
-
-
-
+out=.change_distribution(exp_mat1, mapped_exp_mat1, mapped_exp_mat2, CPU=4, print_step=10)
 
 
 
