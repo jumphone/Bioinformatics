@@ -231,7 +231,7 @@ pbmc <- ScaleData(object = pbmc, genes.use =pbmc@var.genes)
 
 PCNUM=50
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes)
-PSUSE=1:20
+PSUSE=1:50
 pbmc <- RunTSNE(object = pbmc, dims.use =PSUSE, do.fast = TRUE)
 
 TSNEPlot(object = pbmc,pt.size=0.1)
@@ -240,6 +240,29 @@ saveRDS(pbmc,'zfcombined.RDS')
 
 
 write.table(pbmc@meta.data,file='zfcombined_meta.txt',row.names=T,col.names=T,sep='\t',quote=F)
+
+
+
+
+pdf('zfcombined.pdf',width=10,height=7)
+TSNEPlot(object = pbmc,pt.size=0.5)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
