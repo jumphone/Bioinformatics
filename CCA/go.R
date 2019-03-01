@@ -231,6 +231,13 @@ pbmc <- ScaleData(object = pbmc, genes.use =pbmc@var.genes)
 
 PCNUM=50
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes)
+PSUSE=1:20
+pbmc <- RunTSNE(object = pbmc, dims.use =PSUSE, do.fast = TRUE)
+
+
+
+
+
 
 
 
