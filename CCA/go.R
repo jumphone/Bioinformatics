@@ -223,17 +223,14 @@ MSA=CreateSeuratObject(raw.data = A, min.cells = 0, min.genes = 0, project = "MS
 CTB=CreateSeuratObject(raw.data = B, min.cells = 0, min.genes = 0, project = "MS")
 
 pbmc=MergeSeurat(MSA,CTB,add.cell.id1='MS',add.cell.id2='CT')
+pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, 
+    x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+length(x = pbmc@var.genes)
+pbmc <- ScaleData(object = pbmc, genes.use =pbmc@var.genes)
 
-
-
-
-
-
-
-
-
-
-
+PCNUM=50
+pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes)
 
 
 
