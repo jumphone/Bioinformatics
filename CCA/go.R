@@ -286,7 +286,8 @@ while(t<=nrow(VVP)){
 plot(X[,1],Y[,1],pch=16)
 
 
-
+colnames(X)=VVP[,1]
+colnames(Y)=VVP[,2]
 
 
 ################
@@ -299,174 +300,12 @@ RX=apply(X,2,.getRankRatio)
 RY=apply(Y,2,.getRankRatio)
 RD=RY-RX
 
-#D=dist(RD)
-#H=hclust(D)
 
 
 
 
-plot(RX[,1],RY[,1],pch=16)
 
-
-library(pcaPP)
-
-
-tmp=apply(RD,1,median)#*RX[,1]
-tmpRX1=tmp+RX[,1]
-
-tmpRX1
-
-
-RtmpRX1=.getRankRatio(tmpRX1)
-#plot(RtmpRX1,RX[,1])
-cor.fk(RX[,1],RY[,1])
-cor.fk(RtmpRX1,RY[,1])
-
-par(mfrow=c(1,2))
-#plot(RX[,1],RtmpRX1)
-plot(RtmpRX1, RY[,1])
-plot(RX[,1], RY[,1])
-
-
-
-
-
-
-
-
-
-
-################
-.getRankRatio=function(X){
-    R=(rank(X,ties='min')-1)/max(rank(X,ties='min')-1)
-    return(R)
-    }
-
-RX=apply(X,2,.getRankRatio)
-RY=apply(Y,2,.getRankRatio)
-
-X=RX
-Y=RY
-
-plot(X[,1],Y[,1])
-
-
-
-D=Y-X
-TD=t(D)
-
-rownames(TD)=paste0(VVP[,1],'_',VVP[,2])
-
-
-S=apply(TD,2,sd)
-M=apply(TD,2,mean)
-
-plot(S,M,pch=16)
-plot(S,abs(M),pch=16)
-
-
-XX=(X+M)
-
-
-
-
-##########
-
-.getRankRatio=function(X){
-    R=(rank(X,ties='min')-1)/max(rank(X,ties='min')-1)
-    return(R)
-    }
-
-RX=apply(X,2,.getRankRatio)
-RY=apply(Y,2,.getRankRatio)
-
-##########
-
-X=RX
-Y=RY
-
-INTER_PCUT=0.05
-COEF_PCUT=0.05
-
-INTER=c()
-COEF=c()
-
-i=1
-while(i<=nrow(X)){
-    fit=lm(Y[i,]~X[i,])
-    this_sum=summary(fit)   
-    this_inter=fit$coefficients[1]
-    this_coef=fit$coefficients[2]
-    this_inter_p=1
-    this_coef_p=1
-    if(!is.na(this_inter) & this_inter!=0){
-        this_inter_p=this_sum$coefficients[1,4]}
-    if(!is.na(this_coef) & this_coef!=0 ){
-        this_coef_p=this_sum$coefficients[2,4]}
-    out_inter=0
-    out_coef=1
-    if((!is.na(this_inter)) & (this_inter_p<INTER_PCUT) ){out_inter=this_inter}
-    if((!is.na(this_coef)) & (this_coef_p<COEF_PCUT) ){out_coef=this_coef}
-    INTER=c(INTER, out_inter)
-    COEF=c(COEF, out_coef)
-    print(i)
-    i=i+1}
-
-
-
-
-XX=X*COEF+INTER
-library('pcaPP')
-i=3
-cor.fk(X[,i],Y[,i])
-cor.fk(XX[,i],Y[,i])
-
-
-
-
-
-
-###################
-library('pcaPP')
-
-
-.getRankRatio=function(X){
-    R=(rank(X,ties='min')-1)/max(rank(X,ties='min')-1)
-    return(R)
-    }
-
-RX=apply(X,2,.getRankRatio)
-RY=apply(Y,2,.getRankRatio)
-
-
-
-
-RR=apply(cbind(tmpX,tmpY),1,max)
-
-
-tmpC=cor.fk(tmpX,tmpY)
-
-deltaC=c()
-i=1
-while(i<=length(tmpX)){
-    thisX=tmpX[i]
-    thisY=tmpY[i]
-    LX=tmpX
-    LY=tmpY
-    LX[i]=thisY
-    LY[i]=thisX
-    thisC1=cor.fk(LX,tmpY)
-    thisC2=cor.fk(LY,tmpX)
-    thisdC=(thisC1+thisC2)/2-tmpC
-    deltaC=c(deltaC,thisdC)
-    print(i)
-    i=i+1}
- 
-
-
-
-
-
+out=.get_log_p_sc_given_ref(MS, RX, CPU=4, print_step=10)
 
 
 
