@@ -116,6 +116,100 @@ VVP=VP[which(C>0.7),]
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################
+X=c()
+Y=c()
+t=1
+while(t<=nrow(VVP)){
+    this_X=MSRC[,which(colnames(MSRC)==VVP[t,1])]
+    this_Y=CTRC[,which(colnames(CTRC)==VVP[t,2])]
+    X=cbind(X,this_X)
+    Y=cbind(Y,this_Y)
+    t=t+1}
+
+
+plot(X[,1],Y[,1],pch=16)
+
+
+colnames(X)=VVP[,1]
+colnames(Y)=VVP[,2]
+
+
+################
+.getRankRatio=function(X){
+    R=(rank(X,ties='min'))/max(rank(X,ties='min'))
+    R[which(X==0)]=0
+    return(R)
+    }
+RX=apply(X,2,.getRankRatio)
+RY=apply(Y,2,.getRankRatio)
+RD=RY-RX
+
+
+
+
+
+
+out=.get_log_p_sc_given_ref(MS, RX, CPU=4, print_step=10)
+tag=.get_tag_max(out)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############
+############
+############
+
+
 COM=.simple_combine(MS,CT)
 
 matchedMS=COM$exp_sc_mat1
@@ -137,9 +231,6 @@ rank_matchedCT=apply(matchedCT,2, .getRankRatio)
 #quantile(rank_mappedCT,0.9)
 
 #rank(rank_matchedMS[1,])
-
-
-
 
 
 OUT=rank_matchedMS
@@ -247,71 +338,6 @@ write.table(pbmc@meta.data,file='zfcombined_meta.txt',row.names=T,col.names=T,se
 pdf('zfcombined.pdf',width=10,height=7)
 TSNEPlot(object = pbmc,pt.size=0.5)
 dev.off()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################################################################
-X=c()
-Y=c()
-t=1
-while(t<=nrow(VVP)){
-    this_X=MSRC[,which(colnames(MSRC)==VVP[t,1])]
-    this_Y=CTRC[,which(colnames(CTRC)==VVP[t,2])]
-    X=cbind(X,this_X)
-    Y=cbind(Y,this_Y)
-    t=t+1}
-
-
-plot(X[,1],Y[,1],pch=16)
-
-
-colnames(X)=VVP[,1]
-colnames(Y)=VVP[,2]
-
-
-################
-.getRankRatio=function(X){
-    R=(rank(X,ties='min'))/max(rank(X,ties='min'))
-    R[which(X==0)]=0
-    return(R)
-    }
-RX=apply(X,2,.getRankRatio)
-RY=apply(Y,2,.getRankRatio)
-RD=RY-RX
-
-
-
-
-
-
-out=.get_log_p_sc_given_ref(MS, RX, CPU=4, print_step=10)
-
-
-
-
-
-
 
 
 
