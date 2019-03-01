@@ -127,6 +127,35 @@ plot(X[,1],Y[,1],pch=16)
 
 
 
+################
+.getRankRatio=function(X){
+    R=(rank(X,ties='min')-1)/max(rank(X,ties='min')-1)
+    return(R)
+    }
+
+RX=apply(X,2,.getRankRatio)
+RY=apply(Y,2,.getRankRatio)
+
+
+
+plot(RX[,1],RY[,1],pch=16)
+
+
+library(pcaPP)
+
+
+RD=RY-RX
+tmp=apply(RD,1,sample,1)
+tmpRX1=tmp+RX[,1]
+tmpRX1[which(RX[,1]==0)]=0
+RtmpRX1=.getRankRatio(tmpRX1)
+plot(RtmpRX1,RX[,1]
+cor.fk(RtmpRX1,RX[,1])
+
+
+
+
+
 
 
 
