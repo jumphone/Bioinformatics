@@ -133,10 +133,10 @@ rank_matchedMS=apply(matchedMS,2, .getRankRatio)
 rank_matchedCT=apply(matchedCT,2, .getRankRatio)
 
 
-ecdf(c(0,rank_mappedMS[1,],1))(rank_matchedMS[1,1])
-quantile(rank_mappedCT,0.9)
+#ecdf(c(0,rank_mappedMS[1,],1))(rank_matchedMS[1,1])
+#quantile(rank_mappedCT,0.9)
 
-rank(rank_matchedMS[1,])
+#rank(rank_matchedMS[1,])
 
 
 
@@ -176,19 +176,19 @@ while(i<=nrow(rank_matchedMS)){
     #######
     SINGLE <- function(i){
         from_dist=mapped_exp_mat1[i,]
+        from_length=length(from_dist)
         to_dist=mapped_exp_mat2[i,]
         to_length=length(to_dist)
         to_sort=sort(to_dist)
         ECDF=ecdf(from_dist) 
-        out=c()
+        out=rep(0,from_length)
         j=1
         while(j<=ncol(exp_mat1)){
             this_p=ECDF(exp_mat1[i,j])
-            #this_out= quantile(to_dist,this_p)
             this_out= to_sort[this_p*to_length]
-            out=c(out,this_out)
-            j=j+1}
-        if(i%%print_step==1){print(i)}
+            out[j]=this_out
+            j=j+1}        
+        if(print_step==1){print(i)}else if(i%%print_step==1){print(i)}
         return(out)
         }
     ########
