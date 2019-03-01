@@ -163,7 +163,6 @@ while(i<=nrow(rank_matchedMS)){
 
 
 
-
 .change_distribution <- function(exp_mat1, mapped_exp_mat1, mapped_exp_mat2, CPU=4, print_step=10){
     ##########
     library(parallel)
@@ -195,10 +194,13 @@ while(i<=nrow(rank_matchedMS)){
     cl= makeCluster(CPU,outfile='')
     RUN = parLapply(cl=cl,1:nrow(exp_mat1), SINGLE)
     stopCluster(cl)
-    out = c()
+    out = exp_mat1
+    out = out*0
+    i=1
     for(this_out in RUN){
-        out=cbind(out, this_out)}
-   return(out)
+        out[i,]=this_out
+        i=i+1}   
+    return(out)
 }
 
 
