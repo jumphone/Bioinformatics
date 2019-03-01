@@ -146,13 +146,16 @@ OUT=rank_matchedMS
 OUT=OUT*0
 i=1
 while(i<=nrow(rank_matchedMS)){
-    from_dist=c(0,rank_mappedMS[i,],1)
-    to_dist=c(0,rank_mappedCT[i,],1)
+    from_dist=rank_mappedMS[i,]
+    to_dist=rank_mappedCT[i,]
+    to_length=length(to_dist)
+    to_sort=sort(to_dist)
+    
     ECDF=ecdf(from_dist)
     j=1
     while(j<=ncol(rank_matchedMS)){
         this_p=ECDF(rank_matchedMS[i,j])
-        this_out= quantile(to_dist,this_p)
+        this_out= to_sort[this_p*to_length]
         OUT[i,j]=this_out
         j=j+1}
     print(i)
