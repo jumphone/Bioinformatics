@@ -183,8 +183,11 @@ while(i<=nrow(rank_matchedMS)){
         out=rep(0,from_length)
         j=1
         while(j<=ncol(exp_mat1)){
-            this_p=ECDF(exp_mat1[i,j])
-            this_out= to_sort[this_p*to_length]
+            this_exp=exp_mat1[i,j]
+            if(this_exp!=0){
+                this_p=ECDF(this_exp)
+                this_out= to_sort[this_p*to_length]
+            }else{this_out=0}
             out[j]=this_out
             j=j+1}        
         if(print_step==1){print(i)}else if(i%%print_step==1){print(i)}
