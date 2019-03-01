@@ -109,30 +109,32 @@ plot(C)
 VVP=VP[which(C>0.7),]
 ##########
 
+.getRankRatio=function(X){
+    R=(rank(X,ties='min'))/max(rank(X,ties='min'))
+    R[which(X==0)]=0
+    return(R)
+    }
+
+
+COM=.simple_combine(MS,CT)
+
+matchedMS=COM$exp_sc_mat1
+matchedCT=COM$exp_sc_mat2
+
+mappedMS=matchedMS[,which(MSG %in% VVP[,1])]
+mappedCT=matchedCT[,which(CTG %in% VVP[,2])]
+
+
+rank_mappedMS=apply(mappedMS,2, .getRankRatio)
+rank_mappedCT=apply(mappedMS,2, .getRankRatio)
+
+
+rank_matchedMS=apply(matchedMS,2, .getRankRatio)
+rank_matchedCT=apply(matchedCT,2, .getRankRatio)
 
 
 
-matchedMS=MS[,which(MSG %in% VVP[,1])]
-matchedCT=CT[,which(CTG %in% VVP[,2])]
-
-
-
-matchedCOM=.simple_combine(matchedMS,matchedCT)
-
-combine_matchedMS=matchedCOM$exp_sc_mat1
-combine_matchedCT=matchedCOM$exp_sc_mat2
-
-
-
-
-
-
-
-
-
-
-
-
+.change_distribution <- function(exp_mat1, mapped_exp_mat1, mapped_exp_mat2){}
 
 
 
