@@ -163,13 +163,14 @@ RD=RY-RX
 
 
 
+D=(Y-X)/CNUM
 
-
-out=.get_log_p_sc_given_ref(MS, RX, CPU=4, print_step=10)
+out=.get_log_p_sc_given_ref(MS, X, CPU=4, print_step=10)
 tag=.get_tag_max(out)
 
+table(tag[,2])
 
-
+newMS=MS
 
 
 
