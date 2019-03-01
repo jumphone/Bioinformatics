@@ -110,6 +110,43 @@ VVP=VP[which(C>0.7),]
 ##########
 
 
+
+
+matchedMS=MS[,which(MSG %in% VVP[,1])]
+matchedCT=CT[,which(CTG %in% VVP[,2])]
+
+
+
+matchedCOM=.simple_combine(matchedMS,matchedCT)
+
+combine_matchedMS=matchedCOM$exp_sc_mat1
+combine_matchedCT=matchedCOM$exp_sc_mat2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################
 X=c()
 Y=c()
 t=1
