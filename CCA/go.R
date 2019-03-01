@@ -133,6 +133,36 @@ rank_matchedMS=apply(matchedMS,2, .getRankRatio)
 rank_matchedCT=apply(matchedCT,2, .getRankRatio)
 
 
+ecdf(c(0,rank_mappedMS[1,],1))(rank_matchedMS[1,1])
+quantile(rank_mappedCT,0.9)
+
+rank(rank_matchedMS[1,])
+
+
+
+
+
+OUT=rank_matchedMS
+OUT=OUT*0
+i=1
+while(i<=nrow(rank_matchedMS)){
+    from_dist=c(0,rank_mappedMS[i,],1)
+    to_dist=c(0,rank_mappedCT[i,],1)
+    ECDF=ecdf(from_dist)
+    j=1
+    while(j<=ncol(rank_matchedMS)){
+        this_p=ECDF(rank_matchedMS[i,j])
+        this_out=quantile(to_dist,this_p)
+        OUT[i,j]=this_out
+        j=j+1}
+    print(i)
+    i=i+1}
+
+
+
+
+
+
 
 .change_distribution <- function(exp_mat1, mapped_exp_mat1, mapped_exp_mat2){}
 
