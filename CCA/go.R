@@ -149,15 +149,21 @@ plot(RX[,1],RY[,1],pch=16)
 library(pcaPP)
 
 
-tmp=apply(RD,1,sample,1)
+tmp=apply(RD,1,median)#*RX[,1]
 tmpRX1=tmp+RX[,1]
-tmpRX1[which(RX[,1]==0)]=0
+
+tmpRX1
+
+
 RtmpRX1=.getRankRatio(tmpRX1)
 #plot(RtmpRX1,RX[,1])
 cor.fk(RX[,1],RY[,1])
 cor.fk(RtmpRX1,RY[,1])
 
-
+par(mfrow=c(1,2))
+#plot(RX[,1],RtmpRX1)
+plot(RtmpRX1, RY[,1])
+plot(RX[,1], RY[,1])
 
 
 
