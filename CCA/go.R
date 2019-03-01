@@ -174,12 +174,14 @@ while(i<=nrow(rank_matchedMS)){
     SINGLE <- function(i){
         from_dist=mapped_exp_mat1[i,]
         to_dist=mapped_exp_mat2[i,]
+        to_length=length(to_dist)
         ECDF=ecdf(from_dist) 
         out=c()
         j=1
         while(j<=ncol(exp_mat1)){
             this_p=ECDF(exp_mat1[i,j])
-            this_out= quantile(to_dist,this_p)
+            #this_out= quantile(to_dist,this_p)
+            this_out= sort(to_dist)[this_p*to_length]
             out=c(out,this_out)
             j=j+1}
         if(i%%print_step==1){print(i)}
