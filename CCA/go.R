@@ -219,6 +219,24 @@ out=.change_distribution(exp_mat1, mapped_exp_mat1, mapped_exp_mat2, CPU=4, prin
 A=apply(out,2,.getRankRatio)
 B=rank_matchedCT
 
+MSA=CreateSeuratObject(raw.data = A, min.cells = 0, min.genes = 0, project = "MS")
+CTB=CreateSeuratObject(raw.data = B, min.cells = 0, min.genes = 0, project = "MS")
+
+pbmc=MergeSeurat(MSA,CTB,add.cell.id1='MS',add.cell.id2='CT')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
