@@ -141,13 +141,71 @@ while(t<=nrow(VVP)){
     X=cbind(X,this_X)
     Y=cbind(Y,this_Y)
     t=t+1}
+colnames(X)=VVP[,1]
+colnames(Y)=VVP[,2]
+
+
+#install.packages('qualV')
+library(qualV)
+
+.getSeq=function(VALUE, NAME){
+     O=order(-VALUE)
+     N=NAME[O]
+     VALUE=VALUE[O]
+     OUT=c()
+     i=1
+     while(i<=length(VALUE) & VALUE[i]>0){
+         OUT=c(OUT,N[i])
+         i=i+1}
+    return(OUT)
+}
+
+CC=X    
+CC=CC*0
+
+LL=c()
+i=1
+while(i<=ncol(X)){
+    SX=.getSeq(X[,i],rownames(X))
+    SY=.getSeq(Y[,i],rownames(Y))
+    this_LL=LCS(SX,SY)$LCS
+    CC[which(rownames(CC) %in% this_LL),i]=1
+    print(i)
+    i=i+1}
+
+GG=apply(CC,1,sum)
+used_gene=names(GG[which(GG>1)])
+
+
+.getRankRatio=function(X){
+    R=(rank(X,ties='min'))/max(rank(X,ties='min'))
+    R[which(X==0)]=0
+    return(R)
+    }
+RX=apply(X,2,.getRankRatio)
+RY=apply(Y,2,.getRankRatio)
+
+library(pcaPP)
+
+plot(X[which(rownames(X) %in% used_gene),1], Y[which(rownames(X) %in% used_gene),1])
+plot(RX[which(rownames(X) %in% used_gene),1], RY[which(rownames(X) %in% used_gene),1])
+
+cor(RX[which(rownames(X) %in% used_gene),1], RY[which(rownames(X) %in% used_gene),1])
+cor(RX[,1],RY[,1])
+
+ULL=unique(LL)
+LL=LCS(SX1,SY1)
+LL$LCS[1]
+
+
+
+
+
+
 
 
 plot(X[,1],Y[,1],pch=16)
 
-
-colnames(X)=VVP[,1]
-colnames(Y)=VVP[,2]
 
 
 ################
