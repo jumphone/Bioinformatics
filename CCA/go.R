@@ -151,7 +151,7 @@ while(i<=nrow(VVP)){
     i=i+1}
 
 colnames(OUT)=c('IN_SEQ','OUT_SEQ')
-write.table(OUT,row.names=F,col.names=T,sep='\t',quote=F)
+write.table(OUT,file='TRAIN.txt',row.names=F,col.names=T,sep='\t',quote=F)
 
 
 
