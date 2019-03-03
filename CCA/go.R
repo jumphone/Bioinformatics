@@ -152,12 +152,14 @@ while(i<=nrow(VVP)){
 
 colnames(OUT)=c('IN_SEQ','OUT_SEQ')
 write.table(OUT,file='TRAIN.txt',row.names=F,col.names=T,sep='\t',quote=F)
+write.table(OUT,file='TRAIN_noheader.txt',row.names=F,col.names=F,sep='\t',quote=F)
 
 
 
 
+write.table(OUT[,1],file='IN.txt',row.names=F,col.names=F,sep='\t',quote=F)
 
-
+write.table(OUT[,2],file='OUT.txt',row.names=F,col.names=F,sep='\t',quote=F)
 
 
 
