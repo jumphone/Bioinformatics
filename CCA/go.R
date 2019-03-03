@@ -82,8 +82,8 @@ COM=.simple_combine(MSR,CTR)
 MSRC=COM$exp_sc_mat1
 CTRC=COM$exp_sc_mat2
 
-saveRDS(MSR,file='MSR.RDS')
-saveRDS(CTR,file='CTR.RDS')
+#saveRDS(MSR,file='MSR.RDS')
+#saveRDS(CTR,file='CTR.RDS')
 ########
 
 out = .get_cor( MSR, CTR, method='kendall',CPU=4, print_step=10)
@@ -109,6 +109,86 @@ plot(C)
 ##########
 VVP=VP[which(C>0.7),]
 ##########
+
+
+
+X=c()
+Y=c()
+t=1
+while(t<=nrow(VVP)){
+    this_X=MSRC[,which(colnames(MSRC)==VVP[t,1])]
+    this_Y=CTRC[,which(colnames(CTRC)==VVP[t,2])]
+    X=cbind(X,this_X)
+    Y=cbind(Y,this_Y)
+    t=t+1}
+colnames(X)=VVP[,1]
+colnames(Y)=VVP[,2]
+
+
+
+
+###############################
+#install.packages('vegan')
+library('vegan')
+
+#install.packages('CCA')
+library(CCA)
+
+XM=apply(X,1,sum)
+YM=apply(Y,1,sum)
+
+
+
+
+
+
+
+NX=X[which(XM>0 & YM>0),]
+NY=Y[which(XM>0 & YM>0),]
+
+
+IX=NX[,1:5]
+IY=NY[,1:8]
+
+
+TMP=cca(IX,IY)
+#cc1 <- cc(IX, IY)
+#cc2 <- comput(IX, IY, cc1)
+TMP$CCA$eig
+
+
+
+
+
+
+#############
+IY=t(NY)
+IX=t(NX)
+CCAX=cca(IY~IX)
+CCAY=cca(IX~IY)
+plot(CCAX)
+plot(CCAY)
+
+
+
+#plot(CCAX$CCA$u[,1], CCAY$CCA$u[,1])
+
+#CCAX$CCA$u[1:3,1:3]
+
+#test=data.frame(IX=t(NX[,c(1,2)]))
+#tmp=predict(CCAX,newdata=test)
+
+
+CC=.simple_combine(CCAX$CCA$v, NY)$combine
+
+
+
+
+
+
+
+
+
 
 .getRankRatio=function(X){
     R=(rank(X,ties='min'))/max(rank(X,ties='min'))
