@@ -126,6 +126,26 @@ colnames(Y)=VVP[,2]
 
 
 
+#install.packages('dtw')
+library(dtw)
+
+## A noisy sine wave as query
+idx<-seq(0,6.28,len=100);
+query<-sin(idx)+runif(100)/10;
+
+## A cosine is for template; sin and cos are offset by 25 samples
+template<-cos(idx)
+
+## Find the best match with the canonical recursion formula
+library(dtw);
+alignment<-dtw(query,template,keep=TRUE);
+plot(alignment,type="threeway")
+
+
+AL<-dtw(X[,1],Y[,1],keep=TRUE);
+plot(AL,type="threeway")
+
+
 
 ###############################
 #install.packages('vegan')
