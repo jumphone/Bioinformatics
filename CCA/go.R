@@ -134,31 +134,33 @@ library('vegan')
 #install.packages('CCA')
 library(CCA)
 
-XM=apply(X,1,sum)
-YM=apply(Y,1,sum)
 
 
 
 
 
+NX=X[,1:5]
+NY=Y[,1:8]
+
+XM=apply(NX,1,sum)
+YM=apply(NY,1,sum)
 
 
-NX=X[which(XM>0 & YM>0),]
-NY=Y[which(XM>0 & YM>0),]
+NX=NX[which(XM>0 & YM>0),]
+NY=NY[which(XM>0 & YM>0),]
 
 
-IX=NX[,1:5]
-IY=NY[,1:8]
-
+IX=NX
+IY=NY
 
 TMP=cca(IX,IY)
 #cc1 <- cc(IX, IY)
 #cc2 <- comput(IX, IY, cc1)
-TMP$CCA$eig
+TMP$CCA$v
 
+CC=.simple_combine(TMP$CCA$u, IX)$combine
 
-
-
+predict(TMP,newdata=IX)
 
 
 #############
