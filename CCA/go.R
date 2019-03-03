@@ -44,6 +44,7 @@ saveRDS(CTX,file='CTX.RDS')
 ##########
 library(Seurat)
 source('scRef.R')
+library(pcaPP)
 
 MS=readRDS("MS.RDS")
 MSX=readRDS("MSX.RDS")
@@ -115,23 +116,80 @@ VVP=VP[which(C>0.7),]
     return(R)
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ################################################################
+
+set.seed(123)
+MIN_EXP_CUT=1
+GROUP_SAMPLE_SIZE=100
+
+
+OUT=matrix(ncol=2, nrow=GROUP_SAMPLE_SIZE* nrow(VVP))
+i=1
+while(i<=nrow(VVP)){
+    in_this_group=VVP[i,1]
+    out_this_group=VVP[i,2]
+    in_this_group_exp=MS[,which(MSG %in% in_this_group)]
+    out_this_group_exp=CT[,which(CTG %in% out_this_group)]
+    j=1
+    while(j<=GROUP_SAMPLE_SIZE){
+        in_RR=apply(in_this_group_exp,1,sample,1)
+        out_RR=apply(out_this_group_exp,1,sample,1)
+
+        order_in_RR=in_RR[order(in_RR,decreasing=T)]
+        order_out_RR=out_RR[order(out_RR,decreasing=T)]
+
+        in_seq=names(order_in_RR)[which(order_in_RR>=MIN_EXP_CUT)]
+        out_seq=names(order_out_RR)[which(order_out_RR>=MIN_EXP_CUT)]
+
+        final_in_seq=paste(in_seq,collapse=',')
+        final_out_seq=paste(out_seq,collapse=',')
+        OUT[(i-1)*GROUP_SAMPLE_SIZE+j, 1]=final_in_seq
+        OUT[(i-1)*GROUP_SAMPLE_SIZE+j, 2]=final_out_seq
+        print(j)
+        j=j+1}
+    print(i)
+    i=i+1}
+
+colnames(OUT)=c('IN_SEQ','OUT_SEQ')
+write.table(OUT,row.names=F,col.names=T,sep='\t',quote=F)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#in_FF=in_this_group_exp[,1]
+#out_FF=out_this_group_exp[,2]
+#library(pcaPP)
+
+#cor.fk(in_RR, out_RR)
+#cor.fk(in_FF, out_FF)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 X=c()
 Y=c()
 t=1
