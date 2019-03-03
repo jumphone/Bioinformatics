@@ -135,7 +135,14 @@ library('vegan')
 library(CCA)
 
 
+CC=.simple_combine(X,Y)$combine
+PCA=princomp(CC)
 
+COL=rep('black',22)
+COL[c(1,12)]='red'
+plot(PCA$loadings[,1],PCA$loading[,2],col=COL)
+
+plot(PCA$loadings[1,],PCA$loadings[12,])
 
 
 
@@ -153,12 +160,27 @@ NY=NY[which(XM>0 & YM>0),]
 IX=NX
 IY=NY
 
+
+
+#install.packages('candisc')
+library(candisc)
+ca=cancor(IX, IY)
+
+U<-as.matrix(IX) %*% ca$coef$X
+V<-as.matrix(IY) %*% ca$coef$Y
+
+
+
+
+
 TMP=cca(IX,IY)
 #cc1 <- cc(IX, IY)
 #cc2 <- comput(IX, IY, cc1)
 TMP$CCA$v
 
-CC=.simple_combine(TMP$CCA$u, IX)$combine
+CC=.simple_combine(TMP$CCA$wa, IX)$combine
+
+
 
 predict(TMP,newdata=IX)
 
