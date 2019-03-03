@@ -119,7 +119,7 @@ VVP=VP[which(C>0.7),]
 ################################################################
 
 set.seed(123)
-MIN_EXP_CUT=1
+MIN_EXP_CUT=3
 GROUP_SAMPLE_SIZE=100
 
 
@@ -151,15 +151,10 @@ while(i<=nrow(VVP)){
     i=i+1}
 
 colnames(OUT)=c('IN_SEQ','OUT_SEQ')
-write.table(OUT,file='TRAIN.txt',row.names=F,col.names=T,sep='\t',quote=F)
+#write.table(OUT,file='TRAIN.txt',row.names=F,col.names=T,sep='\t',quote=F)
 write.table(OUT,file='TRAIN_noheader.txt',row.names=F,col.names=F,sep='\t',quote=F)
-
-
-
-
-write.table(OUT[,1],file='IN.txt',row.names=F,col.names=F,sep='\t',quote=F)
-
-write.table(OUT[,2],file='OUT.txt',row.names=F,col.names=F,sep='\t',quote=F)
+#write.table(OUT[,1],file='IN.txt',row.names=F,col.names=F,sep='\t',quote=F)
+#write.table(OUT[,2],file='OUT.txt',row.names=F,col.names=F,sep='\t',quote=F)
 
 
 
