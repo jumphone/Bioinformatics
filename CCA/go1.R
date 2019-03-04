@@ -134,8 +134,11 @@ pbmc@dr$alnpca@cell.embeddings=OUT$adr
 PCUSE=which(OUT$var>mean(OUT$var))
 pbmc <- RunTSNE(object = pbmc, reduction.use='alnpca',dims.use = PCUSE, do.fast = TRUE)
 
-DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.1, do.return = TRUE)
-DimPlot(object =pbmc, reduction.use = "tsne", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "condition",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
+
+
 
 
 
