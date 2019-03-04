@@ -111,6 +111,89 @@ VVP=VP[which(C>0.7),]
 ##########
 
 
+TAG=c(MSG,CTG)
+CON=c(rep('MS',length(MSG)),rep('CT',length(CTG)))
+ALL=.simple_combine(MS,CT)$combine
+pbmc=CreateSeuratObject(raw.data = ALL, min.cells = 0, min.genes = 0, project = "10X_PBMC")
+pbmc@meta.data$tag=TAG
+pbmc@meta.data$con=CON
+pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+
+pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+
+length(x = pbmc@var.genes)
+
+pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"))
+
+PCNUM=50
+pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
+
+
+VlnPlot(object = pbmc, features.plot = "PC1", group.by = "tag", do. return = F)
+VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = F)
+
+
+
+
+mapped_ms_index=which(TAG %in% VVP[,1])
+mapped_ct_index=which(TAG %in% VVP[,2])
+
+
+#pc1=pbmc@dr$pca@cell.embeddings[,1]
+
+
+ms_pc1=pbmc@dr$pca@cell.embeddings[mapped_ms_index, 1]
+ct_pc1=pbmc@dr$pca@cell.embeddings[mapped_ct_index, 1]
+
+
+#install.packages('dtw')
+library(dtw)
+
+seq1=ms_pc1
+seq2=ct_pc1
+#ML=min(length(seq1),length(seq2))
+#seq1=seq1[1:ML]
+#seq2=seq2[1:ML]
+seq1=seq1[order(seq1)]
+seq2=seq2[order(seq2)]
+
+ALN<-dtw(seq1,seq2,keep=TRUE);
+
+
+
+TAG=TAG
+VALID_PAIR=VVP
+
+mapped_index1=which(TAG%in% VALID_PAIR[,1])
+mapped_index2=which(TAG%in% VALID_PAIR[,2])
+PC1=pbmc@dr$pca@cell.embeddings
+
+
+
+
+
+
+
+
+plot(A, type="threeway")
+plot(A, type="twoway",offset=-2)
+
+
+seq1[A$index1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 X=c()
 Y=c()
@@ -126,8 +209,59 @@ colnames(Y)=VVP[,2]
 
 
 
+ALL=cbind(MS,CT)
+
+PCA=princomp(ALL)
+
+
+plot(PCA$loading[c(1:11),1], PCA$loading[c(12:22),1])
+
+
+
+
+
+
+
+
 #install.packages('dtw')
 library(dtw)
+
+seq1=X[2,]
+seq2=Y[2,]
+
+seq1=seq1[order(seq1)]
+seq2=seq2[order(seq2)]
+A<-dtw(seq1,seq2,keep=TRUE);
+plot(A, type="threeway")
+
+
+
+plot(A, type="twoway",offset=-2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## A noisy sine wave as query
 idx<-seq(0,6.28,len=100);
@@ -144,6 +278,20 @@ plot(alignment,type="threeway")
 
 AL<-dtw(X[,1],Y[,1],keep=TRUE);
 plot(AL,type="threeway")
+
+plot(
+    dtw(query,template,keep=TRUE,
+        step=rabinerJuangStepPattern(6,"c")),
+    type="twoway",offset=-2);
+
+
+
+
+
+
+
+
+
 
 
 
