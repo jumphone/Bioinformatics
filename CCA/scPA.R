@@ -117,3 +117,71 @@
 
 
 
+.dr2adr <- function(DR, B1index, B2index, GROUP, VP){
+    library(dtw)
+    library(MALDIquant)
+    library(pcaPP)
+    OUT=list()
+    OUT$adr=DR
+    VALID_PAIR=VP
+    ALL_COR=c()   
+    ALL_PW=c() 
+    index1=B1index
+    index2=B2index
+  
+    vindex1=which(GROUP %in% VP[,1])
+    vindex2=which(GROUP %in% VP[,2])
+    
+    print('Start')
+    THIS_DR=1
+    while(THIS_DR<=ncol(DR)){
+        THIS_PC = DR[,THIS_DR]
+        M1=c()
+        M2=c()
+        maplst1=c()
+        maplst2=c()
+        i=1
+        while(i<=nrow(VALID_PAIR)){
+            this_pair=VALID_PAIR[i,]
+            this_index1=which(GROUP %in% this_pair[1])
+            this_index2=which(GROUP %in% this_pair[2])
+            seq1=sort(THIS_PC[this_index1])
+            seq2=sort(THIS_PC[this_index2])
+            this_aln=dtw(seq1,seq2,keep=TRUE)
+            maplst1=c(maplst1, seq1[this_aln$index1])
+            maplst2=c(maplst2, seq2[this_aln$index2])
+            
+            i=i+1}
+        comlst=cbind(maplst1,maplst2)
+        compc=apply(comlst,1,mean)
+        comlst1o=order(comlst[,1])
+        comlst2o=order(comlst[,2])
+        
+        lst1lst1=compc[comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
+        lst2lst2=compc[comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
+        
+        OUT$adr[index1,THIS_DR]=lst1lst1
+        OUT$adr[index2,THIS_DR]=lst2lst2
+        
+
+        this_pw=var(DR[c(vindex1,vindex2),THIS_DR])#/sd(DR[,THIS_DR])
+        ALL_PW=c(ALL_PW, this_pw)
+      
+        #this_cor=cor.fk(OUT$adr[,THIS_DR],DR[,THIS_DR])
+        #ALL_COR=c(ALL_COR, this_cor)
+        
+        #lst1tocom = function(x){quantile(compc,ecdf(comlst[,1])(x))}   
+        #lst2tocom = function(x){quantile(compc,ecdf(comlst[,2])(x))}
+         
+        #OUT$adr[index1,THIS_DR]=lst1tocom(DR[index1,THIS_DR])
+        #OUT$adr[index2,THIS_DR]=lst2tocom(DR[index2,THIS_DR])
+         
+        print(THIS_DR)
+        THIS_DR=THIS_DR+1}
+    
+    #OUT$cor=ALL_COR
+    OUT$var=ALL_PW
+    print('Finished!!!')
+    return(OUT)
+    }
+
