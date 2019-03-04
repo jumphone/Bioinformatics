@@ -160,30 +160,58 @@ seq2=seq2[order(seq2)]
 ALN<-dtw(seq1,seq2,keep=TRUE);
 
 
-
+##########################################
 TAG=TAG
 VALID_PAIR=VVP
 
-mapped_index1=which(TAG%in% VALID_PAIR[,1])
-mapped_index2=which(TAG%in% VALID_PAIR[,2])
-PC1=pbmc@dr$pca@cell.embeddings
+mapped_index1 = which(TAG%in% VALID_PAIR[,1])
+mapped_index2 = which(TAG%in% VALID_PAIR[,2])
 
 
 
+THIS_DR=1
+while(THIS_DR<=ncol(pbmc@dr$pca@cell.embeddings)){ 
 
 
+THIS_PC = pbmc@dr$pca@cell.embeddings[,THIS_DR]
+this_pc_lst1 = THIS_PC[mapped_index1]
+this_pc_lst2 = THIS_PC[mapped_index2]
+this_pc_lst1 = sort(this_pc_lst1)
+this_pc_lst2 = sort(this_pc_lst2)
+this_aln = dtw(this_pc_lst1,this_pc_lst2,keep=TRUE)
 
 
+aln_pc_lst1 = rep(0, length(this_pc_lst1))
+aln_pc_lst2 = rep(0, length(this_pc_lst2))
 
-plot(A, type="threeway")
-plot(A, type="twoway",offset=-2)
+ii=1
+while(ii<=length(aln_pc_lst1)){
+    aln_pc_lst1[ii]=mean(which(this_aln$index1==ii))
+    ii=ii+1}
+
+ii=1
+while(ii<=length(aln_pc_lst2)){
+    aln_pc_lst2[ii]=mean(which(this_aln$index2==ii))
+    ii=ii+1}
 
 
-seq1[A$index1]
+#plot(this_aln, type="threeway")
+#plot(this_aln, type="twoway",offset=-2)
 
+this_percent_lst1 <- ecdf(this_pc_lst1)
+this_percent_lst2 <- ecdf(this_pc_lst2)
 
+lst1_to_aln = function(X){Y=quantile(aln_pc_lst1, this_percent_lst1(X));return(Y)}
+lst2_to_aln = function(X){Y=quantile(aln_pc_lst2, this_percent_lst2(X));return(Y)}
 
+MAPPED_PC=THIS_PC
+MAPPED_PC[mapped_index1]=lst1_to_aln(THIS_PC[mapped_index1])
+MAPPED_PC[mapped_index2]=lst2_to_aln(THIS_PC[mapped_index2])
 
+pbmc@dr$pca@cell.embeddings[,THIS_DR]=scale(MAPPED_PC)
+
+print(THIS_DR)
+THIS_DR=THIS_DR+1}
 
 
 
