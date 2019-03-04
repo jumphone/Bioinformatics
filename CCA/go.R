@@ -135,35 +135,41 @@ VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = F)
 
 
 
-mapped_ms_index=which(TAG %in% VVP[,1])
-mapped_ct_index=which(TAG %in% VVP[,2])
+#mapped_ms_index=which(TAG %in% VVP[,1])
+#mapped_ct_index=which(TAG %in% VVP[,2])
 
 
 #pc1=pbmc@dr$pca@cell.embeddings[,1]
 
 
-ms_pc1=pbmc@dr$pca@cell.embeddings[mapped_ms_index, 1]
-ct_pc1=pbmc@dr$pca@cell.embeddings[mapped_ct_index, 1]
+#ms_pc1=pbmc@dr$pca@cell.embeddings[mapped_ms_index, 1]
+#ct_pc1=pbmc@dr$pca@cell.embeddings[mapped_ct_index, 1]
 
 
 #install.packages('dtw')
 library(dtw)
 
-seq1=ms_pc1
-seq2=ct_pc1
+#seq1=ms_pc1
+#seq2=ct_pc1
 #ML=min(length(seq1),length(seq2))
 #seq1=seq1[1:ML]
 #seq2=seq2[1:ML]
-seq1=seq1[order(seq1)]
-seq2=seq2[order(seq2)]
+#seq1=seq1[order(seq1)]
+#seq2=seq2[order(seq2)]
 
-ALN<-dtw(seq1,seq2,keep=TRUE);
-
+#ALN<-dtw(seq1,seq2,keep=TRUE);
 
 ##########################################
+##########################################
+##########################################
+##########################################
+##########################################
 TAG=TAG
+CON=CON
 VALID_PAIR=VVP
 
+index1=which(CON=='MS')
+index2=which(CON=='CT')
 mapped_index1 = which(TAG%in% VALID_PAIR[,1])
 mapped_index2 = which(TAG%in% VALID_PAIR[,2])
 
@@ -205,8 +211,8 @@ lst1_to_aln = function(X){Y=quantile(aln_pc_lst1, this_percent_lst1(X));return(Y
 lst2_to_aln = function(X){Y=quantile(aln_pc_lst2, this_percent_lst2(X));return(Y)}
 
 MAPPED_PC=THIS_PC
-MAPPED_PC[mapped_index1]=lst1_to_aln(THIS_PC[mapped_index1])
-MAPPED_PC[mapped_index2]=lst2_to_aln(THIS_PC[mapped_index2])
+MAPPED_PC[index1]=lst1_to_aln(THIS_PC[index1])
+MAPPED_PC[index2]=lst2_to_aln(THIS_PC[index2])
 
 pbmc@dr$pca@cell.embeddings[,THIS_DR]=scale(MAPPED_PC)
 
@@ -217,9 +223,50 @@ THIS_DR=THIS_DR+1}
 
 
 
+# VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = TRUE)
+# PCAPlot(object = pbmc, dim.1 = 1, dim.2 = 2,group.by='con')
+PCUSE=1:50
+pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
+
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "con",  pt.size = 0.5, do.return = TRUE)
+
+
+MAP=rep('NA',length(TAG))
+MAP[which(TAG %in% VVP[,1])]='MS'
+MAP[which(TAG %in% VVP[,2])]='CT'
+pbmc@meta.data$map=MAP
+
+pdf('MAP.pdf')
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "con",  pt.size = 0.5, do.return = TRUE)
+dev.off()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################################
+##########################################
+##########################################
+##########################################
+##########################################
 
 
 
