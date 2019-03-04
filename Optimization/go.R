@@ -10,7 +10,8 @@ i=1
 while(i<=ncol(exp_sc_mat)){
 ########################
 this_sc_exp=exp_sc_mat[,i]
-eval_f = function(x){
+   
+eval_f <- function(x){
    pred_exp=exp_ref_mat %*% x
    real_exp=this_sc_exp
    y= - cor.fk(pred_exp, real_exp)
