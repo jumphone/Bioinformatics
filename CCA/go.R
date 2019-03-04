@@ -154,8 +154,8 @@ dev.off()
 
 #########
 
-
-
+pbmc@dr$alnpca=pbmc@dr$pca
+pbmc@dr$alnpca@key='APC'
 #library(dtw)
 #library(nloptr)
 TAG=TAG
@@ -168,7 +168,7 @@ index2=which(CON=='CT')
 ALL_COEF=c()
 THIS_DR=1
 
-while(THIS_DR<=nrow(VVP)){
+while(THIS_DR<=ncol(pbmc@dr$pca@cell.embeddings)){
 THIS_PC = pbmc@dr$pca@cell.embeddings[,THIS_DR]
 M1=c()
 M2=c()
@@ -191,18 +191,19 @@ this_coef=fit$coefficients
 ALL_COEF=cbind(ALL_COEF,this_coef)
 colnames(ALL_COEF)[THIS_DR]=as.character(THIS_DR)
 #
-pbmc@dr$pca@cell.embeddings[index1,THIS_DR]=ALL_COEF[1,THIS_DR]+pbmc@dr$pca@cell.embeddings[index1,THIS_DR]*ALL_COEF[2,THIS_DR]
+pbmc@dr$alnpca@cell.embeddings[index1,THIS_DR]=ALL_COEF[1,THIS_DR]+pbmc@dr$pca@cell.embeddings[index1,THIS_DR]*ALL_COEF[2,THIS_DR]
 #
 THIS_DR=THIS_DR+1
 }
 
 
 pdf('MAP.pdf')
-DimPlot(object =pbmc, reduction.use = "pca", group.by = "con",  pt.size = 0.5, do.return = TRUE)
-DimPlot(object =pbmc, reduction.use = "pca", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "alnpca", group.by = "con",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "alnpca", group.by = "map",  pt.size = 0.5, do.return = TRUE)
 VlnPlot(object = pbmc, features.plot = "PC1", group.by = "map", do.return = TRUE)
 VlnPlot(object = pbmc, features.plot = "PC2", group.by = "map", do.return = TRUE)
 VlnPlot(object = pbmc, features.plot = "PC3", group.by = "map", do.return = TRUE)
+VlnPlot(object = pbmc, features.plot = "APC50", group.by = "map", do.return = TRUE)
 dev.off()
 
 
@@ -210,8 +211,8 @@ dev.off()
 
 # VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = TRUE)
 # PCAPlot(object = pbmc, dim.1 = 1, dim.2 = 2,group.by='con')
-PCUSE=1:50
-pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
+PCUSE=which(ALL_COEF[2,] <1.2 & ALL_COEF[2,]>0.8  )
+pbmc <- RunTSNE(object = pbmc, reduction.use='alnpca',dims.use = PCUSE, do.fast = TRUE)
 
 DimPlot(object =pbmc, reduction.use = "tsne", group.by = "con",  pt.size = 0.5, do.return = TRUE)
 
