@@ -70,10 +70,45 @@
 
 
 
+.dr2adr <- function(DR, B1index, B2index, GROUP, VP){
+    OUT=list()
+    OUT$adr=DR
+    VALID_PAIR=VP
+    ALL_COEF=c()    
+    index1=B1index
+    index2=B2index
+    print('Start')
+    THIS_DR=1
+    while(THIS_DR<=ncol(DR)){
+        THIS_PC = DR[,THIS_DR]
+        M1=c()
+        M2=c()
+        i=1
+        while(i<=nrow(VALID_PAIR)){
+            this_pair=VALID_PAIR[i,]
+            this_index1=which(GROUP %in% this_pair[1])
+            this_index2=which(GROUP %in% this_pair[2])
+            this_m1=mean(THIS_PC[this_index1])
+            this_m2=mean(THIS_PC[this_index2])
+            M1=c(M1,this_m1)
+            M2=c(M2,this_m2)
+            i=i+1}
+        fit=lm(M2~M1)
+        this_coef=fit$coefficients
+        ALL_COEF=cbind(ALL_COEF,this_coef)
+        colnames(ALL_COEF)[THIS_DR]=as.character(THIS_DR)
+        OUT$adr[index1,THIS_DR]=ALL_COEF[1,THIS_DR]+DR[index1,THIS_DR]*DR[2,THIS_DR]
+        print(THIS_DR)
+        THIS_DR=THIS_DR+1}
+    OUT$coef=ALL_COEF
+    print('Finished!!!')
+    return(OUT)
+    }
 
-
-
-
+.getUseddr <- function(COEF, CUTOFF){
+    USE=which(COEF[2,] <1/RATIO & COEF[2,]>RATIO  )
+    return(USE)
+    }
 
 
 
