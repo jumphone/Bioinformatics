@@ -117,6 +117,13 @@ ALL=.simple_combine(MS,CT)$combine
 pbmc=CreateSeuratObject(raw.data = ALL, min.cells = 0, min.genes = 0, project = "10X_PBMC")
 pbmc@meta.data$tag=TAG
 pbmc@meta.data$con=CON
+
+MAP=rep('NA',length(TAG))
+MAP[which(TAG %in% VVP[,1])]='MS'
+MAP[which(TAG %in% VVP[,2])]='CT'
+pbmc@meta.data$map=MAP
+
+
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 
 pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
@@ -135,35 +142,310 @@ VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = F)
 
 
 
-#mapped_ms_index=which(TAG %in% VVP[,1])
-#mapped_ct_index=which(TAG %in% VVP[,2])
+###############################
+
+pdf('unMAP.pdf')
+DimPlot(object =pbmc, reduction.use = "pca", group.by = "con",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "pca", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+VlnPlot(object = pbmc, features.plot = "PC1", group.by = "map", do.return = TRUE)
+VlnPlot(object = pbmc, features.plot = "PC2", group.by = "map", do.return = TRUE)
+VlnPlot(object = pbmc, features.plot = "PC3", group.by = "map", do.return = TRUE)
+dev.off()
+
+#########
 
 
-#pc1=pbmc@dr$pca@cell.embeddings[,1]
+
+#library(dtw)
+#library(nloptr)
+TAG=TAG
+CON=CON
+VALID_PAIR=VVP
+
+index1=which(CON=='MS')
+index2=which(CON=='CT')
+
+ALL_COEF=c()
+THIS_DR=1
+
+while(THIS_DR<=nrow(VVP)){
+THIS_PC = pbmc@dr$pca@cell.embeddings[,THIS_DR]
+M1=c()
+M2=c()
+S1=c()
+S2=c()
+i=1
+while(i<=nrow(VALID_PAIR)){
+    this_pair=VALID_PAIR[i,]
+    this_index1=which(TAG %in% this_pair[1])
+    this_index2=which(TAG %in% this_pair[2])
+    this_m1=mean(THIS_PC[this_index1])
+    this_m2=mean(THIS_PC[this_index2])
+    this_s1=sd(THIS_PC[this_index1])
+    this_s2=sd(THIS_PC[this_index2])
+    M1=c(M1,this_m1)
+    M2=c(M2,this_m2)
+    i=i+1}
+fit=lm(M2~M1)
+this_coef=fit$coefficients
+ALL_COEF=cbind(ALL_COEF,this_coef)
+colnames(ALL_COEF)[THIS_DR]=as.character(THIS_DR)
+#
+pbmc@dr$pca@cell.embeddings[index1,THIS_DR]=ALL_COEF[1,THIS_DR]+pbmc@dr$pca@cell.embeddings[index1,THIS_DR]*ALL_COEF[2,THIS_DR]
+#
+THIS_DR=THIS_DR+1
+}
 
 
-#ms_pc1=pbmc@dr$pca@cell.embeddings[mapped_ms_index, 1]
-#ct_pc1=pbmc@dr$pca@cell.embeddings[mapped_ct_index, 1]
+pdf('MAP.pdf')
+DimPlot(object =pbmc, reduction.use = "pca", group.by = "con",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "pca", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+VlnPlot(object = pbmc, features.plot = "PC1", group.by = "map", do.return = TRUE)
+VlnPlot(object = pbmc, features.plot = "PC2", group.by = "map", do.return = TRUE)
+VlnPlot(object = pbmc, features.plot = "PC3", group.by = "map", do.return = TRUE)
+dev.off()
 
 
-#install.packages('dtw')
+
+
+# VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = TRUE)
+# PCAPlot(object = pbmc, dim.1 = 1, dim.2 = 2,group.by='con')
+PCUSE=1:50
+pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE)
+
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "con",  pt.size = 0.5, do.return = TRUE)
+
+pdf('MAP.pdf')
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "con",  pt.size = 0.5, do.return = TRUE)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mapped_index1 = which(TAG%in% VALID_PAIR[i,1])
+mapped_index2 = which(TAG%in% VALID_PAIR[i,2])
+
+
+
+
+
+
+
+
+
+X=this_coef
+
+get_cost <- function(X){
+     x0=X[1]
+     x1=X[2]
+     CHANGED_PC= x0+THIS_PC*x1
+     COST=0
+     i=1
+     while(i<=nrow(VALID_PAIR)){
+         this_pair=VALID_PAIR[i,]
+         this_index1=which(TAG %in% this_pair[1])
+         this_index2=which(TAG %in% this_pair[2])
+         this_dist=(mean(CHANGED_PC[this_index1])-mean(THIS_PC[this_index2]))**2
+         COST=COST+this_dist
+     i=i+1
+     }
+     return(COST)
+ }
+
+get_cost(X)
+
+
+
+
+
+optim(par = c(0.00001,-5),fn=get_cost,control = list(maxit=50000000))
+ 
+
+
+
+
+
+
+
+this_pc_lst1 = THIS_PC[mapped_index1]
+this_pc_lst2 = THIS_PC[mapped_index2]
+this_pc_lst1 = sort(this_pc_lst1)
+this_pc_lst2 = sort(this_pc_lst2)
+this_aln = dtw(this_pc_lst1,this_pc_lst2,keep=TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######################################################################
+######################################################################
+######################################################################
+
+
 library(dtw)
 
-#seq1=ms_pc1
-#seq2=ct_pc1
-#ML=min(length(seq1),length(seq2))
-#seq1=seq1[1:ML]
-#seq2=seq2[1:ML]
-#seq1=seq1[order(seq1)]
-#seq2=seq2[order(seq2)]
-
-#ALN<-dtw(seq1,seq2,keep=TRUE);
-
-##########################################
-##########################################
-##########################################
-##########################################
-##########################################
 TAG=TAG
 CON=CON
 VALID_PAIR=VVP
