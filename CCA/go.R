@@ -212,7 +212,7 @@ dev.off()
 # VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = TRUE)
 # PCAPlot(object = pbmc, dim.1 = 1, dim.2 = 2,group.by='con')
 
-RATIO=0.7
+RATIO=0.8
 
 PCUSE=which(ALL_COEF[2,] <1/RATIO & ALL_COEF[2,]>RATIO  )
 pbmc <- RunTSNE(object = pbmc, reduction.use='alnpca',dims.use = PCUSE, do.fast = TRUE)
