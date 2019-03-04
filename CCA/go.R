@@ -132,7 +132,7 @@ length(x = pbmc@var.genes)
 
 pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"))
 
-PCNUM=50
+PCNUM=100
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
 
 
@@ -211,7 +211,10 @@ dev.off()
 
 # VlnPlot(object = pbmc, features.plot = "PC1", group.by = "con", do.return = TRUE)
 # PCAPlot(object = pbmc, dim.1 = 1, dim.2 = 2,group.by='con')
-PCUSE=which(ALL_COEF[2,] <1.2 & ALL_COEF[2,]>0.8  )
+
+RATIO=0.7
+
+PCUSE=which(ALL_COEF[2,] <1/RATIO & ALL_COEF[2,]>RATIO  )
 pbmc <- RunTSNE(object = pbmc, reduction.use='alnpca',dims.use = PCUSE, do.fast = TRUE)
 
 DimPlot(object =pbmc, reduction.use = "tsne", group.by = "con",  pt.size = 0.5, do.return = TRUE)
