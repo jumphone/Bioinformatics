@@ -101,7 +101,7 @@
         this_coef=fit$coefficients
         ALL_COEF=cbind(ALL_COEF,this_coef)
         colnames(ALL_COEF)[THIS_DR]=as.character(THIS_DR)
-        OUT$adr[index1,THIS_DR]=ALL_COEF[1,THIS_DR]+DR[index1,THIS_DR]*DR[2,THIS_DR]
+        OUT$adr[index1,THIS_DR]=ALL_COEF[1,THIS_DR]+DR[index1,THIS_DR]*ALL_COEF[2,THIS_DR]
         print(THIS_DR)
         THIS_DR=THIS_DR+1}
     OUT$coef=ALL_COEF
