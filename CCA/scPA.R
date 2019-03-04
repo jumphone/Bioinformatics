@@ -37,14 +37,14 @@
 }
 
 
-.getValidpair <- function(DATA1, GROUP1, DATA2, GROUP2, CUTOFF=0, do.plot=TRUE){
+.getValidpair <- function(DATA1, GROUP1, DATA2, GROUP2, CUTOFF=0, CPU=4, method='kendall', do.plot=TRUE, print_step=10){
     source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
     print('Start')
     print('Step1.Generate Reference...')
     REF1=.generate_ref(DATA1, cbind(GROUP1, GROUP1), min_cell=1) 
     REF2=.generate_ref(DATA2, cbind(GROUP2, GROUP2), min_cell=1) 
     print('Step2.Calculate Correlation Coefficient...')
-    out = .get_cor( REF1, REF2, method='kendall',CPU=4, print_step=10)
+    out = .get_cor( REF1, REF2, method=method,CPU=CPU, print_step=print_step)
     print('Step3.Analyze Result...')
     tag1=.get_tag_max(out)
     tag2=.get_tag_max(t(out))
