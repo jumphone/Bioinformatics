@@ -40,7 +40,7 @@ pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.fun
 length(x = pbmc@var.genes)
 pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"))
 
-PCNUM=100
+PCNUM=50
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
 
 
@@ -97,7 +97,7 @@ B2index=which(CONDITION=='MS')
         OUT$adr[index2,THIS_DR]=lst2lst2
         
 
-        this_pw=var(DR[c(vindex1,vindex2),THIS_DR])#/sd(DR[,THIS_DR])
+        this_pw=var(scale(DR[,THIS_DR])[c(vindex1,vindex2)])#/sd(DR[,THIS_DR])
         ALL_PW=c(ALL_PW, this_pw)
       
         #this_cor=cor.fk(OUT$adr[,THIS_DR],DR[,THIS_DR])
@@ -131,7 +131,7 @@ pbmc@dr$alnpca@key='APC'
 pbmc@dr$alnpca@cell.embeddings=OUT$adr
 
 
-PCUSE=which(OUT$var>mean(OUT$var))
+PCUSE=which(OUT$var>2)
 pbmc <- RunTSNE(object = pbmc, reduction.use='alnpca',dims.use = PCUSE, do.fast = TRUE)
 
 DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
