@@ -74,7 +74,8 @@
     OUT=list()
     OUT$adr=DR
     VALID_PAIR=VP
-    ALL_COEF=c()    
+    ALL_COEF=c()   
+    ALL_PV=c()
     index1=B1index
     index2=B2index
     print('Start')
@@ -94,6 +95,9 @@
             M2=c(M2,this_m2)
             i=i+1}
         fit=lm(M2~M1)
+        sum_fit=summary(fit)
+        this_pv=summary(fit)$coefficients[,4] 
+        ALL_PV=cbind(ALL_PV,this_pv)
         this_coef=fit$coefficients
         ALL_COEF=cbind(ALL_COEF,this_coef)
         colnames(ALL_COEF)[THIS_DR]=as.character(THIS_DR)
@@ -101,14 +105,15 @@
         print(THIS_DR)
         THIS_DR=THIS_DR+1}
     OUT$coef=ALL_COEF
+    OUT$pv=ALL_PV
     print('Finished!!!')
     return(OUT)
     }
 
-.getUseddr <- function(COEF, CUTOFF){
-    USE=which(COEF[2,] <1/RATIO & COEF[2,]>RATIO  )
-    return(USE)
-    }
+#.getUseddr <- function(COEF, CUTOFF){
+#    USE=which(COEF[2,] <1/RATIO & COEF[2,]>RATIO  )
+#    return(USE)
+#    }
 
 
 
