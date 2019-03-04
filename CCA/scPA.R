@@ -37,7 +37,7 @@
 }
 
 
-.getValidpair <- function(DATA1, GROUP1, DATA2, GROUP2, CUTOFF=0, CPU=4, method='kendall', do.plot=TRUE, print_step=10){
+.getValidpair <- function(DATA1, GROUP1, DATA2, GROUP2, CUTOFF=0, CPU=4, method='kendall', do.plot=FALSE, print_step=10){
     source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
     print('Start')
     print('Step1.Generate Reference...')
