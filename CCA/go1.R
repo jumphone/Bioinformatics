@@ -302,7 +302,7 @@ B2index=which(CONDITION=='MS')
     OUT$adr=DR
     VALID_PAIR=VP
     ALL_COR=c()   
-    ALL_PW=c() 
+    ALL_PV=c() 
     index1=B1index
     index2=B2index
   
@@ -349,22 +349,37 @@ B2index=which(CONDITION=='MS')
         OUT$adr[index1,THIS_DR]=lst1lst1
         OUT$adr[index2,THIS_DR]=lst2lst2
         
-
-        this_pw=var(DR[,THIS_DR][c(vindex1,vindex2)])#/sd(DR[,THIS_DR])
-        ALL_PW=c(ALL_PW, this_pw)
-         
+        lst1_mean=c()
+        lst2_mean=c()
+        i=1
+        while(i<=nrow(VALID_PAIR)){
+            this_pair=VALID_PAIR[i,]
+            this_index1=which(GROUP %in% this_pair[1])
+            this_index2=which(GROUP %in% this_pair[2])
+            lst1_mean=c(lst1_mean,mean(OUT$adr[this_index1,THIS_DR]))
+            lst2_mean=c(lst2_mean,mean(OUT$adr[this_index2,THIS_DR]))
+            
+            i=i+1}
+        
+        this_test=cor.test(lst1_mean,lst2_mean)#sum(dist_lst)
+        this_cor=this_test$estimate
+        this_pv=this_test$p.value
+        
+        ALL_COR=c(ALL_COR, this_cor)
+        ALL_PV=c(ALL_PV, this_pv) 
         print(THIS_DR)
         THIS_DR=THIS_DR+1}
     
     #OUT$cor=ALL_COR
-    OUT$var=ALL_PW
+    OUT$cor=ALL_COR
+    OUT$pv=ALL_PV
     print('Finished!!!')
     return(OUT)
     }
 
 
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
-plot(OUT$var,type='l')
+plot(OUT$cor,-log(OUT$pv),type='p')
 
 
 
@@ -374,7 +389,7 @@ pbmc@dr$alnpca@key='APC'
 pbmc@dr$alnpca@cell.embeddings=OUT$adr
 
 
-PCUSE=which(OUT$var>10)
+PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.8)
 pbmc <- RunTSNE(object = pbmc, reduction.use='alnpca',dims.use = PCUSE, do.fast = TRUE)
 
 DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
