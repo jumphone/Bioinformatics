@@ -9,6 +9,10 @@ D2=readRDS('MS.RDS')
 D1=as.matrix(D1)
 D2=as.matrix(D2)
 
+
+bastout=BAST(D1,D2,FDR=0.05,COR=0.8)
+
+
 library(scran)
 
 gene.counts1=D1
@@ -23,7 +27,5 @@ b1 <- sce1
 b2 <- sce2
 out <- fastMNN(b1, b2)
 
-
-bastout=BAST(CT,MS,FDR=0.05,COR=0.8)
 
 
