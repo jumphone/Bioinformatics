@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+WGCNA: an R package for weighted correlation network analysis: https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/
+
 CisTrome: http://cistrome.org/#
 
 WashU browser: http://epigenomegateway.wustl.edu/legacy/
