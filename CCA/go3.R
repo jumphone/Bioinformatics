@@ -1,3 +1,6 @@
+#Batch Alignment of Imbalanced Single-cell Data
+
+
 source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/scPA.R')
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 
@@ -100,17 +103,31 @@ pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
 LABEL=c(rep('SIM_astrocytes_ependymal',ncol(D1)),as.character(ori_label[,2]))
 pbmc@meta.data$lab=LABEL
 
-pdf('MAP.pdf',width=10,height=7)
+pdf('our_MAP.pdf',width=10,height=7)
 DimPlot(object =pbmc, reduction.use = "umap", group.by = "map",  pt.size = 0.1, do.return = TRUE)
 DimPlot(object =pbmc, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
 DimPlot(object =pbmc, reduction.use = "umap", group.by = "lab",  pt.size = 0.1, do.return = TRUE)
 DimPlot(object =pbmc, reduction.use = "umap",  pt.size = 0.1, do.return = TRUE)
 dev.off()
 
+##############
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("scran", version = "3.8")
+library(scran)
 
+gene.counts1=D1
+sce1 <- SingleCellExperiment(list(counts=gene.counts1))
+sce1 <- normalize(sce1)
 
+gene.counts2=D2
+sce2 <- SingleCellExperiment(list(counts=gene.counts2))
+sce2 <- normalize(sce2)
 
-
+b1 <- sce1
+b2 <- sce1
+out <- fastMNN(b1, b2)
+dim(out$corrected)
 
 
 
