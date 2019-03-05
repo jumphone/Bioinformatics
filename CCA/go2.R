@@ -26,7 +26,7 @@ MSX=readRDS('MSX.RDS')
 CTG=.getGroup(CTX,'CT',CNUM=100)
 MSG=.getGroup(MSX,'MS',CNUM=100)
 
-VP_OUT=.getValidpair(CT, CTG, MS, MSG, CPU=4, method='kendall', do.plot=FALSE, print_step=10)
+VP_OUT=.getValidpair(CT, CTG, MS, MSG, CPU=4, method='kendall', print_step=10)
 VP=VP_OUT$vp
 
 EXP=.simple_combine(CT,MS)$combine
