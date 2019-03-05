@@ -338,8 +338,7 @@ B2index=which(CONDITION=='MS')
         .findlst1 <-function(x){y=sample(compc[which(comlst[,1]==x)],1);return(y)}
         vlst1lst1=  comlst[,1][comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
         lst1lst1=apply(as.matrix(vlst1lst1),1,.findlst1) 
-        
-        
+                
         comlst2o=order(comlst[,2])
         .findlst2 <-function(x){y=sample(compc[which(comlst[,2]==x)],1);return(y)}
         vlst2lst2=  comlst[,2][comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
