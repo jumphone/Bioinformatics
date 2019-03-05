@@ -178,18 +178,23 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     PCNUM=PCNUM
     print_step=print_step
     
+    print('######################################')
     print('MainStep1.Data to one-dimension...')
+    print('######################################')
     D1X=.data2one(D1, CPU)
     D2X=.data2one(D2, CPU)
-
     G1=.getGroup(D1X,'D1',CNUM)
     G2=.getGroup(D2X,'D2',CNUM)
     
+    print('######################################')
     print('MainStep2.Get Valid Pairs...')
+    print('######################################')
     VP_OUT=.getValidpair(D1, G1, D2, G2, CPU, method='kendall', print_step)
     VP=VP_OUT$vp
     
+    print('######################################')
     print('MainStep3.Combine Data...')
+    print('######################################')
     EXP=.simple_combine(D1,D2)$combine
     GROUP=c(G1,G2)
     CONDITION=c(rep('D1',ncol(D1)),rep('D2',ncol(D2)))
@@ -197,7 +202,9 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     MAP[which(GROUP %in% VP[,1])]='D1'
     MAP[which(GROUP %in% VP[,2])]='D2'
     
+    print('######################################')
     print('MainStep4.Pre-process Combined Data...')
+    print('######################################')
     pbmc=CreateSeuratObject(raw.data = EXP, min.cells = 0, min.genes = 0, project = "ALL")
     pbmc@meta.data$group=GROUP
     pbmc@meta.data$condition=CONDITION
@@ -209,27 +216,32 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
     pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
     
+    print('######################################')
     print('MainStep5.Subspace Alignment...')
+    print('######################################')
     DR=pbmc@dr$pca@cell.embeddings 
     B1index=which(CONDITION=='D1')
     B2index=which(CONDITION=='D2')
     OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
     pbmc@dr$oldpca=pbmc@dr$pca
     pbmc@dr$pca@cell.embeddings=OUT$adr
-      
+    
+    print('######################################')
     print('MainStep6.UMAP & tSNE...')
+    print('######################################')
     PCUSE=which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR)
     pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
     pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE)
-    ##########################
-    
+    ########################## 
     RESULT$seurat=pbmc
     RESULT$vp=VP
     RESULT$d1x=D1X
     RESULT$d2x=D2X
     RESULT$g1=G1
     RESULT$g2=G2
+    print('######################################')
     print('All Main Steps Finished !!!')
+    print('######################################')
     return(RESULT)
     }
 
