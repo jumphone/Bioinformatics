@@ -331,20 +331,22 @@ B2index=which(CONDITION=='MS')
             i=i+1}
         comlst=cbind(maplst1,maplst2)
         compc=apply(comlst,1,mean)
-        comlst1o=order(comlst[,1])
-        comlst2o=order(comlst[,2])
+        #compc=maplst2
         
         #plot(comlst[,1],compc)
-        
+        comlst1o=order(comlst[,1])
         .findlst1 <-function(x){y=sample(compc[which(comlst[,1]==x)],1);return(y)}
-        .findlst2 <-function(x){y=sample(compc[which(comlst[,2]==x)],1);return(y)}
-        
-        
         vlst1lst1=  comlst[,1][comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
-        vlst2lst2=  comlst[,2][comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
+        lst1lst1=apply(as.matrix(vlst1lst1),1,.findlst1) 
         
-        lst1lst1=apply(as.matrix(vlst1lst1),1,.findlst1)
+        
+        comlst2o=order(comlst[,2])
+        .findlst2 <-function(x){y=sample(compc[which(comlst[,2]==x)],1);return(y)}
+        vlst2lst2=  comlst[,2][comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
         lst2lst2=apply(as.matrix(vlst2lst2),1,.findlst2)
+        #OO=order(THIS_PC[vindex2])
+        #lst2lst2 = THIS_PC[vindex2][OO][match.closest(DR[index2,THIS_DR], THIS_PC[vindex2][OO])]
+        #plot(lst2lst2,DR[index2,THIS_DR])
         
         OUT$adr[index1,THIS_DR]=lst1lst1
         OUT$adr[index2,THIS_DR]=lst2lst2
@@ -379,22 +381,21 @@ B2index=which(CONDITION=='MS')
 
 
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
-plot(OUT$cor,-log(OUT$pv),type='p')
 
+par(mfrow=c(1,2))
+plot(OUT$cor,pch=16)
+plot(-log(OUT$pv),pch=16)
 
-
-
-pbmc@dr$alnpca=pbmc@dr$pca
-pbmc@dr$alnpca@key='APC'
-pbmc@dr$alnpca@cell.embeddings=OUT$adr
+pbmc@dr$oldpca=pbmc@dr$pca
+pbmc@dr$pca@cell.embeddings=OUT$adr
 
 
 PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.8)
-pbmc <- RunTSNE(object = pbmc, reduction.use='alnpca',dims.use = PCUSE, do.fast = TRUE)
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
 
-DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
-DimPlot(object =pbmc, reduction.use = "tsne", group.by = "condition",  pt.size = 0.5, do.return = TRUE)
-DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "umap", group.by = "map",  pt.size = 0.1, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "umap",  pt.size = 0.1, do.return = TRUE)
 
 
 
