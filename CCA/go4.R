@@ -12,6 +12,10 @@ D2=as.matrix(D2)
 
 bastout=BAST(D1,D2,FDR=0.05,COR=0.8)
 
+DimPlot(object =bastout$seurat, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
+DimPlot(object =bastout$seurat, reduction.use = "umap", group.by = "map",  pt.size = 0.1, do.return = TRUE)
+
+
 
 library(scran)
 
