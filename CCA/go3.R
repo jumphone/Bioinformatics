@@ -1,5 +1,5 @@
 #Batch Alignment of Imbalanced Single-cell Data
-
+#ISLET
 
 source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/scPA.R')
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
