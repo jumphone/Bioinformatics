@@ -239,6 +239,8 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     RESULT$d2x=D2X
     RESULT$g1=G1
     RESULT$g2=G2
+    RESULT$cor=OUT$cor
+    RESULT$pv=OUT$pv
     print('######################################')
     print('All Main Steps Finished !!!')
     print('######################################')
