@@ -122,12 +122,14 @@
         
         #plot(comlst[,1],compc)
         comlst1o=order(comlst[,1])
-        .findlst1 <-function(x){y=sample(compc[which(comlst[,1]==x)],1);return(y)}
+        #.findlst1 <-function(x){y=sample(compc[which(comlst[,1]==x)],1);return(y)}
+        .findlst1 <-function(x){y=mean(compc[which(comlst[,1]==x)]);return(y)}
         vlst1lst1=  comlst[,1][comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
         lst1lst1=apply(as.matrix(vlst1lst1),1,.findlst1) 
                 
         comlst2o=order(comlst[,2])
-        .findlst2 <-function(x){y=sample(compc[which(comlst[,2]==x)],1);return(y)}
+        #.findlst2 <-function(x){y=sample(compc[which(comlst[,2]==x)],1);return(y)}
+        .findlst2 <-function(x){y=mean(compc[which(comlst[,2]==x)]);return(y)}
         vlst2lst2=  comlst[,2][comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
         lst2lst2=apply(as.matrix(vlst2lst2),1,.findlst2)
         #OO=order(THIS_PC[vindex2])
