@@ -1,7 +1,7 @@
 
 #library(Seurat)
 #source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
-
+#source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/scPA.R')
 
 .data2one <- function(DATA, CPU=4, PCNUM=50){
     PCUSE=1:PCNUM
