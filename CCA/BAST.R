@@ -171,25 +171,25 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     RESULT=list()
     library(Seurat)
     source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
-    
+    print('BAST Start ')
     D1=D1
     D2=D2
     CNUM=CNUM
     PCNUM=PCNUM
     print_step=print_step
     
-    print('Step1.Data to one-dimension...')
+    print('MainStep1.Data to one-dimension...')
     D1X=.data2one(D1)
     D2X=.data2one(D2)
 
     G1=.getGroup(D1X,'D1',CNUM)
     G2=.getGroup(D2X,'D2',CNUM)
     
-    print('Step2.Get Valid Pairs...')
+    print('MainStep2.Get Valid Pairs...')
     VP_OUT=.getValidpair(D1, G1, D2, G2, CPU, method='kendall', print_step)
     VP=VP_OUT$vp
     
-    print('Step3.Combine Data...')
+    print('MainStep3.Combine Data...')
     EXP=.simple_combine(D1,D2)$combine
     GROUP=c(G1,G2)
     CONDITION=c(rep('D1',ncol(D1)),rep('D2',ncol(D2)))
@@ -197,14 +197,14 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     MAP[which(GROUP %in% VP[,1])]='D1'
     MAP[which(GROUP %in% VP[,2])]='D2'
     
-    print('Step4.Pre-process Combined Data...')
+    print('MainStep4.Pre-process Combined Data...')
     pbmc=CreateSeuratObject(raw.data = EXP, min.cells = 0, min.genes = 0, project = "ALL")
     pbmc@meta.data$group=GROUP
     pbmc@meta.data$condition=CONDITION
     pbmc@meta.data$map=MAP
     pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
     
-    print('Step5.Subspace Alignment...')
+    print('MainStep5.Subspace Alignment...')
     DR=pbmc@dr$pca@cell.embeddings 
     B1index=which(CONDITION=='D1')
     B2index=which(CONDITION=='D2')
@@ -212,7 +212,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     pbmc@dr$oldpca=pbmc@dr$pca
     pbmc@dr$pca@cell.embeddings=OUT$adr
       
-    print('Step6.UMAP & tSNE...')
+    print('MainStep6.UMAP & tSNE...')
     PCUSE=which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR)
     pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
     pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE)
@@ -224,7 +224,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     RESULT$d2x=D2X
     RESULT$g1=G1
     RESULT$g2=G2
-    
+    print('All Main Steps Finished !!!')
     return(RESULT)
     }
 
