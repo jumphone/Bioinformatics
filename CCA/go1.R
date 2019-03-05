@@ -208,8 +208,10 @@ DR=t(DR)
 #B2index=which(CONDITION=='MS')
 #OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
-
+rownames(DR)=colnames(pbmc@data)
+colnames(DR)=NULL
 pbmc@dr$aln@cell.embeddings=DR
+
 #pbmc@dr$aln@cell.embeddings=OUT$adr
 
 boxplot(pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[2,1]),2], pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[2,2]),2])
