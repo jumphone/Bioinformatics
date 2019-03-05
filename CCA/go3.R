@@ -129,5 +129,11 @@ b2 <- sce1
 out <- fastMNN(b1, b2)
 dim(out$corrected)
 
+saveRDS(out,file='MNNout.RDS')
 
+source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BAST.R')
+
+bastout=BAST(D1,D2,CNUM=10,PCNUM=50)
+
+saveRDS(bastout,file='BASTout.RDS')
 
