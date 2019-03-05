@@ -183,8 +183,8 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     print('######################################')
     print('MainStep1.Data to one-dimension...')
     print('######################################')
-    D1X=.data2one(D1, CPU)
-    D2X=.data2one(D2, CPU)
+    D1X=.data2one(D1, CPU, PCNUM)
+    D2X=.data2one(D2, CPU, PCNUM)
     G1=.getGroup(D1X,'D1',CNUM)
     G2=.getGroup(D2X,'D2',CNUM)
     
