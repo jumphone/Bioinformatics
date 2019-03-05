@@ -199,22 +199,25 @@ DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
 
 sout1=t(apply(rout1,1,scale))
 sout2=t(apply(rout2,1,scale))
+sout1=apply(sout1,2,scale)
+sout2=apply(sout2,2,scale)
 DR=cbind(sout1, sout2)
 #DR=cbind(rout1,rout2)
 DR=t(DR)
+
+rownames(DR)=colnames(pbmc@data)
+colnames(DR)=NULL
 
 #DR=pbmc@dr$pca@cell.embeddings
 #B1index=which(CONDITION=='CT')
 #B2index=which(CONDITION=='MS')
 #OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
-rownames(DR)=colnames(pbmc@data)
-colnames(DR)=NULL
 pbmc@dr$aln@cell.embeddings=DR
 
 #pbmc@dr$aln@cell.embeddings=OUT$adr
 
-boxplot(pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[2,1]),2], pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[2,2]),2])
+boxplot(pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[1,1]),1], pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[1,2]),1])
 
 
 PCUSE=1:ncol(DR)
