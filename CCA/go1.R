@@ -29,23 +29,38 @@ MSR=.generate_ref(MS,cbind(MSG,MSG),min_cell=1)
 
 #which(colnames(CTR) %in% VP[,1])
 
-mapped_CTR=c()
-for(one in VP[,1]){
-    mapped_CTR=cbind(mapped_CTR, CTR[,which(colnames(CTR)==one)])
-    }
-colnames(mapped_CTR)=VP[,1]
+mapped_CTR=CTR[,which(rownames(CTR) %in% VP[,1])]
+mapped_MSR=MSR[,which(rownames(MSR) %in% VP[,2])]
+
+out1=.get_cor(CT,mapped_CTR,method='kendall')
+out2=.get_cor(MS,mapped_MSR,method='kendall')
+
+#rout1=out1
+#i=1
+#while(i<=nrow(out1)){
+#    rout1[1,]=out1[which(rownames(out1)==VP[i,1]),]
+#    i=i+1}
 
 
-mapped_MSR=c()
-for(one in VP[,2]){
-    mapped_MSR=cbind(mapped_MSR, MSR[,which(colnames(MSR)==one)])
-    }
-colnames(mapped_MSR)=VP[,2]
-
+#rout2=out2
+#i=1
+#while(i<=nrow(out2)){
+#    rout2[1,]=out2[which(rownames(out2)==VP[i,2]),]
+#    i=i+1}
+#######################
+library(Seurat)
+tmp_exp=cbind(c(1,2,3),c(3,2,1))
+colnames(tmp_exp)=c('c1','c2')
+rownames(tmp_exp)=c('g1','g2','g3')
+tmp=CreateSeuratObject(raw.data = tmp_exp, min.cells = 0, min.genes = 0, project = "ALL")
+tmp=NormalizeData(object = tmp, normalization.method = "LogNormalize", scale.factor = 10000)
+tmp <- ScaleData(object = tmp, genes.use=rownames(tmp@data))
+PCNUM=1
+tmp <- RunPCA(object = tmp, pcs.compute=PCNUM,pc.genes = rownames(tmp@data), do.print =F)
 #######################
 
-
-
+#sout1=apply(out1,2,scale)
+#sout2=apply(out2,2,scale)
 
 
 EXP=.simple_combine(CT,MS)$combine
@@ -64,9 +79,88 @@ pbmc@meta.data$map=MAP
 
 
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+pbmc@dr$aln=tmp@dr$pca
+
+
+
+sout1=apply(out1,2,rank)
+sout2=apply(out2,2,rank)
+
+DR=cbind(sout1,sout2)
+DR=t(DR)
+
+pbmc@dr$aln@cell.embeddings=DR
+
+PCUSE=1:ncol(DR)
+pbmc <- RunTSNE(object = pbmc, reduction.use='aln',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+
+
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "condition",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
+
+#######################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#######################
+#######################
+
+#######################
+
+
+
+
+EXP=.simple_combine(CT,MS)$combine
+GROUP=c(CTG,MSG)
+CONDITION=c(rep('CT',ncol(CT)),rep('MS',ncol(MS)))
+
+
+
+
+pbmc=CreateSeuratObject(raw.data = EXP, min.cells = 0, min.genes = 0, project = "ALL")
+pbmc@meta.data$group=GROUP
+pbmc@meta.data$condition=CONDITION
+
+MAP=rep('NA',length(GROUP))
+MAP[which(GROUP %in% VP[,1])]='CT'
+MAP[which(GROUP %in% VP[,2])]='MS'
+pbmc@meta.data$map=MAP
+
+
+pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
 length(x = pbmc@var.genes)
 pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"))
+pbmc
+
+
 
 PCNUM=50
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
