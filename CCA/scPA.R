@@ -37,7 +37,7 @@
 }
 
 
-.getValidpair <- function(DATA1, GROUP1, DATA2, GROUP2, CUTOFF=0, CPU=4, method='kendall', do.plot=FALSE, print_step=10){
+.getValidpair <- function(DATA1, GROUP1, DATA2, GROUP2, CPU=4, method='kendall', print_step=10){
     source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
     print('Start')
     print('Step1.Generate Reference...')
@@ -62,10 +62,13 @@
         this_c=out[which(rownames(out)==VP[t,2]),which(colnames(out)==VP[t,1])]
         C=c(C,this_c)
         t=t+1}
-    if(do.plot==TRUE){plot(C)}
-    VP=VP[which(C>=CUTOFF),]  
+    #if(do.plot==TRUE){plot(C)}
+    #VP=VP[which(C>=CUTOFF),]  
     print('Finished!!!')
-    return(VP)
+    OUT=list()
+    OUT$vp=VP
+    OUT$cor=C
+    return(OUT)
     }
 
 
