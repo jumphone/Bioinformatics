@@ -204,9 +204,9 @@ DR=cbind(sout1, sout2)
 DR=t(DR)
 
 #DR=pbmc@dr$pca@cell.embeddings
-B1index=which(CONDITION=='CT')
-B2index=which(CONDITION=='MS')
-OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
+#B1index=which(CONDITION=='CT')
+#B2index=which(CONDITION=='MS')
+#OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
 
 pbmc@dr$aln@cell.embeddings=DR
