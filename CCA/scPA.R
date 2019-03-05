@@ -73,7 +73,8 @@
 
 
 
-.dr2adr <- function(DR, B1index, B2index, GROUP, VP){
+.dr2adr <- function(DR, B1index, B2index, GROUP, VP, SEED=123){
+    set.seed(SEED)
     library(dtw)
     library(MALDIquant)
     library(pcaPP)
