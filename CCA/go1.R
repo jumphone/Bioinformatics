@@ -45,9 +45,9 @@ rout1=out1
 i=1
 while(i<=nrow(out1)){
     rout1[i,]=out1[which(rownames(out1)==VP[i,1]),]
-    this_mean=mean(rout1[i,which(CTG %in% VP[i,1])])
-    this_sd=sd(rout1[i,which(CTG %in% VP[i,1])])
-    rout1[i,]=(rout1[i,]-this_mean)/this_sd
+    #this_mean=mean(rout1[i,which(CTG %in% VP[i,1])])
+    #this_sd=sd(rout1[i,which(CTG %in% VP[i,1])])
+    #rout1[i,]=(rout1[i,]-this_mean)/this_sd
     i=i+1}
 rownames(rout1)=VP[,1]
 
@@ -56,9 +56,9 @@ rout2=out2
 i=1
 while(i<=nrow(out2)){
     rout2[i,]=out2[which(rownames(out2)==VP[i,2]),]
-    this_mean=mean(rout2[i,which(MSG %in% VP[i,2])])
-    this_sd=sd(rout2[i,which(MSG %in% VP[i,2])])
-    rout2[i,]=(rout2[i,]-this_mean)/this_sd
+    #this_mean=mean(rout2[i,which(MSG %in% VP[i,2])])
+    #this_sd=sd(rout2[i,which(MSG %in% VP[i,2])])
+    #rout2[i,]=(rout2[i,]-this_mean)/this_sd
     i=i+1}
 rownames(rout2)=VP[,2]
 
@@ -75,14 +75,6 @@ tmp <- ScaleData(object = tmp, genes.use=rownames(tmp@data))
 PCNUM=1
 tmp <- RunPCA(object = tmp, pcs.compute=PCNUM,pc.genes = rownames(tmp@data), do.print =F)
 #######################
-
-sout1=apply(rout1,2,scale)
-sout2=apply(rout2,2,scale)
-#DR=cbind(rout1,rout2)
-DR=cbind(sout1,sout2)
-DR=t(DR)
-boxplot(DR[which(GROUP %in% VP[1,1]),1],DR[which(GROUP %in% VP[2,1]),1])
-
 
 
 EXP=.simple_combine(CT,MS)$combine
@@ -103,14 +95,21 @@ pbmc@meta.data$map=MAP
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 pbmc@dr$aln=tmp@dr$pca
 
+########################
+
+
+#sout1=apply(rout1,2,scale)
+#sout2=apply(rout2,2,scale)
+#DR=cbind(rout1,rout2)
+#DR=cbind(sout1,sout2)
+#DR=t(DR)
+#boxplot(DR[which(GROUP %in% VP[1,1]),1],DR[which(GROUP %in% VP[1,2]),1])
+
+
+#
+
 
 pbmc@dr$aln@cell.embeddings=DR
-
-
-
-
-
-
 
 PCUSE=1:ncol(DR)
 pbmc <- RunTSNE(object = pbmc, reduction.use='aln',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
@@ -168,8 +167,17 @@ DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
         comlst1o=order(comlst[,1])
         comlst2o=order(comlst[,2])
         
-        lst1lst1=compc[comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
-        lst2lst2=compc[comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
+        #plot(comlst[,1],compc)
+        
+        .findlst1 <-function(x){y=sample(compc[which(comlst[,1]==x)],1);return(y)}
+        .findlst2 <-function(x){y=sample(compc[which(comlst[,2]==x)],1);return(y)}
+        
+        
+        vlst1lst1=  comlst[,1][comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
+        vlst2lst2=  comlst[,2][comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
+        
+        lst1lst1=apply(as.matrix(vlst1lst1),1,.findlst1)
+        lst2lst2=apply(as.matrix(vlst2lst2),1,.findlst2)
         
         OUT$adr[index1,THIS_DR]=lst1lst1
         OUT$adr[index2,THIS_DR]=lst2lst2
@@ -177,15 +185,6 @@ DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
 
         this_pw=var(DR[,THIS_DR][c(vindex1,vindex2)])#/sd(DR[,THIS_DR])
         ALL_PW=c(ALL_PW, this_pw)
-      
-        #this_cor=cor.fk(OUT$adr[,THIS_DR],DR[,THIS_DR])
-        #ALL_COR=c(ALL_COR, this_cor)
-        
-        #lst1tocom = function(x){quantile(compc,ecdf(comlst[,1])(x))}   
-        #lst2tocom = function(x){quantile(compc,ecdf(comlst[,2])(x))}
-         
-        #OUT$adr[index1,THIS_DR]=lst1tocom(DR[index1,THIS_DR])
-        #OUT$adr[index2,THIS_DR]=lst2tocom(DR[index2,THIS_DR])
          
         print(THIS_DR)
         THIS_DR=THIS_DR+1}
@@ -197,10 +196,10 @@ DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
     }
 
 
-sout1=t(apply(rout1,1,scale))
-sout2=t(apply(rout2,1,scale))
-sout1=apply(sout1,2,scale)
-sout2=apply(sout2,2,scale)
+sout1=rout1#t(apply(rout1,1,scale))
+sout2=rout2#t(apply(rout2,1,scale))
+#sout1=apply(sout1,2,scale)
+#sout2=apply(sout2,2,scale)
 DR=cbind(sout1, sout2)
 #DR=cbind(rout1,rout2)
 DR=t(DR)
@@ -209,18 +208,27 @@ rownames(DR)=colnames(pbmc@data)
 colnames(DR)=NULL
 
 #DR=pbmc@dr$pca@cell.embeddings
-#B1index=which(CONDITION=='CT')
-#B2index=which(CONDITION=='MS')
-#OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
-
-pbmc@dr$aln@cell.embeddings=DR
-
-#pbmc@dr$aln@cell.embeddings=OUT$adr
-
-boxplot(pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[1,1]),1], pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[1,2]),1])
+B1index=which(CONDITION=='CT')
+B2index=which(CONDITION=='MS')
+OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
 
-PCUSE=1:ncol(DR)
+
+#pbmc@dr$aln@cell.embeddings=DR
+ADR=OUT$adr
+ADR=apply(ADR,2,scale)
+rownames(ADR)=colnames(pbmc@data)
+colnames(ADR)=NULL
+
+pbmc@dr$aln@cell.embeddings=ADR
+
+
+
+THIS_DR=1
+boxplot(pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[THIS_DR,1]),1], pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[THIS_DR,2]),1])
+
+
+PCUSE=1:ncol(ADR)
 pbmc <- RunTSNE(object = pbmc, reduction.use='aln',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 
 
@@ -269,10 +277,10 @@ pbmc@meta.data$map=MAP
 
 
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
-pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+pbmc <- FindVariableGenes(object = pbmc, do.plot=F,mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
 length(x = pbmc@var.genes)
 pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"))
-pbmc
+
 
 
 
@@ -326,8 +334,17 @@ B2index=which(CONDITION=='MS')
         comlst1o=order(comlst[,1])
         comlst2o=order(comlst[,2])
         
-        lst1lst1=compc[comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
-        lst2lst2=compc[comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
+        #plot(comlst[,1],compc)
+        
+        .findlst1 <-function(x){y=sample(compc[which(comlst[,1]==x)],1);return(y)}
+        .findlst2 <-function(x){y=sample(compc[which(comlst[,2]==x)],1);return(y)}
+        
+        
+        vlst1lst1=  comlst[,1][comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
+        vlst2lst2=  comlst[,2][comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
+        
+        lst1lst1=apply(as.matrix(vlst1lst1),1,.findlst1)
+        lst2lst2=apply(as.matrix(vlst2lst2),1,.findlst2)
         
         OUT$adr[index1,THIS_DR]=lst1lst1
         OUT$adr[index2,THIS_DR]=lst2lst2
@@ -335,15 +352,6 @@ B2index=which(CONDITION=='MS')
 
         this_pw=var(DR[,THIS_DR][c(vindex1,vindex2)])#/sd(DR[,THIS_DR])
         ALL_PW=c(ALL_PW, this_pw)
-      
-        #this_cor=cor.fk(OUT$adr[,THIS_DR],DR[,THIS_DR])
-        #ALL_COR=c(ALL_COR, this_cor)
-        
-        #lst1tocom = function(x){quantile(compc,ecdf(comlst[,1])(x))}   
-        #lst2tocom = function(x){quantile(compc,ecdf(comlst[,2])(x))}
-         
-        #OUT$adr[index1,THIS_DR]=lst1tocom(DR[index1,THIS_DR])
-        #OUT$adr[index2,THIS_DR]=lst2tocom(DR[index2,THIS_DR])
          
         print(THIS_DR)
         THIS_DR=THIS_DR+1}
@@ -353,7 +361,6 @@ B2index=which(CONDITION=='MS')
     print('Finished!!!')
     return(OUT)
     }
-
 
 
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
