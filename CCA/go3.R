@@ -133,7 +133,41 @@ saveRDS(out,file='MNNout.RDS')
 
 source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BAST.R')
 
-bastout=BAST(D1,D2,CNUM=10,PCNUM=50)
+colnames(D1)=paste0('sim_',colnames(D1))
+
+bastout=BAST(D1,D2,CNUM=10,PCNUM=50, FDR=0.05, COR=0.6)
 
 saveRDS(bastout,file='BASTout.RDS')
+
+TSNEPlot(bastout$seurat,group.by='condition')
+
+
+
+
+pbmc=bastout$seurat
+pbmc@dr$pca@cell.embeddings=out$corrected
+rownames(pbmc@dr$pca@cell.embeddings)=rownames(pbmc@dr$oldpca@cell.embeddings)
+colnames(pbmc@dr$pca@cell.embeddings)=colnames(pbmc@dr$oldpca@cell.embeddings)
+PCUSE=1:50
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
+
+TSNEPlot(pbmc,group.by='condition')
+DimPlot(object =pbmc, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
+LABEL=c(rep('SIM_astrocytes_ependymal',ncol(D1)),as.character(ori_label[,2]))
+pbmc@meta.data$lab=LABEL
+DimPlot(object =pbmc, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "umap", group.by = "lab",  pt.size = 0.1, do.return = TRUE)
+
+
+
+
+
+#PCUSE=1:50
+#bastout$seurat <- RunUMAP(object = bastout$seurat, reduction.use='pca',dims.use = PCUSE)
+
+bastout$seurat@meta.data$lab=LABEL
+DimPlot(object =bastout$seurat, reduction.use = "umap", group.by = "lab",  pt.size = 0.1, do.return = TRUE)
+DimPlot(object =bastout$seurat, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
+
+
 
