@@ -10,7 +10,11 @@ D1=as.matrix(D1)
 D2=as.matrix(D2)
 
 
-bastout=BAST(D1,D2,FDR=0.05,COR=0.8)
+bastout=BAST(D1,D2,FDR=0.05,CNUM=100, COR=0.8)
+
+#PCUSE=which(bastout$cor>0.9 & bastout$fdr<0.05)
+bastout$seurat <- RunUMAP(object = bastout$seurat, reduction.use='pca',dims.use = PCUSE)
+
 
 DimPlot(object =bastout$seurat, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
 DimPlot(object =bastout$seurat, reduction.use = "umap", group.by = "map",  pt.size = 0.1, do.return = TRUE)
