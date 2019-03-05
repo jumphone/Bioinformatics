@@ -14,11 +14,39 @@ saveRDS(CTX,file='CTX.RDS')
 saveRDS(MSX,file='MSX.RDS')
 
 
+CT=readRDS('CT.RDS')
+MS=readRDS('MS.RDS')
+CTX=readRDS('CTX.RDS')
+MSX=readRDS('MSX.RDS')
+
 CTG=.getGroup(CTX,'CT',CNUM=100)
 MSG=.getGroup(MSX,'MS',CNUM=100)
 
 VP=.getValidpair(CT, CTG, MS, MSG, CPU=4, method='kendall', do.plot=FALSE, print_step=10)
-  
+
+CTR=.generate_ref(CT,cbind(CTG,CTG),min_cell=1)
+MSR=.generate_ref(MS,cbind(MSG,MSG),min_cell=1)
+
+#which(colnames(CTR) %in% VP[,1])
+
+mapped_CTR=c()
+for(one in VP[,1]){
+    mapped_CTR=cbind(mapped_CTR, CTR[,which(colnames(CTR)==one)])
+    }
+colnames(mapped_CTR)=VP[,1]
+
+
+mapped_MSR=c()
+for(one in VP[,2]){
+    mapped_MSR=cbind(mapped_MSR, MSR[,which(colnames(MSR)==one)])
+    }
+colnames(mapped_MSR)=VP[,2]
+
+#######################
+
+
+
+
 
 EXP=.simple_combine(CT,MS)$combine
 GROUP=c(CTG,MSG)
