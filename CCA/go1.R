@@ -13,7 +13,10 @@ saveRDS(MS,file='MS.RDS')
 saveRDS(CTX,file='CTX.RDS')
 saveRDS(MSX,file='MSX.RDS')
 
+#####################
 
+source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/scPA.R')
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 CT=readRDS('CT.RDS')
 MS=readRDS('MS.RDS')
 CTX=readRDS('CTX.RDS')
@@ -29,24 +32,38 @@ MSR=.generate_ref(MS,cbind(MSG,MSG),min_cell=1)
 
 #which(colnames(CTR) %in% VP[,1])
 
-mapped_CTR=CTR[,which(rownames(CTR) %in% VP[,1])]
-mapped_MSR=MSR[,which(rownames(MSR) %in% VP[,2])]
+mapped_CTR=CTR[,which(colnames(CTR) %in% VP[,1])]
+mapped_MSR=MSR[,which(colnames(MSR) %in% VP[,2])]
+
+
 
 out1=.get_cor(CT,mapped_CTR,method='kendall')
 out2=.get_cor(MS,mapped_MSR,method='kendall')
 
-#rout1=out1
-#i=1
-#while(i<=nrow(out1)){
-#    rout1[1,]=out1[which(rownames(out1)==VP[i,1]),]
-#    i=i+1}
+
+rout1=out1
+i=1
+while(i<=nrow(out1)){
+    rout1[i,]=out1[which(rownames(out1)==VP[i,1]),]
+    this_mean=mean(rout1[i,which(CTG %in% VP[i,1])])
+    this_sd=sd(rout1[i,which(CTG %in% VP[i,1])])
+    rout1[i,]=(rout1[i,]-this_mean)/this_sd
+    i=i+1}
+rownames(rout1)=VP[,1]
 
 
-#rout2=out2
-#i=1
-#while(i<=nrow(out2)){
-#    rout2[1,]=out2[which(rownames(out2)==VP[i,2]),]
-#    i=i+1}
+rout2=out2
+i=1
+while(i<=nrow(out2)){
+    rout2[i,]=out2[which(rownames(out2)==VP[i,2]),]
+    this_mean=mean(rout2[i,which(MSG %in% VP[i,2])])
+    this_sd=sd(rout2[i,which(MSG %in% VP[i,2])])
+    rout2[i,]=(rout2[i,]-this_mean)/this_sd
+    i=i+1}
+rownames(rout2)=VP[,2]
+
+boxplot(rout1[1,],rout2[1,])
+
 #######################
 library(Seurat)
 tmp_exp=cbind(c(1,2,3),c(3,2,1))
@@ -59,8 +76,13 @@ PCNUM=1
 tmp <- RunPCA(object = tmp, pcs.compute=PCNUM,pc.genes = rownames(tmp@data), do.print =F)
 #######################
 
-#sout1=apply(out1,2,scale)
-#sout2=apply(out2,2,scale)
+sout1=apply(rout1,2,scale)
+sout2=apply(rout2,2,scale)
+#DR=cbind(rout1,rout2)
+DR=cbind(sout1,sout2)
+DR=t(DR)
+boxplot(DR[which(GROUP %in% VP[1,1]),1],DR[which(GROUP %in% VP[2,1]),1])
+
 
 
 EXP=.simple_combine(CT,MS)$combine
@@ -82,14 +104,13 @@ pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scal
 pbmc@dr$aln=tmp@dr$pca
 
 
-
-sout1=apply(out1,2,rank)
-sout2=apply(out2,2,rank)
-
-DR=cbind(sout1,sout2)
-DR=t(DR)
-
 pbmc@dr$aln@cell.embeddings=DR
+
+
+
+
+
+
 
 PCUSE=1:ncol(DR)
 pbmc <- RunTSNE(object = pbmc, reduction.use='aln',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
@@ -107,12 +128,100 @@ DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
 
 
 
+.dr2adr <- function(DR, B1index, B2index, GROUP, VP){
+    library(dtw)
+    library(MALDIquant)
+    library(pcaPP)
+    OUT=list()
+    OUT$adr=DR
+    VALID_PAIR=VP
+    ALL_COR=c()   
+    ALL_PW=c() 
+    index1=B1index
+    index2=B2index
+  
+    vindex1=which(GROUP %in% VP[,1])
+    vindex2=which(GROUP %in% VP[,2])
+    
+    print('Start')
+    THIS_DR=1
+    while(THIS_DR<=ncol(DR)){
+        THIS_PC = DR[,THIS_DR]
+        M1=c()
+        M2=c()
+        maplst1=c()
+        maplst2=c()
+        i=1
+        while(i<=nrow(VALID_PAIR)){
+            this_pair=VALID_PAIR[i,]
+            this_index1=which(GROUP %in% this_pair[1])
+            this_index2=which(GROUP %in% this_pair[2])
+            seq1=sort(THIS_PC[this_index1])
+            seq2=sort(THIS_PC[this_index2])
+            this_aln=dtw(seq1,seq2,keep=TRUE)
+            maplst1=c(maplst1, seq1[this_aln$index1])
+            maplst2=c(maplst2, seq2[this_aln$index2])
+            
+            i=i+1}
+        comlst=cbind(maplst1,maplst2)
+        compc=apply(comlst,1,mean)
+        comlst1o=order(comlst[,1])
+        comlst2o=order(comlst[,2])
+        
+        lst1lst1=compc[comlst1o][match.closest(DR[index1,THIS_DR], comlst[,1][comlst1o])]
+        lst2lst2=compc[comlst2o][match.closest(DR[index2,THIS_DR], comlst[,2][comlst2o])]
+        
+        OUT$adr[index1,THIS_DR]=lst1lst1
+        OUT$adr[index2,THIS_DR]=lst2lst2
+        
+
+        this_pw=var(DR[,THIS_DR][c(vindex1,vindex2)])#/sd(DR[,THIS_DR])
+        ALL_PW=c(ALL_PW, this_pw)
+      
+        #this_cor=cor.fk(OUT$adr[,THIS_DR],DR[,THIS_DR])
+        #ALL_COR=c(ALL_COR, this_cor)
+        
+        #lst1tocom = function(x){quantile(compc,ecdf(comlst[,1])(x))}   
+        #lst2tocom = function(x){quantile(compc,ecdf(comlst[,2])(x))}
+         
+        #OUT$adr[index1,THIS_DR]=lst1tocom(DR[index1,THIS_DR])
+        #OUT$adr[index2,THIS_DR]=lst2tocom(DR[index2,THIS_DR])
+         
+        print(THIS_DR)
+        THIS_DR=THIS_DR+1}
+    
+    #OUT$cor=ALL_COR
+    OUT$var=ALL_PW
+    print('Finished!!!')
+    return(OUT)
+    }
 
 
+sout1=t(apply(rout1,1,scale))
+sout2=t(apply(rout2,1,scale))
+DR=cbind(sout1, sout2)
+#DR=cbind(rout1,rout2)
+DR=t(DR)
+
+#DR=pbmc@dr$pca@cell.embeddings
+B1index=which(CONDITION=='CT')
+B2index=which(CONDITION=='MS')
+OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
 
+pbmc@dr$aln@cell.embeddings=DR
+#pbmc@dr$aln@cell.embeddings=OUT$adr
+
+boxplot(pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[2,1]),2], pbmc@dr$aln@cell.embeddings[which(GROUP %in% VP[2,2]),2])
 
 
+PCUSE=1:ncol(DR)
+pbmc <- RunTSNE(object = pbmc, reduction.use='aln',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+
+
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "map",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne", group.by = "condition",  pt.size = 0.5, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "tsne",  pt.size = 0.5, do.return = TRUE)
 
 
 
