@@ -41,6 +41,7 @@
         #if(i%%CUTOFF==1){j=j+1;print(j)}
         if(i%%CUTOFF==1){j=j+1}
         i=i+1}
+    print(j-1)
     return(GROUP)
 }
 
