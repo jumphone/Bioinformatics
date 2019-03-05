@@ -241,6 +241,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     RESULT$g2=G2
     RESULT$cor=OUT$cor
     RESULT$pv=OUT$pv
+    RESULT$fdr=p.adjust(OUT$pv,method='fdr')
     RESULT$pcuse=PCUSE
     print('######################################')
     print('All Main Steps Finished !!!')
