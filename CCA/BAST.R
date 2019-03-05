@@ -179,8 +179,8 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     print_step=print_step
     
     print('MainStep1.Data to one-dimension...')
-    D1X=.data2one(D1)
-    D2X=.data2one(D2)
+    D1X=.data2one(D1, CPU)
+    D2X=.data2one(D2, CPU)
 
     G1=.getGroup(D1X,'D1',CNUM)
     G2=.getGroup(D2X,'D2',CNUM)
@@ -206,7 +206,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
     pbmc <- FindVariableGenes(object = pbmc, do.plot=F,mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
     #length(x = pbmc@var.genes)
-    pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"))
+    pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
     pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
     
     print('MainStep5.Subspace Alignment...')
