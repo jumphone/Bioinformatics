@@ -323,11 +323,10 @@ B2index=which(CONDITION=='MS')
             this_index1=which(GROUP %in% this_pair[1])
             this_index2=which(GROUP %in% this_pair[2])
             seq1=sort(THIS_PC[this_index1])
-            seq2=sort(THIS_PC[this_index2])
+            seq2=sort(THIS_PC[this_index2])         
             this_aln=dtw(seq1,seq2,keep=TRUE)
             maplst1=c(maplst1, seq1[this_aln$index1])
-            maplst2=c(maplst2, seq2[this_aln$index2])
-            
+            maplst2=c(maplst2, seq2[this_aln$index2])            
             i=i+1}
         comlst=cbind(maplst1,maplst2)
         compc=apply(comlst,1,mean)
@@ -378,6 +377,76 @@ B2index=which(CONDITION=='MS')
     return(OUT)
     }
 
+#################
+
+.dr2adr <- function(DR, B1index, B2index, GROUP, VP){
+    library(dtw)
+    library(MALDIquant)
+    library(pcaPP)
+    OUT=list()
+    OUT$adr=DR
+    VALID_PAIR=VP
+    ALL_COR=c()   
+    ALL_PV=c() 
+    index1=B1index
+    index2=B2index
+  
+    vindex1=which(GROUP %in% VP[,1])
+    vindex2=which(GROUP %in% VP[,2])
+    
+    print('Start')
+    THIS_DR=1
+    while(THIS_DR<=ncol(DR)){
+        THIS_PC = DR[,THIS_DR]
+        M1=c()
+        M2=c()
+        maplst1=c()
+        maplst2=c()
+        i=1
+        while(i<=nrow(VALID_PAIR)){
+            this_pair=VALID_PAIR[i,]
+            this_index1=which(GROUP %in% this_pair[1])
+            this_index2=which(GROUP %in% this_pair[2])
+            seq1=sort(THIS_PC[this_index1])
+            seq2=sort(THIS_PC[this_index2])         
+            maplst1=c(maplst1,mean(seq1))
+            maplst2=c(maplst2,mean(seq2))
+            i=i+1}
+        
+        this_fit=lm(maplst2~maplst1)
+        this_coef=this_fit$coefficients
+        OUT$adr[index1,THIS_DR]=this_coef[1]+DR[index1,THIS_DR]*this_coef[2]
+        OUT$adr[index2,THIS_DR]=DR[index2,THIS_DR]
+        
+        lst1_mean=c()
+        lst2_mean=c()
+        i=1
+        while(i<=nrow(VALID_PAIR)){
+            this_pair=VALID_PAIR[i,]
+            this_index1=which(GROUP %in% this_pair[1])
+            this_index2=which(GROUP %in% this_pair[2])
+            lst1_mean=c(lst1_mean,mean(OUT$adr[this_index1,THIS_DR]))
+            lst2_mean=c(lst2_mean,mean(OUT$adr[this_index2,THIS_DR]))      
+            i=i+1}
+        
+        this_test=cor.test(lst1_mean,lst2_mean)#sum(dist_lst)
+        this_cor=this_test$estimate
+        this_pv=this_test$p.value
+        
+        ALL_COR=c(ALL_COR, this_cor)
+        ALL_PV=c(ALL_PV, this_pv) 
+        print(THIS_DR)
+        THIS_DR=THIS_DR+1}
+    
+    #OUT$cor=ALL_COR
+    OUT$cor=ALL_COR
+    OUT$pv=ALL_PV
+    print('Finished!!!')
+    return(OUT)
+    }
+
+
+
 
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
@@ -388,14 +457,16 @@ plot(-log(OUT$pv),pch=16)
 pbmc@dr$oldpca=pbmc@dr$pca
 pbmc@dr$pca@cell.embeddings=OUT$adr
 
+#pbmc@dr$pca=pbmc@dr$oldpca
 
 PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.8)
 pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
 
+pdf('unMAP.pdf',width=10,height=7)
 DimPlot(object =pbmc, reduction.use = "umap", group.by = "map",  pt.size = 0.1, do.return = TRUE)
 DimPlot(object =pbmc, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
 DimPlot(object =pbmc, reduction.use = "umap",  pt.size = 0.1, do.return = TRUE)
-
+dev.off()
 
 
 
