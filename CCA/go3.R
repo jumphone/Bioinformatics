@@ -125,7 +125,7 @@ sce2 <- SingleCellExperiment(list(counts=gene.counts2))
 sce2 <- normalize(sce2)
 
 b1 <- sce1
-b2 <- sce1
+b2 <- sce2
 out <- fastMNN(b1, b2)
 dim(out$corrected)
 
