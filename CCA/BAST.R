@@ -38,7 +38,8 @@
     j=1
     while(i<=length(RANK)){
         GROUP[which(RANK==i)]=paste0(TAG,'_',as.character(j))
-        if(i%%CUTOFF==1){j=j+1;print(j)}
+        #if(i%%CUTOFF==1){j=j+1;print(j)}
+        if(i%%CUTOFF==1){j=j+1}
         i=i+1}
     return(GROUP)
 }
