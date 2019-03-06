@@ -11,6 +11,26 @@ beerout=BEER(D1, D2, CNUM=100, PCNUM=50, VPCOR=0.7, CPU=4, print_step=10)
 
 pbmc=beerout$seurat
 
+pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+
+
+
+
+
+
+
+
+
+
+
+
+
 DR=beerout$seurat@dr$pca@cell.embeddings
 GROUP=c(beerout$g1,beerout$g2)
 B1index=c(1:length(beerout$g1))
@@ -79,8 +99,8 @@ VPC=beerout$vpcor
    
       
         .x1_to_com=function(x1){
-            #if(x1<min(min_lst1)){x1=min(min_lst1)}
-            #if(x1>max(max_lst1)){x1=max(max_lst1)}
+            if(x1<min(min_lst1)){x1=min(min_lst1)}
+            if(x1>max(max_lst1)){x1=max(max_lst1)}
             x1=x1
             dlst1=c()
               
@@ -101,8 +121,8 @@ VPC=beerout$vpcor
             return(out)}
       
         .x2_to_com=function(x2){
-            #if(x2<min(min_lst2)){x2=min(min_lst2)}
-            #if(x2>max(max_lst2)){x2=max(max_lst2)}
+            if(x2<min(min_lst2)){x2=min(min_lst2)}
+            if(x2>max(max_lst2)){x2=max(max_lst2)}
             x2=x2
             dlst2=c()
             
@@ -179,21 +199,27 @@ VPC=beerout$vpcor
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 boxplot(OUT$cor,OUT$adjcor)
 
+
 pbmc@dr$pca@cell.embeddings=DR
 pbmc@dr$adjpca@cell.embeddings=OUT$adr
 
 
 PCUSE=which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
 
-pbmc <- RunTSNE(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
-DimPlot(pbmc,reduction.use='tsne',group.by='map',pt.size=0.1)
-
+boxplot(OUT$cor[PCUSE],OUT$adjcor[PCUSE])
 
 pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
 DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+
+
+pbmc <- RunTSNE(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
+DimPlot(pbmc,reduction.use='tsne',group.by='map',pt.size=0.1)
 
 
 #PCUSE=which(OUT$cor>0.9 & p.adjust(OUT$pv,method='fdr')<0.05) 
