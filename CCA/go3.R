@@ -66,7 +66,9 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
         .x1_to_com=function(x1){
             #if(x1 <=min_lst1){x1=min_lst1}
             #if(x1 >=max_lst1){x1=max_lst1}
-                
+            if(x1 <=min(mean_lst1)){x1=min(mean_lst1)}
+            if(x1 >=max(mean_lst1)){x1=max(mean_lst1)}
+            
             x1=x1
             dlst1=c()
             value1=c()
@@ -83,12 +85,15 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
                 dlst1=c(dlst1,this_d)
                 i=i+1} 
             
-            out=sum(dlst1/sum(dlst1)*value1)
+            #out=sum(dlst1/sum(dlst1)*value1)
+            out=sum(dlst1/sum(dlst1)*mean_com)
             return(out)}
       
         .x2_to_com=function(x2){
             #if(x2 <=min_lst2){x2=min_lst2}
             #if(x2 >=max_lst2){x2=max_lst2}
+            if(x2 <=min(mean_lst2)){x2=min(mean_lst2)}
+            if(x2 >=max(mean_lst2)){x2=max(mean_lst2)}
                 
             x2=x2
             dlst2=c()
@@ -105,21 +110,24 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
                 if(is.na(this_d)){this_d=0}
                 dlst2=c(dlst2,this_d)
                 i=i+1} 
-            out=sum(dlst2/sum(dlst2)*value2)
+            #out=sum(dlst2/sum(dlst2)*value2)
+            out=sum(dlst2/sum(dlst2)*mean_com)
             return(out)}
          
          ########################
-         #tmp=c(-10:20)
+         #tmp=c(-100:100)
          #tmp1=apply(as.matrix(tmp),1,.x1_to_com)
          #tmp2=apply(as.matrix(tmp),1,.x2_to_com) 
          #plot(tmp1,tmp2)
         
-        #lst1lst1=apply(as.matrix(DR[index1,THIS_DR]),1,.x1_to_com) 
-        #lst2lst2=apply(as.matrix(DR[index2,THIS_DR]),1,.x2_to_com)        
-        #vlst1=DR[index1,THIS_DR]
-        #vlst2=
-        #OUT$adr[index1,THIS_DR]=lst1lst1
-        #OUT$adr[index2,THIS_DR]=lst2lst2
+        lst1lst1=apply(as.matrix(DR[index1,THIS_DR]),1,.x1_to_com) 
+        lst2lst2=apply(as.matrix(DR[index2,THIS_DR]),1,.x2_to_com)        
+       
+        OUT$adr[index1,THIS_DR]=lst1lst1
+        OUT$adr[index2,THIS_DR]=lst2lst2
+        par(mfrow=c(1,2))
+        plot(DR[index1,THIS_DR],lst1lst1)
+        plot(DR[index2,THIS_DR],lst2lst2)
         
         lst1_mean=c()
         lst2_mean=c()
@@ -135,23 +143,23 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
         
         this_test=cor.test(lst1_mean,lst2_mean)#sum(dist_lst)
         
-        this_data=data.frame(v1=lst1_mean,v2=lst2_mean)
-        this_fit=loess(v2~v1,data=this_data)
+        #this_data=data.frame(v1=lst1_mean,v2=lst2_mean)
+        #this_fit=loess(v2~v1,data=this_data)
         
-        lst1lst1=DR[index1,THIS_DR]
-        lst2lst2=DR[index2,THIS_DR]
-        limit_lst1lst1=lst1lst1
-        limit_lst1lst1[which(lst1lst1>max(lst1_mean))]=max(lst1_mean)
-        limit_lst1lst1[which(lst1lst1<min(lst1_mean))]=min(lst1_mean)
-        new_data=data.frame(v1=limit_lst1lst1)
+        #lst1lst1=DR[index1,THIS_DR]
+        #lst2lst2=DR[index2,THIS_DR]
+        #limit_lst1lst1=lst1lst1
+        #limit_lst1lst1[which(lst1lst1>max(lst1_mean))]=max(lst1_mean)
+        #limit_lst1lst1[which(lst1lst1<min(lst1_mean))]=min(lst1_mean)
+        #new_data=data.frame(v1=limit_lst1lst1)
         
-        new_lst1lst1=predict(this_fit,newdata=new_data)
-        new_lst2lst2=lst2lst2
-        new_lst2lst2[which(lst2lst2>max(lst2_mean))]=max(lst2_mean)
-        new_lst2lst2[which(lst2lst2<min(lst2_mean))]=min(lst2_mean)
+        #new_lst1lst1=predict(this_fit,newdata=new_data)
+        #new_lst2lst2=lst2lst2
+        #new_lst2lst2[which(lst2lst2>max(lst2_mean))]=max(lst2_mean)
+        #new_lst2lst2[which(lst2lst2<min(lst2_mean))]=min(lst2_mean)
         
-        OUT$adr[index1,THIS_DR]=new_lst1lst1
-        OUT$adr[index2,THIS_DR]=new_lst2lst2
+        #OUT$adr[index1,THIS_DR]=new_lst1lst1
+        #OUT$adr[index2,THIS_DR]=new_lst2lst2
         
         
         #this_fit=lm(lst2_mean~lst1_mean)
@@ -184,6 +192,7 @@ VP=bastout$vp
 
 
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP, SEED=123)
+plot(OUT$cor)
 
 
 pbmc=bastout$seurat
@@ -193,7 +202,8 @@ pbmc=bastout$seurat
 pbmc@dr$pca@cell.embeddings=OUT$adr
 
 
-PCUSE=1:ncol(DR)
+PCUSE=which(OUT$cor>0.9)
+#PCUSE=1:ncol(DR)
 pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 
 DimPlot(pbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
