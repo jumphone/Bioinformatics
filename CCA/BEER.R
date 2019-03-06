@@ -84,7 +84,7 @@
 
 
 
-.dr2adr <- function(DR, B1index, B2index, GROUP, VP){
+.dr2adr <- function(DR, B1index, B2index, GROUP, VP, CUTOFF=0.05){
     
     OUT=list()
     OUT$adr=DR
@@ -125,7 +125,7 @@
         sum_this_fit=summary(this_fit)
         this_coefpv=sum_this_fit$coefficients[,4]
         
-        if(this_coefpv[1]<0.05 & this_coefpv[2]<0.05){
+        if(this_coefpv[1]<CUTOFF & this_coefpv[2]<CUTOFF){
             OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] #+ (all_lst1^2)*this_coef[3] + (all_lst1^3)*this_coef[4]
             }else{OUT$adr[index2,THIS_DR]= all_lst1}
             OUT$adr[index2,THIS_DR]= all_lst2
@@ -211,7 +211,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, VPCOR=0.7, CPU=4, print_step=10){
     DR=pbmc@dr$pca@cell.embeddings 
     B1index=which(CONDITION=='D1')
     B2index=which(CONDITION=='D2')
-    OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
+    OUT=.dr2adr(DR, B1index, B2index, GROUP, VP, 0.05)
     pbmc@dr$adjpca=pbmc@dr$pca
     pbmc@dr$adjpca@cell.embeddings=OUT$adr
     
