@@ -1,7 +1,7 @@
 #Batch Alignment of Imbalanced Single-cell Data
 #ISLET
 
-source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/scPA.R')
+source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BAST.R')
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 
 
@@ -11,6 +11,8 @@ source('scRef.R')
 ori_label=read.table('Zeisel_exp_sc_mat_cluster_original.txt',header=T,sep='\t')
 pbmc@meta.data$ori=ori_label[,2]
 
+
+USE=which(pbmc@meta.data$ori=='astrocytes_ependymal')
 
 COL=c()
 i=1
@@ -39,6 +41,45 @@ sim_exp_sc_mat = apply(exp_sc_mat,2, getRanGene)
 
 D1=sim_exp_sc_mat
 D2=exp_ref_mat
+colnames(D1)=paste0('sim_',colnames(D1))
+
+bastout=BAST(D1, D2, CNUM=10, PCNUM=50, FDR=1, COR=0, CPU=4, print_step=10)
+
+DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
+
+plot(bastout$cor)
+LABEL=c(rep('SIM_astrocytes_ependymal',ncol(D1)),as.character(ori_label[,2]))
+bastout$seurat@meta.data$lab=LABEL
+DimPlot(bastout$seurat,reduction.use='umap',group.by='lab',pt.size=0.1)
+
+DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 D1X=.data2one(D1)
