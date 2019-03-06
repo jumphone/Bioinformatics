@@ -202,9 +202,9 @@
         
         this_test=cor.test(lst1_mean,lst2_mean)#sum(dist_lst)
         
-        this_fit=lm(lst2_mean~lst1_mean)
-        this_coef=this_fit$coefficients
-        OUT$adr[index1,THIS_DR]=this_coef[1]+this_coef[2]*OUT$adr[index1,THIS_DR]
+        #this_fit=lm(lst2_mean~lst1_mean)
+        #this_coef=this_fit$coefficients
+        #OUT$adr[index1,THIS_DR]=this_coef[1]+this_coef[2]*OUT$adr[index1,THIS_DR]
         
         this_cor=this_test$estimate
         this_pv=this_test$p.value
@@ -281,13 +281,13 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     pbmc@dr$oldpca=pbmc@dr$pca
     pbmc@dr$pca@cell.embeddings=OUT$adr
     
-    print('######################################')
-    print('MainStep5.UMAP & tSNE...')
-    print('######################################')
-    PCUSE=1:PCNUM #which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR )
-    pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
+    #print('######################################')
+    #print('MainStep5.UMAP & tSNE...')
+    #print('######################################')
+    #PCUSE=1:PCNUM #which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR )
+    #pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
     #pbmc <- RunUMAP(object = pbmc, reduction.use='oldpca',dims.use = PCUSE)
-    pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE)
+    #pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE)
     #DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
     #DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
     #DimPlot(pbmc,reduction.use='umap',pt.size=0.1)
@@ -301,7 +301,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     RESULT$cor=OUT$cor
     RESULT$pv=OUT$pv
     RESULT$fdr=p.adjust(OUT$pv,method='fdr')
-    RESULT$pcuse=PCUSE
+    #RESULT$pcuse=PCUSE
     print('######################################')
     print('All Main Steps Finished !!!')
     print('######################################')
