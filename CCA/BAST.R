@@ -132,8 +132,8 @@
    
       
         .x1_to_com=function(x1){
-            if(x1 <=min_lst1){x1=min_lst1}
-            if(x1 >=max_lst1){x1=max_lst1}
+            #if(x1 <=min_lst1){x1=min_lst1}
+            #if(x1 >=max_lst1){x1=max_lst1}
                 
             x1=x1
             dlst1=c()
@@ -149,8 +149,8 @@
             return(out)}
       
         .x2_to_com=function(x2){
-            if(x2 <=min_lst2){x2=min_lst2}
-            if(x2 >=max_lst2){x2=max_lst2}
+            #if(x2 <=min_lst2){x2=min_lst2}
+            #if(x2 >=max_lst2){x2=max_lst2}
                 
             x2=x2
             dlst2=c()
