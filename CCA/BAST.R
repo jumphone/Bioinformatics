@@ -144,7 +144,7 @@
                 this_mean=mean_lst1[i]
                 this_d=dnorm(x1,sd=this_sd,mean=this_mean)
                 #######################   
-                this_v=(x1-this_mean)+mean_com
+                this_v=(x1-this_mean)+mean_com[i]
                 value1=c(value1,this_v)
                 ##################
                 if(is.na(this_d)){this_d=0}
@@ -167,7 +167,7 @@
                 this_mean=mean_lst2[i]
                 this_d=dnorm(x2,sd=this_sd,mean=this_mean)
                 #######################   
-                this_v=(x2-this_mean)+mean_com
+                this_v=(x2-this_mean)+mean_com[i]
                 value2=c(value2,this_v)
                 ##################
                 if(is.na(this_d)){this_d=0}
