@@ -248,6 +248,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     print('MainStep3.Get Valid Pairs...')
     print('######################################')
     VP_OUT=.getValidpair(D1, G1, D2, G2, CPU, method='kendall', print_step)
+    #VP_OUT=.getValidpair(D1, G1, D2, G2, 4, 'kendall', 10)
     VP=VP_OUT$vp
     MAP=rep('NA',length(GROUP))
     MAP[which(GROUP %in% VP[,1])]='D1'
