@@ -173,7 +173,7 @@
                 if(is.na(this_d)){this_d=0}
                 dlst2=c(dlst2,this_d)
                 i=i+1} 
-                out=sum(dlst2/sum(dlst2)*value2)
+            out=sum(dlst2/sum(dlst2)*value2)
             return(out)}
          
          ########################
