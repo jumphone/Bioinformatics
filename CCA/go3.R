@@ -11,7 +11,14 @@ beerout=BEER(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
 
 
 pbmc=bastout$seurat
+
+
 PCUSE=which(bastout$cor>0.8 & bastout$fdr<0.05) 
+pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+
+
+
 
 
 
