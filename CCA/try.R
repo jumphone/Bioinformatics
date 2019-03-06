@@ -171,3 +171,36 @@ B2index=which(CONDITION=='MS')
    }
 
 
+
+#approxfun(density(THIS_PC[p1]
+
+
+
+
+DR=pbmc@dr$pca@cell.embeddings
+B1index=which(CONDITION=='CT')
+B2index=which(CONDITION=='MS')
+
+OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
+
+
+
+
+
+
+
+
+DR=pbmc@dr$pca@cell.embeddings
+B1index=which(CONDITION=='CT')
+B2index=which(CONDITION=='MS')
+
+OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
+
+
+pbmc@dr$oldpca=pbmc@dr$pca
+pbmc@dr$pca@cell.embeddings=OUT$adr
+
+
+PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.8)
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
+
