@@ -127,7 +127,7 @@
         this_cor=this_test$estimate
         this_pv=this_test$p.value
        
-        ALL_COEF=cbind(ALL_COEF,thos_coef)
+        ALL_COEF=cbind(ALL_COEF,this_coef)
         ALL_COR=c(ALL_COR, this_cor)
         ALL_PV=c(ALL_PV, this_pv) 
         print(THIS_DR)
