@@ -10,7 +10,7 @@
 #source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 #source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BAST.R')
 
-.data2one <- function(DATA, CPU=4, PCNUM=50){
+.data2one <- function(DATA, GENES, CPU=4, PCNUM=50){
     PCUSE=1:PCNUM
     print('Start')
     library(Seurat)
@@ -19,9 +19,9 @@
     print('Step2.Normalize Data...')
     DATA <- NormalizeData(object = DATA, normalization.method = "LogNormalize", scale.factor = 10000)
     print('Step3.Scale Data...')
-    DATA <- ScaleData(object = DATA, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
+    DATA <- ScaleData(object = DATA, genes.use =GENES, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
     print('Step4.PCA...')
-    DATA <- RunPCA(object = DATA, pcs.compute=PCNUM, pc.genes = rownames(DATA@data), do.print = FALSE)
+    DATA <- RunPCA(object = DATA, pcs.compute=PCNUM, pc.genes =GENES, do.print = FALSE)
     print('Step5.tSNE...')
     DATA <- RunTSNE(object = DATA, dims.use = PCUSE, do.fast=TRUE,dim.embed = 1)
     DR=DATA@dr$tsne@cell.embeddings
@@ -218,39 +218,13 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     CNUM=CNUM
     PCNUM=PCNUM
     print_step=print_step
-    
+      
     print('######################################')
-    print('MainStep1.Data to one-dimension...')
-    print('######################################')
-    D1X=.data2one(D1, CPU, PCNUM)
-    D2X=.data2one(D2, CPU, PCNUM)
-    G1=.getGroup(D1X,'D1',CNUM)
-    G2=.getGroup(D2X,'D2',CNUM)
-    
-    print('######################################')
-    print('MainStep2.Get Valid Pairs...')
-    print('######################################')
-    VP_OUT=.getValidpair(D1, G1, D2, G2, CPU, method='kendall', print_step)
-    VP=VP_OUT$vp
-    
-    print('######################################')
-    print('MainStep3.Combine Data...')
+    print('MainStep1.Combine Data...')
     print('######################################')
     EXP=.simple_combine(D1,D2)$combine
-    GROUP=c(G1,G2)
-    CONDITION=c(rep('D1',ncol(D1)),rep('D2',ncol(D2)))
-    MAP=rep('NA',length(GROUP))
-    MAP[which(GROUP %in% VP[,1])]='D1'
-    MAP[which(GROUP %in% VP[,2])]='D2'
-    
-    print('######################################')
-    print('MainStep4.Pre-process Combined Data...')
-    print('######################################')
+   
     pbmc=CreateSeuratObject(raw.data = EXP, min.cells = 0, min.genes = 0, project = "ALL")
-    pbmc@meta.data$group=GROUP
-    pbmc@meta.data$condition=CONDITION
-    pbmc@meta.data$map=MAP
-    
     pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
     pbmc <- FindVariableGenes(object = pbmc, do.plot=F,mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
     #length(x = pbmc@var.genes)
@@ -258,7 +232,30 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
     
     print('######################################')
-    print('MainStep5.Subspace Alignment...')
+    print('MainStep2.Data to one-dimension...')
+    print('######################################')
+    D1X=.data2one(D1, pbmc@var.genes, CPU, PCNUM)
+    D2X=.data2one(D2, pbmc@var.genes, CPU, PCNUM)
+    G1=.getGroup(D1X,'D1',CNUM)
+    G2=.getGroup(D2X,'D2',CNUM)
+    GROUP=c(G1,G2)
+    CONDITION=c(rep('D1',ncol(D1)),rep('D2',ncol(D2)))
+    pbmc@meta.data$group=GROUP
+    pbmc@meta.data$condition=CONDITION
+    
+    
+    print('######################################')
+    print('MainStep3.Get Valid Pairs...')
+    print('######################################')
+    VP_OUT=.getValidpair(D1, G1, D2, G2, CPU, method='kendall', print_step)
+    VP=VP_OUT$vp
+    MAP=rep('NA',length(GROUP))
+    MAP[which(GROUP %in% VP[,1])]='D1'
+    MAP[which(GROUP %in% VP[,2])]='D2'
+    pbmc@meta.data$map=MAP
+    
+    print('######################################')
+    print('MainStep4.Subspace Alignment...')
     print('######################################')
     DR=pbmc@dr$pca@cell.embeddings 
     B1index=which(CONDITION=='D1')
@@ -268,7 +265,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     pbmc@dr$pca@cell.embeddings=OUT$adr
     
     print('######################################')
-    print('MainStep6.UMAP & tSNE...')
+    print('MainStep5.UMAP & tSNE...')
     print('######################################')
     PCUSE=which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR)
     pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
