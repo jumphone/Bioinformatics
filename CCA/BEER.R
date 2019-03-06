@@ -215,6 +215,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     RESULT$cor=OUT$cor
     RESULT$pv=OUT$pv
     RESULT$fdr=OUT$fdr
+    RESULT$coef=OUT$coef
     #RESULT$pcuse=PCUSE
     print('############################################################################')
     print('BEER cheers !!! all main steps finished.')
