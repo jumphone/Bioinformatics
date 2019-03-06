@@ -154,26 +154,26 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     CNUM=CNUM
     PCNUM=PCNUM
     print_step=print_step
-      
-    print('######################################')
+    
+    print('############################################################################')
     print('MainStep1.Combine Data...')
-    print('######################################')
+    print('############################################################################')
     EXP=.simple_combine(D1,D2)$combine
     pbmc=CreateSeuratObject(raw.data = EXP, min.cells = 0, min.genes = 0, project = "ALL")
     
     
-    print('######################################')
+    print('############################################################################')
     print('MainStep2.Preprocess Data...')
-    print('######################################')
+    print('############################################################################')
     pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
     pbmc <- FindVariableGenes(object = pbmc, do.plot=F,mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
     #length(x = pbmc@var.genes)
     pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("nUMI"), num.cores=CPU, do.par=TRUE)
     pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
     
-    print('######################################')
+    print('############################################################################')
     print('MainStep3.Convert to one-dimension...')
-    print('######################################')
+    print('############################################################################')
     D1X=.data2one(D1, pbmc@var.genes, CPU, PCNUM)
     D2X=.data2one(D2, pbmc@var.genes, CPU, PCNUM)
     G1=.getGroup(D1X,'D1',CNUM)
@@ -184,9 +184,9 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     pbmc@meta.data$condition=CONDITION
     
     
-    print('######################################')
+    print('############################################################################')
     print('MainStep4.Get Valid Pairs...')
-    print('######################################')
+    print('############################################################################')
     VP_OUT=.getValidpair(D1, G1, D2, G2, CPU, method='kendall', print_step)
     #VP_OUT=.getValidpair(D1, G1, D2, G2, 4, 'kendall', 10)
     VP=VP_OUT$vp
@@ -195,9 +195,9 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     MAP[which(GROUP %in% VP[,2])]='D2'
     pbmc@meta.data$map=MAP
     
-    print('######################################')
+    print('############################################################################')
     print('MainStep5.Detect batch effect & linear adjustment...')
-    print('######################################')
+    print('############################################################################')
     DR=pbmc@dr$pca@cell.embeddings 
     B1index=which(CONDITION=='D1')
     B2index=which(CONDITION=='D2')
@@ -216,9 +216,9 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     RESULT$pv=OUT$pv
     RESULT$fdr=OUT$fdr
     #RESULT$pcuse=PCUSE
-    print('######################################')
+    print('############################################################################')
     print('BEER cheers !!! all main steps finished.')
-    print('######################################')
+    print('############################################################################')
     return(RESULT)
     }
 
