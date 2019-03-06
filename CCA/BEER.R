@@ -129,13 +129,13 @@
             
             OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] 
             
-        #}else if(this_coefpv[1]<CUTOFF & this_coefpv[2]>CUTOFF){
+        }else if(this_coefpv[1]<CUTOFF & this_coefpv[2]>CUTOFF){
             
-        #    OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1
+            OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1
             
-        #}else if(this_coefpv[1]>CUTOFF & this_coefpv[2]<CUTOFF){
+        }else if(this_coefpv[1]>CUTOFF & this_coefpv[2]<CUTOFF){
             
-        #    OUT$adr[index1,THIS_DR]= all_lst1*this_coef[2]
+            OUT$adr[index1,THIS_DR]= all_lst1*this_coef[2]
             
         }else{ OUT$adr[index1,THIS_DR]= all_lst1 }
             
