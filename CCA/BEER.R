@@ -117,10 +117,12 @@
             
             i=i+1}
         
-        this_fit=lm(lst2_mean~lst1_mean)
+        
+        
+        this_fit=lm(lst2_mean~lst1_mean + I(lst1_mean^2) + I(lst1_mean^3))
         this_coef= this_fit$coefficients
         
-        OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2]
+        OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] + (all_lst1^2)*this_coef[3] + (all_lst1^3)*this_coef[4]
         OUT$adr[index2,THIS_DR]= all_lst2
          
         this_test=cor.test(lst1_mean,lst2_mean)
