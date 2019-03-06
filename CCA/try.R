@@ -108,6 +108,7 @@ B2index=which(CONDITION=='MS')
                 this_sd=sd_lst1[i]
                 this_mean=mean_lst1[i]
                 this_d=dnorm(x1,sd=this_sd,mean=this_mean)
+                if(is.na(this_d)){this_d=0}
                 dlst1=c(dlst1,this_d)
                 i=i+1} 
                 out=sum(dlst1/sum(dlst1)*mean_com)
@@ -124,6 +125,7 @@ B2index=which(CONDITION=='MS')
                 this_sd=sd_lst2[i]
                 this_mean=mean_lst2[i]
                 this_d=dnorm(x2,sd=this_sd,mean=this_mean)
+                if(is.na(this_d)){this_d=0}
                 dlst2=c(dlst2,this_d)
                 i=i+1} 
                 out=sum(dlst2/sum(dlst2)*mean_com)
@@ -186,15 +188,11 @@ OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
 
 
+##DR=pbmc@dr$pca@cell.embeddings
+#B1index=which(CONDITION=='CT')
+#B2index=which(CONDITION=='MS')
 
-
-
-
-DR=pbmc@dr$pca@cell.embeddings
-B1index=which(CONDITION=='CT')
-B2index=which(CONDITION=='MS')
-
-OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
+#OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
 
 
 pbmc@dr$oldpca=pbmc@dr$pca
