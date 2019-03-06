@@ -190,6 +190,7 @@ pbmc@dr$pca@cell.embeddings=OUT$adr
 PCUSE=1:ncol(DR)
 pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 
+DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
 
 
 
