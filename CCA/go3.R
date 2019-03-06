@@ -6,7 +6,7 @@ D1=readRDS('CT.RDS')
 D2=readRDS('MS.RDS')
 
 
-beerout=BEER(D1, D2, CNUM=100, PCNUM=50, VPCOR=0.7, CPU=4, print_step=10)
+beerout=BEER(D1, D2, CNUM=100, PCNUM=50, CPU=4, print_step=10)
 
 
 pbmc=beerout$seurat
