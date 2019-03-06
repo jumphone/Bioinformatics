@@ -224,7 +224,7 @@
 
 
 
-BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step=10){
+BAST <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     RESULT=list()
     library(Seurat)
     source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
@@ -284,7 +284,7 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     print('######################################')
     print('MainStep5.UMAP & tSNE...')
     print('######################################')
-    PCUSE=which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR )
+    PCUSE=1:PCNUM #which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR )
     pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
     #pbmc <- RunUMAP(object = pbmc, reduction.use='oldpca',dims.use = PCUSE)
     pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE)
