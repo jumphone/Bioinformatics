@@ -201,6 +201,11 @@
             i=i+1}
         
         this_test=cor.test(lst1_mean,lst2_mean)#sum(dist_lst)
+        
+        this_fit=lm(lst2_mean~lst1_mean)
+        this_coef=this_fit$coefficients
+        OUT$adr[index1,THIS_DR]=this_coef[1]+this_coef[2]*OUT$adr[index1,THIS_DR]
+        
         this_cor=this_test$estimate
         this_pv=this_test$p.value
         
