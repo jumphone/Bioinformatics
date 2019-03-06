@@ -6,15 +6,17 @@ MS=readRDS('MS.RDS')
 CTX=readRDS('CTX.RDS')
 MSX=readRDS('MSX.RDS')
 
-CTG=.getGroup(CTX,'CT',CNUM=50)
-MSG=.getGroup(MSX,'MS',CNUM=50)
+CTG=.getGroup(CTX,'CT',CNUM=100)
+MSG=.getGroup(MSX,'MS',CNUM=100)
+GROUP=c(CTG,MSG)
+
 
 VP=.getValidpair(CT, CTG, MS, MSG, CPU=4, method='kendall', print_step=10)
 VP=VP$vp
 
 
 EXP=.simple_combine(CT,MS)$combine
-GROUP=c(CTG,MSG)
+
 CONDITION=c(rep('CT',ncol(CT)),rep('MS',ncol(MS)))
 
 
@@ -37,11 +39,11 @@ pbmc <- ScaleData(object = pbmc, genes.use=pbmc@var.genes, vars.to.regress = c("
 PCNUM=50
 pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM,pc.genes = pbmc@var.genes, do.print =F)
 
-saveRDS(pbmc, file='try_pbmc.RDS')
+#saveRDS(pbmc, file='try_pbmc.RDS')
 
 
 DR=pbmc@dr$pca@cell.embeddings
-saveRDS(DR, file='try_DR.RDS')
+#saveRDS(DR, file='try_DR.RDS')
 
 
 B1index=which(CONDITION=='CT')
@@ -98,8 +100,8 @@ B2index=which(CONDITION=='MS')
    
       
         .x1_to_com=function(x1){
-            if(x1 <=min_lst1){x1=min_lst1}
-            if(x1 >=max_lst1){x1=max_lst1}
+            #if(x1 <=min_lst1){x1=min_lst1}
+            #if(x1 >=max_lst1){x1=max_lst1}
                 
             x1=x1
             dlst1=c()
@@ -115,8 +117,8 @@ B2index=which(CONDITION=='MS')
             return(out)}
       
         .x2_to_com=function(x2){
-            if(x2 <=min_lst2){x2=min_lst2}
-            if(x2 >=max_lst2){x2=max_lst2}
+            #if(x2 <=min_lst2){x2=min_lst2}
+            #if(x2 >=max_lst2){x2=max_lst2}
                 
             x2=x2
             dlst2=c()
@@ -199,7 +201,7 @@ pbmc@dr$oldpca=pbmc@dr$pca
 pbmc@dr$pca@cell.embeddings=OUT$adr
 
 
-PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.9)
+PCUSE=1:50#which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.8)
 pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
 
 
