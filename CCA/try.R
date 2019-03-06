@@ -199,7 +199,7 @@ pbmc@dr$oldpca=pbmc@dr$pca
 pbmc@dr$pca@cell.embeddings=OUT$adr
 
 
-PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.8)
+PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.9)
 pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
 
 
