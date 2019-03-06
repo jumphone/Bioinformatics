@@ -91,13 +91,13 @@ VP=beerout$vp
                 this_mean=mean_lst1[i]
                 this_d=dnorm(x1,sd=this_sd,mean=this_mean)
                 #######################   
-                #if(x1 > max_lst1[i] | x1 < min_lst1[i]){this_d=0}
+                if(x1 > max_lst1[i] | x1 < min_lst1[i]){this_d=0}
                 ##################
                 if(is.na(this_d)){this_d=0}
                 dlst1=c(dlst1,this_d)
                 i=i+1} 
             
-            out=sum(dlst1/sum(dlst1)*mean_com)
+            if(sum(dlst1)==0){out=x1}else{out=sum(dlst1/sum(dlst1)*mean_com)}
             
             return(out)}
       
@@ -113,14 +113,14 @@ VP=beerout$vp
                 this_mean=mean_lst2[i]
                 this_d=dnorm(x2,sd=this_sd,mean=this_mean)
                 #######################   
-                #if(x2 > max_lst2[i] | x2 < min_lst2[i]){this_d=0}
+                if(x2 > max_lst2[i] | x2 < min_lst2[i]){this_d=0}
                 ##################
                 if(is.na(this_d)){this_d=0}
                 dlst2=c(dlst2,this_d)
                 i=i+1} 
            
+            if(sum(dlst2)==0){out=x2}else{out=sum(dlst2/sum(dlst2)*mean_com)}
             
-            out=sum(dlst2/sum(dlst2)*mean_com)
             return(out)}
          
          ########################
