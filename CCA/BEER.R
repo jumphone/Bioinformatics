@@ -147,7 +147,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     RESULT=list()
     library(Seurat)
     source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
-    print('BAST Start ')
+    print('BEER Start ! ')
     D1=D1
     D2=D2
     CNUM=CNUM
