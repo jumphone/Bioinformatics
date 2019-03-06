@@ -120,14 +120,25 @@
         
         
         
-        this_fit=lm(lst2_mean~lst1_mean)  # + I(lst1_mean^2) + I(lst1_mean^3))
+        this_fit=lm(lst2_mean~lst1_mean) 
         this_coef= this_fit$coefficients
         sum_this_fit=summary(this_fit)
         this_coefpv=sum_this_fit$coefficients[,4]
         
         if(this_coefpv[1]<CUTOFF & this_coefpv[2]<CUTOFF){
-            OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] #+ (all_lst1^2)*this_coef[3] + (all_lst1^3)*this_coef[4]
-            }else{OUT$adr[index2,THIS_DR]= all_lst1}
+            
+            OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] 
+            
+        #}else if(this_coefpv[1]<CUTOFF & this_coefpv[2]>CUTOFF){
+            
+        #    OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1
+            
+        #}else if(this_coefpv[1]>CUTOFF & this_coefpv[2]<CUTOFF){
+            
+        #    OUT$adr[index1,THIS_DR]= all_lst1*this_coef[2]
+            
+        }else{ OUT$adr[index1,THIS_DR]= all_lst1 }
+            
             OUT$adr[index2,THIS_DR]= all_lst2
         
         this_test=cor.test(lst1_mean,lst2_mean)
