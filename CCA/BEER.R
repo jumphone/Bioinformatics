@@ -146,7 +146,7 @@
    }
 
 
-BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
+BEER <- function(D1, D2, CNUM=10, PCNUM=50, VPCOR=0.7, CPU=4, print_step=10){
     RESULT=list()
     library(Seurat)
     source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
@@ -192,6 +192,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     VP_OUT=.getValidpair(D1, G1, D2, G2, CPU, method='kendall', print_step)
     #VP_OUT=.getValidpair(D1, G1, D2, G2, 4, 'kendall', 10)
     VP=VP_OUT$vp
+    VP=VP[which(VP_OUT$cor>=VPCOR),]
     MAP=rep('NA',length(GROUP))
     MAP[which(GROUP %in% VP[,1])]='D1'
     MAP[which(GROUP %in% VP[,2])]='D2'
@@ -210,6 +211,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10){
     ########################## 
     RESULT$seurat=pbmc
     RESULT$vp=VP
+    RESULT$vpcor=VP_OUT$cor
     RESULT$d1x=D1X
     RESULT$d2x=D2X
     RESULT$g1=G1
