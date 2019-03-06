@@ -4,6 +4,11 @@
 source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BAST.R')
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 
+D1=readRDS('CT.RDS')
+D2=readRDS('MS.RDS')
+
+bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=4, print_step=10)
+
 
 load('TSNE.RData')
 library('Seurat')
@@ -43,7 +48,8 @@ D1=sim_exp_sc_mat
 D2=exp_ref_mat
 colnames(D1)=paste0('sim_',colnames(D1))
 
-bastout=BAST(D1, D2, CNUM=10, PCNUM=50, FDR=1, COR=0, CPU=4, print_step=10)
+#bastout=BAST(D1, D2, CNUM=10, PCNUM=50, FDR=1, COR=0, CPU=4, print_step=10)
+bastout=BAST(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10)
 
 DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
 
