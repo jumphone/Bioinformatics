@@ -6,8 +6,7 @@ D1=readRDS('CT.RDS')
 D2=readRDS('MS.RDS')
 
 
-beerout=BEER(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
-#DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
+beerout=BEER(D1, D2, CNUM=100, PCNUM=50, VPCOR=0.7, CPU=4, print_step=10)
 
 
 pbmc=beerout$seurat
@@ -17,7 +16,7 @@ GROUP=c(beerout$g1,beerout$g2)
 B1index=c(1:length(beerout$g1))
 B2index=c((length(beerout$g1)+1):(length(beerout$g1)+length(beerout$g2)))
 VP=beerout$vp
-
+VPC=beerout$vpcor
 
 .dr2adr <- function(DR, B1index, B2index, GROUP, VP){
     #set.seed(SEED)
@@ -166,9 +165,10 @@ VP=beerout$vp
     
     OUT$adjcor=ALL_COR
     OUT$adjpv=ALL_PV
+    OUT$adjfdr=p.adjust(OUT$adjpv,method='fdr')
     OUT$cor=ALL_UCOR
     OUT$pv=ALL_UPV
-    OUT$fdr=p.adjust()
+    OUT$fdr=p.adjust(OUT$pv,method='fdr')
     print('Finished!!!')
     return(OUT)
    }
@@ -177,13 +177,18 @@ VP=beerout$vp
 
 
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
-
+boxplot(OUT$cor,OUT$adjcor)
 
 pbmc@dr$pca@cell.embeddings=DR
 pbmc@dr$adjpca@cell.embeddings=OUT$adr
 
 
-PCUSE=which(OUT$cor>0.9 & p.adjust(OUT$pv,method='fdr')<0.05) 
+PCUSE=which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
+
+pbmc <- RunTSNE(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
+DimPlot(pbmc,reduction.use='tsne',group.by='map',pt.size=0.1)
+
 
 pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
@@ -191,13 +196,10 @@ DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 
 
 
-
-
-PCUSE=which(beerout$cor>0.9 & beerout$fdr<0.05) 
-pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
-
-DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+#PCUSE=which(OUT$cor>0.9 & p.adjust(OUT$pv,method='fdr')<0.05) 
+pcpbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
+DimPlot(pcpbmc,reduction.use='tsne',group.by='map',pt.size=0.1)
 
 
 
@@ -219,7 +221,7 @@ pbmc=bastout$seurat
 pbmc@dr$pca@cell.embeddings=OUT$adr
 
 
-PCUSE=which(OUT$cor>0.8 & p.adjust(OUT$pv,method='fdr')<0.05) 
+PCUSE=which(beerout$cor>0.8 & p.adjust(OUT$pv,method='fdr')<0.05) 
 #PCUSE=which(OUT$ucor>0.8 & p.adjust(OUT$upv,method='fdr')<0.05)                          
 
                              #PCUSE=1:ncol(DR)
