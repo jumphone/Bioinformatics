@@ -10,7 +10,7 @@ D2=readRDS('MS.RDS')
 
 
 bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
-DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
+#DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
 
 
 
@@ -140,11 +140,18 @@ DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
         
         lst1lst1=DR[index1,THIS_DR]
         lst2lst2=DR[index2,THIS_DR]
-        new_data=data.frame(v1=lst1lst1)
-        lst1lst1=predict(this_fit,newdata=new_data)
+        limit_lst1lst1=lst1lst1
+        limit_lst1lst1[which(lst1lst1>max(lst1_mean))]=max(lst1_mean)
+        limit_lst1lst1[which(lst1lst1<min(lst1_mean))]=min(lst1_mean)
+        new_data=data.frame(v1=limit_lst1lst1)
         
-        OUT$adr[index1,THIS_DR]=lst1lst1
-        OUT$adr[index2,THIS_DR]=lst2lst2
+        new_lst1lst1=predict(this_fit,newdata=new_data)
+        new_lst2lst2=lst2lst2
+        new_lst2lst2[which(lst2lst2>max(lst2_mean))]=max(lst2_mean)
+        new_lst2lst2[which(lst2lst2<min(lst2_mean))]=min(lst2_mean)
+        
+        OUT$adr[index1,THIS_DR]=new_lst1lst1
+        OUT$adr[index2,THIS_DR]=new_lst2lst2
         
         
         #this_fit=lm(lst2_mean~lst1_mean)
@@ -189,7 +196,7 @@ pbmc@dr$pca@cell.embeddings=OUT$adr
 PCUSE=1:ncol(DR)
 pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 
-DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
 
 
 
