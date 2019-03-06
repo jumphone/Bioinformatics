@@ -11,7 +11,7 @@
 #source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 
 
-.data2one <- function(DATA, GENE, CPU=4, PCNUM=50){
+.data2one <- function(DATA, GENE, CPU=4, PCNUM=100){
     PCUSE=1:PCNUM
     print('Start')
     library(Seurat)
