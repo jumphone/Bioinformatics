@@ -65,7 +65,6 @@ B2index=which(CONDITION=='MS')
     vindex2=which(GROUP %in% VP[,2])
   
     
-
     print('Start')
     THIS_DR=1
     while(THIS_DR<=ncol(DR)){
@@ -129,7 +128,7 @@ B2index=which(CONDITION=='MS')
                 i=i+1} 
                 out=sum(dlst2/sum(dlst2)*mean_com)
             return(out)}
-      
+         
          ########################
          #tmp=c(-10:20)
          #tmp1=apply(as.matrix(tmp),1,.x1_to_com)
@@ -161,6 +160,7 @@ B2index=which(CONDITION=='MS')
         ALL_COR=c(ALL_COR, this_cor)
         ALL_PV=c(ALL_PV, this_pv) 
         print(THIS_DR)
+        
         THIS_DR=THIS_DR+1}
     
     #OUT$cor=ALL_COR
