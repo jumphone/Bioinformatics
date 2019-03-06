@@ -137,15 +137,21 @@
                 
             x1=x1
             dlst1=c()
+            value1=c()
             i=1
             while(i<=nrow(VP)){
                 this_sd=sd_lst1[i]
                 this_mean=mean_lst1[i]
                 this_d=dnorm(x1,sd=this_sd,mean=this_mean)
+                #######################   
+                this_v=(x1-this_mean)+mean_com
+                value1=c(value1,this_v)
+                ##################
                 if(is.na(this_d)){this_d=0}
                 dlst1=c(dlst1,this_d)
                 i=i+1} 
-                out=sum(dlst1/sum(dlst1)*mean_com)
+            
+            out=sum(dlst1/sum(dlst1)*value1)
             return(out)}
       
         .x2_to_com=function(x2){
@@ -154,15 +160,20 @@
                 
             x2=x2
             dlst2=c()
+            value2=c()
             i=1
             while(i<=nrow(VP)){
                 this_sd=sd_lst2[i]
                 this_mean=mean_lst2[i]
                 this_d=dnorm(x2,sd=this_sd,mean=this_mean)
+                #######################   
+                this_v=(x2-this_mean)+mean_com
+                value2=c(value2,this_v)
+                ##################
                 if(is.na(this_d)){this_d=0}
                 dlst2=c(dlst2,this_d)
                 i=i+1} 
-                out=sum(dlst2/sum(dlst2)*mean_com)
+                out=sum(dlst2/sum(dlst2)*value2)
             return(out)}
          
          ########################
