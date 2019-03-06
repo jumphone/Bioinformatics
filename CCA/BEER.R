@@ -111,8 +111,8 @@
             this_pair=VALID_PAIR[i,]
             this_index1=which(GROUP %in% this_pair[1])
             this_index2=which(GROUP %in% this_pair[2])
-            lst1_mean=c(lst1_mean,mean(all_lst1[this_index1,THIS_DR]))
-            lst2_mean=c(lst2_mean,mean(all_lst2[this_index2,THIS_DR]))
+            lst1_mean=c(lst1_mean,mean(DR[this_index1,THIS_DR]))
+            lst2_mean=c(lst2_mean,mean(DR[this_index2,THIS_DR]))
             
             i=i+1}
         
