@@ -132,8 +132,8 @@
    
       
         .x1_to_com=function(x1){
-            #if(x1 <=min_lst1){x1=min_lst1}
-            #if(x1 >=max_lst1){x1=max_lst1}
+            if(x1 <=min_lst1){x1=min_lst1}
+            if(x1 >=max_lst1){x1=max_lst1}
                 
             x1=x1
             dlst1=c()
@@ -149,8 +149,8 @@
             return(out)}
       
         .x2_to_com=function(x2){
-            #if(x2 <=min_lst2){x2=min_lst2}
-            #if(x2 >=max_lst2){x2=max_lst2}
+            if(x2 <=min_lst2){x2=min_lst2}
+            if(x2 >=max_lst2){x2=max_lst2}
                 
             x2=x2
             dlst2=c()
@@ -268,9 +268,13 @@ BAST <- function(D1, D2, CNUM=10, PCNUM=50, FDR=0.05, COR=0.8, CPU=4, print_step
     print('######################################')
     print('MainStep5.UMAP & tSNE...')
     print('######################################')
-    PCUSE=which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR)
+    PCUSE=1:PCNUM #which(p.adjust(OUT$pv,method='fdr')<FDR & OUT$cor>COR )
     pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
+    #pbmc <- RunUMAP(object = pbmc, reduction.use='oldpca',dims.use = PCUSE)
     pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE)
+    #DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+    #DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+    #DimPlot(pbmc,reduction.use='umap',pt.size=0.1)
     ########################## 
     RESULT$seurat=pbmc
     RESULT$vp=VP
