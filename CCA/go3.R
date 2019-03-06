@@ -7,6 +7,8 @@ source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 D1=readRDS('CT.RDS')
 D2=readRDS('MS.RDS')
 
+
+
 bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
 DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
 
@@ -164,9 +166,6 @@ DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
     print('Finished!!!')
     return(OUT)
    }
-
-
-
 
 
 DR=bastout$seurat@dr$oldpca@cell.embeddings
