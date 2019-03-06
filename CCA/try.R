@@ -204,3 +204,9 @@ pbmc@dr$pca@cell.embeddings=OUT$adr
 PCUSE=which(p.adjust(OUT$pv,method='fdr')<0.05 & OUT$cor>0.8)
 pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE)
 
+
+
+DimPlot(object =pbmc, reduction.use = "umap", group.by = "condition",  pt.size = 0.1, do.return = TRUE)
+DimPlot(object =pbmc, reduction.use = "umap", group.by = "map",  pt.size = 0.1, do.return = TRUE)
+
+
