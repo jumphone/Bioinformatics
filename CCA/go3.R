@@ -24,6 +24,8 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
     VALID_PAIR=VP
     ALL_COR=c()   
     ALL_PV=c() 
+    ALL_UCOR=c()   
+    ALL_UPV=c() 
     index1=B1index
     index2=B2index
   
@@ -39,12 +41,15 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
         ########################
         sd_lst1=c()
         mean_lst1=c()
-        max_lst1=max(THIS_PC[vindex1])
-        min_lst1=min(THIS_PC[vindex1])
+        max_lst1=c()
+        min_lst1=c()
         sd_lst2=c()
         mean_lst2=c()  
-        max_lst2=max(THIS_PC[vindex2])
-        min_lst2=min(THIS_PC[vindex2])
+        max_lst2=c()
+        min_lst2=c()
+        
+        
+        
         i=1
         while(i<=nrow(VP)){
             p1=which(GROUP %in% VP[i,1])
@@ -55,6 +60,12 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
             mean2=mean(THIS_PC[p2])
             sd_lst1=c(sd_lst1,sd1)
             sd_lst2=c(sd_lst2,sd2)
+            
+            max_lst1=c(max_lst1,max(THIS_PC[p1]))
+            min_lst1=c(min_lst1,min(THIS_PC[p1]))
+            max_lst2=c(max_lst2,max(THIS_PC[p2]))
+            min_lst2=c(min_lst2,min(THIS_PC[p2]))
+            
             mean_lst1=c(mean_lst1,mean1)
             mean_lst2=c(mean_lst2,mean2)
             i=i+1}
@@ -66,52 +77,67 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
         .x1_to_com=function(x1){
             #if(x1 <=min_lst1){x1=min_lst1}
             #if(x1 >=max_lst1){x1=max_lst1}
-            if(x1 <=min(mean_lst1)){x1=min(mean_lst1)}
-            if(x1 >=max(mean_lst1)){x1=max(mean_lst1)}
-            
+            #if(x1 <=min(mean_lst1)){x1=min(mean_lst1)}
+            #if(x1 >=max(mean_lst1)){x1=max(mean_lst1)}
             x1=x1
             dlst1=c()
-            value1=c()
+              
             i=1
             while(i<=nrow(VP)){
                 this_sd=sd_lst1[i]
                 this_mean=mean_lst1[i]
                 this_d=dnorm(x1,sd=this_sd,mean=this_mean)
                 #######################   
-                this_v=(x1-this_mean)+mean_com[i]
-                value1=c(value1,this_v)
+                if(x1 > max_lst1[i] | x1 < min_lst1[i]){this_d=0}
                 ##################
                 if(is.na(this_d)){this_d=0}
                 dlst1=c(dlst1,this_d)
                 i=i+1} 
             
-            #out=sum(dlst1/sum(dlst1)*value1)
-            out=sum(dlst1/sum(dlst1)*mean_com)
+            if(sum(dlst1)==0){
+                    if(x1>max(mean_com){
+                    x1=max(mean_com)
+                    }else if(x1<min(mean_com){
+                    x1=min(mean_com)
+                    }else{
+                    x1=x1}
+                    out=x1
+                }else{
+                    out=sum(dlst1/sum(dlst1)*mean_com)}
+            
             return(out)}
       
         .x2_to_com=function(x2){
             #if(x2 <=min_lst2){x2=min_lst2}
             #if(x2 >=max_lst2){x2=max_lst2}
-            if(x2 <=min(mean_lst2)){x2=min(mean_lst2)}
-            if(x2 >=max(mean_lst2)){x2=max(mean_lst2)}
+            #if(x2 <=min(mean_lst2)){x2=min(mean_lst2)}
+            #if(x2 >=max(mean_lst2)){x2=max(mean_lst2)}
                 
             x2=x2
             dlst2=c()
-            value2=c()
+            
             i=1
             while(i<=nrow(VP)){
                 this_sd=sd_lst2[i]
                 this_mean=mean_lst2[i]
                 this_d=dnorm(x2,sd=this_sd,mean=this_mean)
                 #######################   
-                this_v=(x2-this_mean)+mean_com[i]
-                value2=c(value2,this_v)
+                if(x2 > max_lst2[i] | x2 < min_lst2[i]){this_d=0}
                 ##################
                 if(is.na(this_d)){this_d=0}
                 dlst2=c(dlst2,this_d)
                 i=i+1} 
-            #out=sum(dlst2/sum(dlst2)*value2)
-            out=sum(dlst2/sum(dlst2)*mean_com)
+           
+            if(sum(dlst2)==0){
+                    if(x2>max(mean_com){
+                    x2=max(mean_com)
+                    }else if(x2<min(mean_com){
+                    x2=min(mean_com)
+                    }else{
+                    x2=x2}
+                    out=x2
+                }else{
+                    out=sum(dlst2/sum(dlst2)*mean_com)}
             return(out)}
          
          ########################
@@ -142,35 +168,18 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
             i=i+1}
         
         this_test=cor.test(lst1_mean,lst2_mean)#sum(dist_lst)
-        
-        #this_data=data.frame(v1=lst1_mean,v2=lst2_mean)
-        #this_fit=loess(v2~v1,data=this_data)
-        
-        #lst1lst1=DR[index1,THIS_DR]
-        #lst2lst2=DR[index2,THIS_DR]
-        #limit_lst1lst1=lst1lst1
-        #limit_lst1lst1[which(lst1lst1>max(lst1_mean))]=max(lst1_mean)
-        #limit_lst1lst1[which(lst1lst1<min(lst1_mean))]=min(lst1_mean)
-        #new_data=data.frame(v1=limit_lst1lst1)
-        
-        #new_lst1lst1=predict(this_fit,newdata=new_data)
-        #new_lst2lst2=lst2lst2
-        #new_lst2lst2[which(lst2lst2>max(lst2_mean))]=max(lst2_mean)
-        #new_lst2lst2[which(lst2lst2<min(lst2_mean))]=min(lst2_mean)
-        
-        #OUT$adr[index1,THIS_DR]=new_lst1lst1
-        #OUT$adr[index2,THIS_DR]=new_lst2lst2
-        
-        
-        #this_fit=lm(lst2_mean~lst1_mean)
-        #this_coef=this_fit$coefficients
-        #OUT$adr[index1,THIS_DR]=this_coef[1]+this_coef[2]*OUT$adr[index1,THIS_DR]
+        this_ua_test=cor.test(mean_lst1, mean_lst2)
         
         this_cor=this_test$estimate
         this_pv=this_test$p.value
         
+        this_un_cor=this_ua_test$estimate
+        this_un_pv=this_ua_test$p.value
+        
         ALL_COR=c(ALL_COR, this_cor)
         ALL_PV=c(ALL_PV, this_pv) 
+        ALL_UCOR=c(ALL_UCOR,this_un_cor)   
+        ALL_UPV=c(ALL_UPV,this_un_pv)
         print(THIS_DR)
         
         THIS_DR=THIS_DR+1}
@@ -178,6 +187,8 @@ bastout=BAST(D1, D2, CNUM=100, PCNUM=50, CPU=1, print_step=10)
     #OUT$cor=ALL_COR
     OUT$cor=ALL_COR
     OUT$pv=ALL_PV
+    OUT$ucor=ALL_UCOR
+    OUT$upv=ALL_UPV
     print('Finished!!!')
     return(OUT)
    }
@@ -192,8 +203,20 @@ VP=bastout$vp
 
 
 OUT=.dr2adr(DR, B1index, B2index, GROUP, VP, SEED=123)
-plot(OUT$cor)
+plot(OUT$cor,OUT$ucor)
+boxplot(OUT$cor,OUT$ucor)
+summary(OUT$cor)
 
+
+
+#C1=OUT$cor
+#C2=OUT$cor
+#C3=OUT$cor
+#C4=OUT$cor
+#boxplot(C1,C2,C3,C4,OUT$ucor)
+
+
+OUT$cor-OUT$ucor
 
 pbmc=bastout$seurat
 
@@ -202,13 +225,18 @@ pbmc=bastout$seurat
 pbmc@dr$pca@cell.embeddings=OUT$adr
 
 
-PCUSE=which(OUT$cor>0.9)
-#PCUSE=1:ncol(DR)
-pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+PCUSE=which(OUT$cor>0.8 & p.adjust(OUT$pv,method='fdr')<0.05) 
+#PCUSE=which(OUT$ucor>0.8 & p.adjust(OUT$upv,method='fdr')<0.05)                          
 
-DimPlot(pbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
+                             #PCUSE=1:ncol(DR)
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+pbmc <- RunUMAP(object = pbmc, reduction.use='oldpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 
+                             
+DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 
+DimPlot(pbmc,reduction.use='umap',pt.size=0.1)
 
 
 
