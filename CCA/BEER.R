@@ -91,6 +91,7 @@
     VALID_PAIR=VP
     
     ALL_COEF=c()
+    ALL_COEFPV=c()
     ALL_COR=c()   
     ALL_PV=c() 
     
@@ -119,17 +120,22 @@
         
         
         
-        this_fit=lm(lst2_mean~lst1_mean + I(lst1_mean^2) + I(lst1_mean^3))
+        this_fit=lm(lst2_mean~lst1_mean)  # + I(lst1_mean^2) + I(lst1_mean^3))
         this_coef= this_fit$coefficients
+        sum_this_fit=summary(this_fit)
+        this_coefpv=sum_this_fit$coefficients[,4]
         
-        OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] + (all_lst1^2)*this_coef[3] + (all_lst1^3)*this_coef[4]
-        OUT$adr[index2,THIS_DR]= all_lst2
-         
+        if(this_coefpv[1]<0.05 & this_coefpv[2]<0.05){
+            OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] #+ (all_lst1^2)*this_coef[3] + (all_lst1^3)*this_coef[4]
+            }else{OUT$adr[index2,THIS_DR]= all_lst1}
+            OUT$adr[index2,THIS_DR]= all_lst2
+        
         this_test=cor.test(lst1_mean,lst2_mean)
         this_cor=this_test$estimate
         this_pv=this_test$p.value
        
         ALL_COEF=cbind(ALL_COEF,this_coef)
+        ALL_COEFPV=cbind(ALL_COEFPV,this_coefpv)
         ALL_COR=c(ALL_COR, this_cor)
         ALL_PV=c(ALL_PV, this_pv) 
         print(THIS_DR)
@@ -138,6 +144,7 @@
     
     OUT$adr=OUT$adr
     OUT$coef=ALL_COEF
+    OUT$coefpv=ALL_COEFPV
     OUT$cor=ALL_COR
     OUT$pv=ALL_PV
     OUT$fdr=p.adjust(ALL_PV,method='fdr')
@@ -220,6 +227,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, VPCOR=0.7, CPU=4, print_step=10){
     RESULT$pv=OUT$pv
     RESULT$fdr=OUT$fdr
     RESULT$coef=OUT$coef
+    RESULT$coefpv=OUT$coefpv
     #RESULT$pcuse=PCUSE
     print('############################################################################')
     print('BEER cheers !!! all main steps finished.')
