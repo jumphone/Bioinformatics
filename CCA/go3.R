@@ -120,6 +120,7 @@ D2=read.table('GSE70630_OG_processed_data_v2_MGH54.txt',sep='\t',row.names=1,hea
 
 beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=1, print_step=10)
 
+plot(beerout$cor,-log(beerout$fdr))
 
 pbmc=beerout$seurat
 
@@ -127,7 +128,7 @@ pbmc=beerout$seurat
 #LABEL=c(as.character(ori_label[,2]), EXP@meta.data$label )
 #pbmc@meta.data$label=LABEL
 
-PCUSE=which(beerout$cor>0.8 & beerout$pv<0.05) 
+PCUSE=which(beerout$fdr <0.1)#which(beerout$fdr < 0.15)#which(beerout$fdr < 0.1469528 & beerout$cor>0.9) #which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
 pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
 #DimPlot(pbmc,reduction.use='umap',group.by='label',pt.size=0.1, do.label=T)
