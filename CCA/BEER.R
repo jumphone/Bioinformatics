@@ -158,8 +158,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, VPCOR=0, CPU=4, print_step=10){
     print('MainStep1.Combine Data...')
     print('############################################################################')
     EXP=.simple_combine(D1,D2)$combine
-    pbmc=CreateSeuratObject(raw.data = EXP, min.cells = 0, min.genes = 0, project = "ALL")
-    
+    pbmc=CreateSeuratObject(raw.data = EXP, min.cells = 0, min.genes = 0, project = "ALL") 
     
     print('############################################################################')
     print('MainStep2.Preprocess Data...')
@@ -196,14 +195,12 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, VPCOR=0, CPU=4, print_step=10){
     pbmc@meta.data$map=MAP
     
     print('############################################################################')
-    print('MainStep5.Detect batch effect & linear adjustment...')
+    print('MainStep5.Detect subspaces with batch effect...')
     print('############################################################################')
     DR=pbmc@dr$pca@cell.embeddings 
     B1index=which(CONDITION=='D1')
     B2index=which(CONDITION=='D2')
     OUT=.dr2adr(DR, B1index, B2index, GROUP, VP, 0.05)
-    pbmc@dr$adjpca=pbmc@dr$pca
-    pbmc@dr$adjpca@cell.embeddings=OUT$adr
     
     ########################## 
     RESULT$seurat=pbmc
