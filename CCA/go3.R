@@ -6,208 +6,12 @@ D1=readRDS('CT.RDS')
 D2=readRDS('MS.RDS')
 
 
-beerout=BEER(D1, D2, CNUM=100, PCNUM=50, CPU=4, print_step=10)
+beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=1, print_step=10)
 
-
+saveRDS(beerout,file='beerout.RDS')
 pbmc=beerout$seurat
 
-pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
-DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
-
-pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
-DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-DR=beerout$seurat@dr$pca@cell.embeddings
-GROUP=c(beerout$g1,beerout$g2)
-B1index=c(1:length(beerout$g1))
-B2index=c((length(beerout$g1)+1):(length(beerout$g1)+length(beerout$g2)))
-VP=beerout$vp
-VPC=beerout$vpcor
-
-.dr2adr <- function(DR, B1index, B2index, GROUP, VP){
-    #set.seed(SEED)
-    #library(dtw)
-    #library(MALDIquant)
-    #library(pcaPP)
-    OUT=list()
-    OUT$adr=DR
-    VALID_PAIR=VP
-    ALL_COR=c()   
-    ALL_PV=c() 
-    ALL_UCOR=c()   
-    ALL_UPV=c() 
-    index1=B1index
-    index2=B2index
-  
-    vindex1=which(GROUP %in% VP[,1])
-    vindex2=which(GROUP %in% VP[,2])
-  
-    
-    print('Start')
-    THIS_DR=1
-    while(THIS_DR<=ncol(DR)){
-        THIS_PC = DR[,THIS_DR]
-       
-        ########################
-        sd_lst1=c()
-        mean_lst1=c()
-        max_lst1=c()
-        min_lst1=c()
-        sd_lst2=c()
-        mean_lst2=c()  
-        max_lst2=c()
-        min_lst2=c()
-        
-        
-        
-        i=1
-        while(i<=nrow(VP)){
-            p1=which(GROUP %in% VP[i,1])
-            p2=which(GROUP %in% VP[i,2])
-            sd1=sd(THIS_PC[p1])
-            mean1=mean(THIS_PC[p1])
-            sd2=sd(THIS_PC[p2])
-            mean2=mean(THIS_PC[p2])
-            sd_lst1=c(sd_lst1,sd1)
-            sd_lst2=c(sd_lst2,sd2)
-            
-            max_lst1=c(max_lst1,max(THIS_PC[p1]))
-            min_lst1=c(min_lst1,min(THIS_PC[p1]))
-            max_lst2=c(max_lst2,max(THIS_PC[p2]))
-            min_lst2=c(min_lst2,min(THIS_PC[p2]))
-            
-            mean_lst1=c(mean_lst1,mean1)
-            mean_lst2=c(mean_lst2,mean2)
-            i=i+1}
-    
-
-        mean_com= apply(cbind(mean_lst1,mean_lst2),1,mean)    
-   
-      
-        .x1_to_com=function(x1){
-            if(x1<min(min_lst1)){x1=min(min_lst1)}
-            if(x1>max(max_lst1)){x1=max(max_lst1)}
-            x1=x1
-            dlst1=c()
-              
-            i=1
-            while(i<=nrow(VP)){
-                this_sd=sd_lst1[i]
-                this_mean=mean_lst1[i]
-                this_d=dnorm(x1,sd=this_sd,mean=this_mean)
-                #######################   
-                if(x1 > max_lst1[i] | x1 < min_lst1[i]){this_d=0}
-                ##################
-                if(is.na(this_d)){this_d=0}
-                dlst1=c(dlst1,this_d)
-                i=i+1} 
-            
-            if(sum(dlst1)==0){out=x1}else{out=sum(dlst1/sum(dlst1)*mean_com)}
-            
-            return(out)}
-      
-        .x2_to_com=function(x2){
-            if(x2<min(min_lst2)){x2=min(min_lst2)}
-            if(x2>max(max_lst2)){x2=max(max_lst2)}
-            x2=x2
-            dlst2=c()
-            
-            i=1
-            while(i<=nrow(VP)){
-                this_sd=sd_lst2[i]
-                this_mean=mean_lst2[i]
-                this_d=dnorm(x2,sd=this_sd,mean=this_mean)
-                #######################   
-                if(x2 > max_lst2[i] | x2 < min_lst2[i]){this_d=0}
-                ##################
-                if(is.na(this_d)){this_d=0}
-                dlst2=c(dlst2,this_d)
-                i=i+1} 
-           
-            if(sum(dlst2)==0){out=x2}else{out=sum(dlst2/sum(dlst2)*mean_com)}
-            
-            return(out)}
-         
-         ########################
-        
-        lst1lst1=apply(as.matrix(DR[index1,THIS_DR]),1,.x1_to_com) 
-        lst2lst2=apply(as.matrix(DR[index2,THIS_DR]),1,.x2_to_com)        
-       
-        OUT$adr[index1,THIS_DR]=lst1lst1
-        OUT$adr[index2,THIS_DR]=lst2lst2
-        #par(mfrow=c(1,2))
-        #plot(DR[index1,THIS_DR],lst1lst1)
-        #plot(DR[index2,THIS_DR],lst2lst2)
-        
-        lst1_mean=c()
-        lst2_mean=c()
-        i=1
-        while(i<=nrow(VALID_PAIR)){
-            this_pair=VALID_PAIR[i,]
-            this_index1=which(GROUP %in% this_pair[1])
-            this_index2=which(GROUP %in% this_pair[2])
-            lst1_mean=c(lst1_mean,mean(OUT$adr[this_index1,THIS_DR]))
-            lst2_mean=c(lst2_mean,mean(OUT$adr[this_index2,THIS_DR]))
-            
-            i=i+1}
-        
-        this_test=cor.test(lst1_mean,lst2_mean)#sum(dist_lst)
-        this_ua_test=cor.test(mean_lst1, mean_lst2)
-        
-        this_cor=this_test$estimate
-        this_pv=this_test$p.value
-        
-        this_un_cor=this_ua_test$estimate
-        this_un_pv=this_ua_test$p.value
-        
-        ALL_COR=c(ALL_COR, this_cor)
-        ALL_PV=c(ALL_PV, this_pv) 
-        ALL_UCOR=c(ALL_UCOR,this_un_cor)   
-        ALL_UPV=c(ALL_UPV,this_un_pv)
-        print(THIS_DR)
-        
-        THIS_DR=THIS_DR+1}
-    
-    
-    OUT$adjcor=ALL_COR
-    OUT$adjpv=ALL_PV
-    OUT$adjfdr=p.adjust(OUT$adjpv,method='fdr')
-    OUT$cor=ALL_UCOR
-    OUT$pv=ALL_UPV
-    OUT$fdr=p.adjust(OUT$pv,method='fdr')
-    print('Finished!!!')
-    return(OUT)
-   }
-
-
-
-
-OUT=.dr2adr(DR, B1index, B2index, GROUP, VP)
-boxplot(OUT$cor,OUT$adjcor)
-
-
-pbmc@dr$pca@cell.embeddings=DR
-pbmc@dr$adjpca@cell.embeddings=OUT$adr
-
-
 PCUSE=which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
-
-boxplot(OUT$cor[PCUSE],OUT$adjcor[PCUSE])
-
 pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
 DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
@@ -217,15 +21,35 @@ DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
 DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 
 
-pbmc <- RunTSNE(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
-DimPlot(pbmc,reduction.use='tsne',group.by='map',pt.size=0.1)
+pdf('ALL.pdf',width=20,height=17)
+DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+dev.off()
 
 
-#PCUSE=which(OUT$cor>0.9 & p.adjust(OUT$pv,method='fdr')<0.05) 
-pcpbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pcpbmc,reduction.use='tsne',group.by='condition',pt.size=0.1)
-DimPlot(pcpbmc,reduction.use='tsne',group.by='map',pt.size=0.1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
