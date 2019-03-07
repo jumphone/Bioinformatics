@@ -109,6 +109,51 @@ DimPlot(pcpbmc,reduction.use='umap',group.by='label',pt.size=0.1, do.label=T)
 
 
 
+##################################
+
+
+source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BEER.R')
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+D1=read.table('GSE70630_OG_processed_data_v2_MGH53.txt',sep='\t',row.names=1,header=T)
+D2=read.table('GSE70630_OG_processed_data_v2_MGH54.txt',sep='\t',row.names=1,header=T)
+
+
+beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=1, print_step=10)
+
+
+pbmc=beerout$seurat
+
+
+#LABEL=c(as.character(ori_label[,2]), EXP@meta.data$label )
+#pbmc@meta.data$label=LABEL
+
+PCUSE=which(beerout$cor>0.8 & beerout$pv<0.05) 
+pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+#DimPlot(pbmc,reduction.use='umap',group.by='label',pt.size=0.1, do.label=T)
+DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+#DimPlot(pcpbmc,reduction.use='umap',group.by='label',pt.size=0.1, do.label=T)
+
+PCUSE=1:50
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+#DimPlot(pcpbmc,reduction.use='umap',group.by='label',pt.size=0.1, do.label=T)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
