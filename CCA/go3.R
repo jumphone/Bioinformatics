@@ -6,9 +6,13 @@ D1=readRDS('CT.RDS')
 D2=readRDS('MS.RDS')
 
 
-beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=1, print_step=10)
+#beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=1, print_step=10)
 
 saveRDS(beerout,file='beerout.RDS')
+
+
+beerout=readRDS('beerout.RDS')
+
 pbmc=beerout$seurat
 
 PCUSE=which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
@@ -19,6 +23,15 @@ DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
 DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+
+
+PCUSE=1:50
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+
+
+
+
 
 
 pdf('ALL.pdf',width=20,height=17)
@@ -35,54 +48,6 @@ dev.off()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#C1=OUT$cor
-#C2=OUT$cor
-#C3=OUT$cor
-#C4=OUT$cor
-#boxplot(C1,C2,C3,C4,OUT$ucor)
-
-
-OUT$cor-OUT$ucor
-
-pbmc=bastout$seurat
-
-
-
-pbmc@dr$pca@cell.embeddings=OUT$adr
-
-
-PCUSE=which(beerout$cor>0.8 & p.adjust(OUT$pv,method='fdr')<0.05) 
-#PCUSE=which(OUT$ucor>0.8 & p.adjust(OUT$upv,method='fdr')<0.05)                          
-
-                             #PCUSE=1:ncol(DR)
-pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-pbmc <- RunUMAP(object = pbmc, reduction.use='oldpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-
-                             
-DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
-DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
-
-DimPlot(pbmc,reduction.use='umap',pt.size=0.1)
 
 
 
@@ -140,12 +105,53 @@ D1=sim_exp_sc_mat
 D2=exp_ref_mat
 colnames(D1)=paste0('sim_',colnames(D1))
 
+
+source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BEER.R')
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+
+
 #bastout=BAST(D1, D2, CNUM=10, PCNUM=50, FDR=1, COR=0, CPU=4, print_step=10)
-bastout=BAST(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10)
+beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=4, print_step=10)
+
+
+
+pbmc=beerout$seurat
+
+PCUSE=which(beerout$cor>0.6 & p.adjust(beerout$pv,method='fdr')<0.05) 
+pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
+
+PCUSE=1:50
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 DimPlot(bastout$seurat,reduction.use='umap',group.by='condition',pt.size=0.1)
 
-plot(bastout$cor)
+
 LABEL=c(rep('SIM_astrocytes_ependymal',ncol(D1)),as.character(ori_label[,2]))
 bastout$seurat@meta.data$lab=LABEL
 DimPlot(bastout$seurat,reduction.use='umap',group.by='lab',pt.size=0.1)
