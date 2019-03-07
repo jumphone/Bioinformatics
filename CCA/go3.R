@@ -117,8 +117,11 @@ DimPlot(pcpbmc,reduction.use='umap',group.by='label',pt.size=0.1, do.label=T)
 
 source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/CCA/BEER.R')
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
-D1=read.table('GSE70630_OG_processed_data_v2_MGH53.txt',sep='\t',row.names=1,header=T)
-D2=read.table('GSE70630_OG_processed_data_v2_MGH54.txt',sep='\t',row.names=1,header=T)
+#D1=read.table('GSE70630_OG_processed_data_v2_MGH53.txt',sep='\t',row.names=1,header=T)
+#D2=read.table('GSE70630_OG_processed_data_v2_MGH54.txt',sep='\t',row.names=1,header=T)
+
+D1=read.table('MGH53_mat.txt',sep='\t',row.names=1,header=T)
+D2=read.table('MGH54_mat.txt',sep='\t',row.names=1,header=T)
 
 
 beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=1, print_step=10)
