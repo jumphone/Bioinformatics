@@ -9,6 +9,14 @@ D2=readRDS('MS.RDS')
 beerout=BEER(D1, D2, CNUM=100, PCNUM=50, CPU=1)
 
 
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+
+D1=readRDS('CT.RDS')
+D2=readRDS('MS.RDS')
+beerout=BEER(D1, D2, CNUM=100, PCNUM=50, CPU=1)
+
+
 
 
 saveRDS(beerout,file='beerout.RDS')
@@ -18,22 +26,22 @@ beerout=readRDS('beerout.RDS')
 
 pbmc=beerout$seurat
 
-PCUSE=which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
-pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
+PCUSE=which(beerout$cor>0.7 & p.adjust(beerout$pv,method='fdr')<0.05) 
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pbmc,reduction.use='umap',group.by='batch',pt.size=0.1)
 DimPlot(pbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 
-pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
-DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
-DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 
 
 PCUSE=1:50
 pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
+DimPlot(pcpbmc,reduction.use='umap',group.by='batch',pt.size=0.1)
+
+
+
+pcpbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 DimPlot(pcpbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
-
-
-
+DimPlot(pcpbmc,reduction.use='umap',group.by='map',pt.size=0.1)
 
 
 
