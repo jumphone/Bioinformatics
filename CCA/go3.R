@@ -134,7 +134,8 @@ pbmc=beerout$seurat
 #LABEL=c(as.character(ori_label[,2]), EXP@meta.data$label )
 #pbmc@meta.data$label=LABEL
 
-PCUSE=which(beerout$fdr <0.1)#which(beerout$fdr < 0.15)#which(beerout$fdr < 0.1469528 & beerout$cor>0.9) #which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
+PCUSE=which(beerout$cor>0.7 & p.adjust(beerout$pv,method='fdr')<0.05) 
+#PCUSE=which(beerout$fdr <0.1)#which(beerout$fdr < 0.15)#which(beerout$fdr < 0.1469528 & beerout$cor>0.9) #which(beerout$cor>0.9 & p.adjust(beerout$pv,method='fdr')<0.05) 
 pbmc <- RunUMAP(object = pbmc, reduction.use='adjpca',dims.use = PCUSE, do.fast = TRUE, check_duplicates=FALSE)
 DimPlot(pbmc,reduction.use='umap',group.by='condition',pt.size=0.1)
 #DimPlot(pbmc,reduction.use='umap',group.by='label',pt.size=0.1, do.label=T)
