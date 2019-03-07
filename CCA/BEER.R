@@ -85,7 +85,7 @@
 
 
 .dr2adr <- function(DR, B1index, B2index, GROUP, VP, CUTOFF=0.05){
-    library(dtw)
+    #library(dtw)
     OUT=list()
     OUT$adr=DR
     VALID_PAIR=VP
@@ -117,12 +117,11 @@
             this_index1=which(GROUP %in% this_pair[1])
             this_index2=which(GROUP %in% this_pair[2])
             
-            seq1=sort(THIS_PC[this_index1])
-            seq2=sort(THIS_PC[this_index2])
-            this_aln=dtw(seq1,seq2,keep=TRUE)
-            maplst1=c(maplst1, seq1[this_aln$index1])
-            maplst2=c(maplst2, seq2[this_aln$index2])
-            
+            #seq1=sort(THIS_PC[this_index1])
+            #seq2=sort(THIS_PC[this_index2])
+            #this_aln=dtw(seq1,seq2,keep=TRUE)
+            #maplst1=c(maplst1, seq1[this_aln$index1])
+            #maplst2=c(maplst2, seq2[this_aln$index2])
             
             lst1_mean=c(lst1_mean,mean(DR[this_index1,THIS_DR]))
             lst2_mean=c(lst2_mean,mean(DR[this_index2,THIS_DR]))
@@ -130,8 +129,8 @@
             i=i+1}
         
         
-        
-        this_fit=lm(maplst1 ~ maplst2) #lm(lst2_mean~lst1_mean) 
+        this_fit=lm(lst2_mean~lst1_mean) 
+        #this_fit=lm(maplst1 ~ maplst2) #lm(lst2_mean~lst1_mean) 
         this_coef= this_fit$coefficients
         sum_this_fit=summary(this_fit)
         this_coefpv=sum_this_fit$coefficients[,4]
@@ -152,7 +151,8 @@
             
             OUT$adr[index2,THIS_DR]= all_lst2
         
-        this_test=cor.test(maplst1, maplst2)#(lst1_mean,lst2_mean)
+        this_test=cor.test(lst1_mean,lst2_mean)
+        #this_test=cor.test(maplst1, maplst2)#(lst1_mean,lst2_mean)
         this_cor=this_test$estimate
         this_pv=this_test$p.value
        
