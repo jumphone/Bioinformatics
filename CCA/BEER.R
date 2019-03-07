@@ -84,14 +84,13 @@
 
 
 
-.dr2adr <- function(DR, B1index, B2index, GROUP, VP, CUTOFF=0.05){
+.evaluateBatcheffect <- function(DR, B1index, B2index, GROUP, VP, CUTOFF=0.05){
+    
     #library(dtw)
     OUT=list()
-    OUT$adr=DR
+    
     VALID_PAIR=VP
     
-    ALL_COEF=c()
-    ALL_COEFPV=c()
     ALL_COR=c()   
     ALL_PV=c() 
     
@@ -116,58 +115,24 @@
             this_pair=VALID_PAIR[i,]
             this_index1=which(GROUP %in% this_pair[1])
             this_index2=which(GROUP %in% this_pair[2])
-            
-            #seq1=sort(THIS_PC[this_index1])
-            #seq2=sort(THIS_PC[this_index2])
-            #this_aln=dtw(seq1,seq2,keep=TRUE)
-            #maplst1=c(maplst1, seq1[this_aln$index1])
-            #maplst2=c(maplst2, seq2[this_aln$index2])
-            
-            lst1_mean=c(lst1_mean,quantile(DR[this_index1,THIS_DR]))
-            lst2_mean=c(lst2_mean,quantile(DR[this_index2,THIS_DR]))
-            
-            #lst1_mean=c(lst1_mean,mean(DR[this_index1,THIS_DR]))
-            #lst2_mean=c(lst2_mean,mean(DR[this_index2,THIS_DR]))
-            
+                       
+            lst1_quantile=c(lst1_quantile,quantile(DR[this_index1,THIS_DR]))
+            lst2_quantile=c(lst2_quantile,quantile(DR[this_index2,THIS_DR]))
+                       
             i=i+1}
-        
-        
-        this_fit=lm(lst2_mean~lst1_mean) 
-        #this_fit=lm(maplst1 ~ maplst2) #lm(lst2_mean~lst1_mean) 
-        this_coef= this_fit$coefficients
-        sum_this_fit=summary(this_fit)
-        this_coefpv=sum_this_fit$coefficients[,4]
-        
-        if(this_coefpv[1]<CUTOFF & this_coefpv[2]<CUTOFF){
-            
-            OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1*this_coef[2] 
-            
-        }else if(this_coefpv[1]<CUTOFF & this_coefpv[2]>CUTOFF){
-            
-            OUT$adr[index1,THIS_DR]= this_coef[1]+ all_lst1
-            
-        }else if(this_coefpv[1]>CUTOFF & this_coefpv[2]<CUTOFF){
-            
-            OUT$adr[index1,THIS_DR]= all_lst1*this_coef[2]
-            
-        }else{ OUT$adr[index1,THIS_DR]= all_lst1 }
-            
-            OUT$adr[index2,THIS_DR]= all_lst2
-        
+                
         this_test=cor.test(lst1_mean,lst2_mean)
-        #this_test=cor.test(maplst1, maplst2)#(lst1_mean,lst2_mean)
+                
         this_cor=this_test$estimate
         this_pv=this_test$p.value
-       
-        ALL_COEF=cbind(ALL_COEF,this_coef)
-        ALL_COEFPV=cbind(ALL_COEFPV,this_coefpv)
+         
         ALL_COR=c(ALL_COR, this_cor)
         ALL_PV=c(ALL_PV, this_pv) 
         print(THIS_DR)
         
         THIS_DR=THIS_DR+1}
     
-    OUT$adr=OUT$adr
+    
     OUT$coef=ALL_COEF
     OUT$coefpv=ALL_COEFPV
     OUT$cor=ALL_COR
@@ -251,8 +216,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, VPCOR=0, CPU=4, print_step=10){
     RESULT$cor=OUT$cor
     RESULT$pv=OUT$pv
     RESULT$fdr=OUT$fdr
-    RESULT$coef=OUT$coef
-    RESULT$coefpv=OUT$coefpv
+    
     #RESULT$pcuse=PCUSE
     print('############################################################################')
     print('BEER cheers !!! All main steps finished.')
