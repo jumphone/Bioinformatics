@@ -241,7 +241,7 @@ BEER <- function(D1, D2, CNUM=10, PCNUM=50, VPCOR=0, CPU=4, print_step=10){
     RESULT$coefpv=OUT$coefpv
     #RESULT$pcuse=PCUSE
     print('############################################################################')
-    print('BEER cheers !!! all main steps finished.')
+    print('BEER cheers !!! All main steps finished.')
     print('############################################################################')
     return(RESULT)
     }
