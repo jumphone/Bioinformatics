@@ -121,7 +121,7 @@
                        
             i=i+1}
                 
-        this_test=cor.test(lst1_mean,lst2_mean)
+        this_test=cor.test(lst1_mean,lst2_mean,method='kendall')
                 
         this_cor=this_test$estimate
         this_pv=this_test$p.value
