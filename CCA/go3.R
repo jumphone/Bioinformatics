@@ -6,7 +6,10 @@ D1=readRDS('CT.RDS')
 D2=readRDS('MS.RDS')
 
 
-#beerout=BEER(D1, D2, CNUM=10, PCNUM=50, CPU=1, print_step=10)
+beerout=BEER(D1, D2, CNUM=100, PCNUM=50, CPU=1)
+
+
+
 
 saveRDS(beerout,file='beerout.RDS')
 
