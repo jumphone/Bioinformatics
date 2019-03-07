@@ -123,8 +123,11 @@
             #maplst1=c(maplst1, seq1[this_aln$index1])
             #maplst2=c(maplst2, seq2[this_aln$index2])
             
-            lst1_mean=c(lst1_mean,mean(DR[this_index1,THIS_DR]))
-            lst2_mean=c(lst2_mean,mean(DR[this_index2,THIS_DR]))
+            lst1_mean=c(lst1_mean,quantile(DR[this_index1,THIS_DR]))
+            lst2_mean=c(lst2_mean,quantile(DR[this_index2,THIS_DR]))
+            
+            #lst1_mean=c(lst1_mean,mean(DR[this_index1,THIS_DR]))
+            #lst2_mean=c(lst2_mean,mean(DR[this_index2,THIS_DR]))
             
             i=i+1}
         
