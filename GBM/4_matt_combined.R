@@ -1,4 +1,18 @@
 
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+
+
+exp_mat=read.delim('matt_combined.txt',sep='\t',row.names=1,header=T)
+
+out=.get_cor(exp_mat, exp_mat, method='spearman',CPU=4)
+
+
+
+
+
+
+
+
 library(Seurat)
 pbmc.data=read.delim('matt_combined.txt',sep='\t',row.names=1,header=T)
 
