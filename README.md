@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+Homer Motif: http://homer.ucsd.edu/homer/download.html
+
 WGCNA: an R package for weighted correlation network analysis: https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/
 
 CisTrome: http://cistrome.org/#
