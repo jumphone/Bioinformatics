@@ -1,5 +1,8 @@
 
 
+
+#BAM to BigWig (BW)
+
 INPUT=CB_P30_CB_H3k27ac_In3.rmdup.bam
 samtools index $INPUT
 bamCoverage -b $INPUT -o $INPUT\.bw
