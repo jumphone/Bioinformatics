@@ -1,7 +1,7 @@
 
 
 
-#BAM to BigWig (BW)
+#BAM (sorted) to BigWig (BW)
 
 INPUT=CB_P30_CB_H3k27ac_In3.rmdup.bam
 samtools index $INPUT
