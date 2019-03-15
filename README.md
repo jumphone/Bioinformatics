@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+deepTools: https://deeptools.readthedocs.io/en/latest/content/tools/plotHeatmap.html
+
 g:Profiler: https://biit.cs.ut.ee/gprofiler/gost
 
 Homer Motif: http://homer.ucsd.edu/homer/download.html
