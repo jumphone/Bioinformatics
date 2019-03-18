@@ -26,18 +26,13 @@ D=.simple_combine(d1,d2)$combine
 
 
 source('scRef.R')
-exp_ref_mat=D
-REF_TAG=colnames(exp_ref_mat)
-tmp=strsplit(REF_TAG, "_")
-REF_TAG=c()
-for(one in tmp){REF_TAG=c(REF_TAG, one[1])}
-NewRef=.generate_ref(exp_ref_mat, cbind(REF_TAG,REF_TAG), min_cell=1) 
-
-
+NewRef=read.table('Hochgerner_exp_sc_mat.txt',sep='\t',row.names=1,header=T)
+TAG=read.table('Hochgerner.TAG',sep='\t',row.names=1,header=T)
+TAG=as.character(TAG[,1])
 sampleID=1:ncol(NewRef)
 SubjectName=colnames(NewRef)
-cellTypeID=colnames(NewRef)
-cellType=colnames(NewRef)
+cellTypeID=TAG
+cellType=TAG
 
 pheno.matrix=data.frame(sampleID,SubjectName,cellTypeID,cellType)
 rownames(pheno.matrix)=colnames(NewRef)
