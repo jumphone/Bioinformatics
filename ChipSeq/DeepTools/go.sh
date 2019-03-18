@@ -44,7 +44,7 @@ computeMatrix scale-regions -S  $CB_OLIG2 \
                               --afterRegionStartLength 400 \
                               --skipZeros -o matrix.mat.gz
 
-#plotHeatmap -m matrix.mat.gz -out ExampleHeatmap1.png 
+plotHeatmap -m matrix.mat.gz -out ExampleHeatmap1.png 
 
 
 
