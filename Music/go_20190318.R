@@ -63,7 +63,7 @@ SC.eset = ExpressionSet(assayData = data.matrix(NewRef), phenoData =  new("Annot
 
 library(xbioc)
 library(pvar)
-PP = music_prop(bulk.eset = Bulk.eset, sc.eset = SC.eset , clusters = cellType, samples = sampleID, verbose = F)
+PP_ALL = music_prop(bulk.eset = Bulk.eset, sc.eset = SC.eset , clusters = cellType, samples = sampleID, verbose = F)
 
 
 
