@@ -17,17 +17,13 @@ metadata <- data.frame(labelDescription= c("Sample ID", "Subject Name", "Cell Ty
 Bulk.eset = ExpressionSet(assayData = data.matrix(assayData), phenoData =  new("AnnotatedDataFrame", data = pheno.matrix, varMetadata = metadata) )
 
 
-
-source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
-d1=read.table('Brain_ref_mouse.txt',sep='\t',row.names=1,header=T)
-d2=read.table('FetalBrain_ref_mouse.txt',sep='\t',row.names=1,header=T)
-
-D=.simple_combine(d1,d2)$combine
+#####################
+library(data.table)
+NewRef=read.table('Zeisel_exp_sc_mat.txt',sep='\t',row.names=1,header=T)
+NewRef=as.matrix(NewRef)
 
 
-source('scRef.R')
-NewRef=read.table('Hochgerner_exp_sc_mat.txt',sep='\t',row.names=1,header=T)
-TAG=read.table('Hochgerner.TAG',sep='\t',row.names=1,header=T)
+TAG=read.table('Zeisel_TAG.txt',sep='\t',row.names=1,header=T)
 TAG=as.character(TAG[,1])
 sampleID=1:ncol(NewRef)
 SubjectName=colnames(NewRef)
