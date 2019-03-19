@@ -79,11 +79,35 @@ SC.eset = ExpressionSet(assayData = data.matrix(COM), phenoData =  new("Annotate
 #SC.eset=ExpressionSet(COM)
 
 #sampleType=c(rep('E14',ncol(D1)),rep('P0',ncol(D2)))
-sampleType=rep('ALL',ncol(COM))
+sampleType=colnames(COM)#rep('ALL',ncol(COM))
 
 library(xbioc)
 library(pvar)
 PP_ALL = music_prop(bulk.eset = Bulk.eset, sc.eset = SC.eset ,markers = NULL, clusters = cellType, samples = sampleType, verbose = F)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
