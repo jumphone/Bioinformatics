@@ -11,7 +11,7 @@ assayData=as.matrix(assayData)
 #cellTypeID=colnames(assayData)
 #cellType=colnames(assayData)
 
-sampleType=colnames(assayData)
+#sampleType=colnames(assayData)
 #sampleID=colnames(assayData)
 Bulk.eset=ExpressionSet(assayData)
 
@@ -68,22 +68,36 @@ COM=as.matrix(COM)
 CELLTYPE=c(AT1,AT2)
 
 
-#sampleID=1:ncol(COM)
-#SubjectName=colnames(COM)
-#cellTypeID=CELLTYPE
+sampleID=1:ncol(COM)
+SubjectName=colnames(COM)
+cellTypeID=CELLTYPE
 cellType=CELLTYPE
-#pheno.matrix=data.frame(sampleID,SubjectName,cellTypeID,cellType)
-#rownames(pheno.matrix)=colnames(COM)
-#metadata <- data.frame(labelDescription= c("Sample ID", "Subject Name", "Cell Type ID", "Cell Type Name"), row.names=c("sampleID", "SubjectName", "cellTypeID", "cellType"))
-#SC.eset = ExpressionSet(assayData = data.matrix(COM), phenoData =  new("AnnotatedDataFrame", data = pheno.matrix, varMetadata = metadata) )
-SC.eset=ExpressionSet(COM)
+pheno.matrix=data.frame(sampleID,SubjectName,cellTypeID,cellType)
+rownames(pheno.matrix)=colnames(COM)
+metadata <- data.frame(labelDescription= c("Sample ID", "Subject Name", "Cell Type ID", "Cell Type Name"), row.names=c("sampleID", "SubjectName", "cellTypeID", "cellType"))
+SC.eset = ExpressionSet(assayData = data.matrix(COM), phenoData =  new("AnnotatedDataFrame", data = pheno.matrix, varMetadata = metadata) )
+#SC.eset=ExpressionSet(COM)
 
-sampleType=c(rep('E14',ncol(D1)),rep('P0',ncol(D2)))
-
+#sampleType=c(rep('E14',ncol(D1)),rep('P0',ncol(D2)))
+sampleType=rep('ALL',ncol(COM))
 
 library(xbioc)
 library(pvar)
 PP_ALL = music_prop(bulk.eset = Bulk.eset, sc.eset = SC.eset ,markers = NULL, clusters = cellType, samples = sampleType, verbose = F)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
