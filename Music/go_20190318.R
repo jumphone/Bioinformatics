@@ -87,28 +87,29 @@ PP_ALL = music_prop(bulk.eset = Bulk.eset, sc.eset = SC.eset ,markers = NULL, cl
 
 
 
+saveRDS(PP_ALL,file='PP_ALL.RDS')
 
 
 
 
 
 
+OUT=PP_ALL$Est.prop.weighted
+S=apply(OUT,2,sum)
+OUT=OUT[,which(S>0)]
 
 
 
 
+library('gplots')
+
+pdf('HEAT.pdf',width=7,height=5)
+heatmap.2(OUT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F, trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(15,5))
+heatmap.2(OUT,scale=c("column"),dendrogram='none',Colv=F,Rowv=F, trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(15,5))
+dev.off()
 
 
-
-
-
-
-
-
-
-
-
-
+write.table(OUT, file='MUSIC_OUT.txt',sep='\t',quote=F,row.names=T,col.names=T)
 
 
 
