@@ -1,6 +1,6 @@
 library('Seurat')
 pbmc=readRDS('GFPSN_merged.RDS')
-
+#pbmc=readRDS('GBM.RDS')
 
 #MCA
 table(pbmc@meta.data$mca)
