@@ -91,3 +91,15 @@ saveRDS(pbmc,file='WT.RDS')
 
 ########################################################################
 
+pbmc=readRDS('WT.RDS')
+
+plot(pbmc@meta.data$nGene, pbmc@meta.data$nUMI)
+VEC=cbind(pbmc@meta.data$nGene, pbmc@meta.data$nUMI)
+K=kmeans(VEC,centers=3)
+C=K$cluster
+
+plot(pbmc@meta.data$nGene, pbmc@meta.data$nUMI,col=C,pch=16)
+table(C)
+table(C)/sum(table(C))
+
+0.931182796 0.002977667 0.065839537
