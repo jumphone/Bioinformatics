@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+Splicing: rMATs
+
 deepTools: https://deeptools.readthedocs.io/en/latest/content/tools/plotHeatmap.html
 
 g:Profiler: https://biit.cs.ut.ee/gprofiler/gost
