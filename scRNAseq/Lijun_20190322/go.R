@@ -26,7 +26,7 @@ DimPlot(pbmc,reduction.use='umap')
 #cell_use=colnames(pbmc@data)[which(pbmc@dr$umap@cell.embeddings[,2] > -5)]
 #DimPlot(pbmc,reduction.use='umap',cells.use=cell_use)
 pdf('f1_UMAP.pdf',width=7,height=8)
-GENE=c("PDGFRA","CSPG4", "TOP2A",'MKI67','PCDH15' ,'MOG','MBP')
+GENE=c("PDGFRA","CSPG4", "TOP2A",'MKI67','PCDH15' ,'MOG','MBP','CNP')
 FeaturePlot(object = pbmc, features.plot = GENE, cols.use = c("grey", "blue"), reduction.use = "umap")
 dev.off()
 
