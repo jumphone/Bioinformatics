@@ -47,8 +47,8 @@ COLP=colorRampPalette(c('blue3','darkgreen','gold','red3'))(101)
 COL=COLP[V]
 
 
-pdf('f2_TRA.pdf',width=5,height=8)
-par(mfrow=c(4,1))
+pdf('f2_TRA.pdf',width=5,height=10)
+par(mfrow=c(5,1))
 PDGFRA=pbmc@data[which(rownames(pbmc@data) == "PDGFRA"),]
 plot(UMAP2, PDGFRA, pch=16,xlab='UMAP2',col=COL)
 CSPG4=pbmc@data[which(rownames(pbmc@data) == "CSPG4"),]
@@ -57,6 +57,8 @@ TOP2A=pbmc@data[which(rownames(pbmc@data) == "TOP2A"),]
 plot(UMAP2, TOP2A, pch=16,xlab='UMAP2',col=COL)
 MBP=pbmc@data[which(rownames(pbmc@data) == "MBP"),]
 plot(UMAP2, MBP, pch=16,xlab='UMAP2',col=COL)
+CNP=pbmc@data[which(rownames(pbmc@data) == "CNP"),]
+plot(UMAP2,CNP, pch=16,xlab='CNP',col=COL)
 dev.off()
 
 saveRDS(pbmc,file='pbmc.RDS')
