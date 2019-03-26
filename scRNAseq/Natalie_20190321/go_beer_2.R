@@ -1,7 +1,7 @@
 
 d2=read.table('p100_out_gene_exon_tagged.dge.txt',sep='\t',row.names=1,header=T)
-
-
+library('Seurat')
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 ########################
 
 exp_sc_mat=d2
