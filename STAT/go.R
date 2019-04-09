@@ -26,11 +26,13 @@ PV=length(which(stat_list>true_stat))/length(stat_list)
 save.image(file='data.RData')
 #PV=0.0466828
 
-pdf('permutation_test.pdf',width=12,height=6)
+pdf('permutation_test_sem.pdf',width=12,height=6)
 #barplot(b[,1],b[,2])
 par(mfrow=c(1,2))
 M=c(mean(b[,1]),mean(b[,2]))
-SD=c(sd(b[,1]),sd(b[,2]))
+#SD=c(sd(b[,1]),sd(b[,2]))
+SD=c(sd(b[,1])/sqrt(length(b[,1])), sd(b[,2])/sqrt(length(b[,2])) )
+
 names(M)=c('primary','recurrence')
 barCenters =barplot(M,ylim=c(0,40))
 arrows(barCenters, M,
