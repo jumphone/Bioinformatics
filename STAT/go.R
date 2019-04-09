@@ -38,7 +38,7 @@ barCenters =barplot(M,ylim=c(0,40))
 arrows(barCenters, M,
        barCenters, M+SD,angle=90,code=3)
 
-points(barCenters[2],(M+SD)[2],pch=8,col='black')
+points(barCenters[2],(M+SD)[2]+1,pch=8,col='black')
 
 
 plot(density(stat_list),main='',xlab='Statistic',xlim=c(-4,4))
