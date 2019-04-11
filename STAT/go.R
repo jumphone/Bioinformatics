@@ -25,7 +25,7 @@ PV=length(which(stat_list>true_stat))/length(stat_list)
 
 save.image(file='data.RData')
 #PV=0.0466828
-
+load('data.RData')
 pdf('permutation_test_sem.pdf',width=12,height=6)
 #barplot(b[,1],b[,2])
 par(mfrow=c(1,2))
@@ -37,6 +37,10 @@ names(M)=c('primary','recurrence')
 barCenters =barplot(M,ylim=c(0,40))
 arrows(barCenters, M,
        barCenters, M+SD,angle=90,code=3)
+points(x=c(rep(barCenters[1],5),rep(barCenters[2],5)),y=c(b[,1],b[,2]),pch=16,col='black',cex=1)
+
+
+
 
 points(barCenters[2],(M+SD)[2]+1,pch=8,col='black')
 
@@ -50,6 +54,24 @@ dev.off()
 
 
 
+par(mfrow=c(1,2))
+M=c(mean(b[,1]),mean(b[,2]))
+#SD=c(sd(b[,1]),sd(b[,2]))
+SD=c(sd(b[,1])/sqrt(length(b[,1])), sd(b[,2])/sqrt(length(b[,2])) )
+
+names(M)=c('primary','recurrence')
+barCenters =barplot(M,ylim=c(0,40))
+arrows(barCenters, M,
+       barCenters, M+SD,angle=90,code=3)
+points(x=c(rep(barCenters[1],5),rep(barCenters[2],5)),y=c(b[,1],b[,2]),pch=16,col='black',cex=1)
+
+names(M)=c('primary','recurrence')
+barCenters =barplot(M,ylim=c(0,40))
+arrows(barCenters, M,
+       barCenters, M+SD,angle=90,code=3)
+
+set.seed(123)
+points(x=jitter(c(rep(barCenters[1],5),rep(barCenters[2],5))),y=c(b[,1],b[,2]),pch=16,col='black',cex=1)
 
 
 
