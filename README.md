@@ -24,6 +24,8 @@ Enrichr: http://amp.pharm.mssm.edu/Enrichr/
 
 GeneMANIA: https://genemania.org/
 
+PathView: https://pathview.uncc.edu/
+
 The Human Protein Atlas: https://www.proteinatlas.org/
 
 R2 Cancer Database: https://hgserver1.amc.nl/cgi-bin/r2/main.cgi
