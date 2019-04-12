@@ -2,6 +2,8 @@
 
 Splicing: rMATs
 
+Cell-Cell: https://www.bioconductor.org/packages/devel/bioc/vignettes/scTensor/inst/doc/scTensor.html
+
 deepTools: https://deeptools.readthedocs.io/en/latest/content/tools/plotHeatmap.html
 
 g:Profiler: https://biit.cs.ut.ee/gprofiler/gost
