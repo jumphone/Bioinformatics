@@ -20,6 +20,8 @@ TCGA ATAC: https://gdc.cancer.gov/about-data/publications/ATACseq-AWG
 
 Enrichr: http://amp.pharm.mssm.edu/Enrichr/
 
+GeneMANIA: https://genemania.org/
+
 The Human Protein Atlas: https://www.proteinatlas.org/
 
 R2 Cancer Database: https://hgserver1.amc.nl/cgi-bin/r2/main.cgi
