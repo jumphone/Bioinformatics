@@ -24,6 +24,8 @@ Enrichr: http://amp.pharm.mssm.edu/Enrichr/
 
 GeneMANIA: https://genemania.org/
 
+PathwayCommons: https://www.pathwaycommons.org/
+
 PathView: https://pathview.uncc.edu/
 
 The Human Protein Atlas: https://www.proteinatlas.org/
