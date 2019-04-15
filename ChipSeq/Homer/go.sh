@@ -12,3 +12,8 @@ nohup findMotifsGenome.pl Lijun.txt.bed.POS.bed mm10 OUTPUT_POS -size 200 &
 
 nohup findMotifsGenome.pl Lijun.txt.bed.NEG.bed mm10 OUTPUT_NEG -size 200 &
 
+
+
+
+# Compare
+findMotifsGenome.pl POS.bed mm10 OUTPUT -size 200 -bg NEG.bed
