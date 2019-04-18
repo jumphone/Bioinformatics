@@ -20,6 +20,9 @@ pca_projections, _ = palantir.utils.run_pca(norm_df)
 dm_res = palantir.utils.run_diffusion_maps(pca_projections, n_components=5)
 ms_data = palantir.utils.determine_multiscale_space(dm_res)
 tsne = palantir.utils.run_tsne(ms_data)
+imp_df = palantir.utils.run_magic_imputation(norm_df, dm_res)
+
+
 
 
 fig, ax = palantir.plot.plot_tsne(tsne)
@@ -28,11 +31,16 @@ plt.show()
 fig, ax = palantir.plot.plot_tsne_by_cell_sizes(counts, tsne)
 plt.show()
 
-
-imp_df = palantir.utils.run_magic_imputation(norm_df, dm_res)
-
 palantir.plot.plot_diffusion_components(tsne, dm_res)
 plt.show()
+
+
+palantir.plot.plot_gene_expression(imp_df, tsne, ["'A1CF'"])
+plt.show()
+
+
+
+
 
 pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=500)
 
