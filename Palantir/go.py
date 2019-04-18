@@ -35,10 +35,11 @@ palantir.plot.plot_diffusion_components(tsne, dm_res)
 plt.show()
 
 
-palantir.plot.plot_gene_expression(imp_df, tsne, ["'A1CF'"])
+palantir.plot.plot_gene_expression(norm_df, tsne, ['A1CF'])
 plt.show()
 
-
+palantir.plot.plot_gene_expression(imp_df, tsne, ['PDGFRA'])
+plt.show()
 
 
 
