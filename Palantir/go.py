@@ -25,6 +25,16 @@ tsne = palantir.utils.run_tsne(ms_data)
 fig, ax = palantir.plot.plot_tsne(tsne)
 plt.show()
 
+fig, ax = palantir.plot.plot_tsne_by_cell_sizes(counts, tsne)
+plt.show()
+
+
+imp_df = palantir.utils.run_magic_imputation(norm_df, dm_res)
+
+palantir.plot.plot_diffusion_components(tsne, dm_res)
+plt.show()
+
+pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=500)
 
 ###########
 import pickle 
