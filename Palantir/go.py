@@ -40,10 +40,13 @@ plt.show()
 
 palantir.plot.plot_gene_expression(imp_df, tsne, ['PDGFRA'])
 plt.show()
+palantir.plot.plot_gene_expression(norm_df, tsne, ['PDGFRA'])
+plt.show()
 
+start_cell='MGH54_P2_H03'
+pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=200)
+plt.show()
 
-
-pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=500)
 
 ###########
 import pickle 
