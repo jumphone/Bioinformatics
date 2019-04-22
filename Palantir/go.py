@@ -48,8 +48,21 @@ plt.show()
 
 
 
-start_cell='MGH54_P2_H03'
+start_cell='MGH54_P13_G06'
 pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=200)
+palantir.plot.plot_palantir_results(pr_res, tsne)
+plt.show()
+
+genes = ['PDGFRA']
+gene_trends = palantir.presults.compute_gene_trends( pr_res, imp_df.loc[:, genes])
+
+#import rpy2
+#import rpy2.robjects as RObjects
+#from rpy2.robjects.packages import importr
+#importr("name package", lib_loc = "/Library/Frameworks/R.framework/Versions/3.5/Resources/")
+
+
+palantir.plot.plot_gene_trends(gene_trends)
 plt.show()
 
 
