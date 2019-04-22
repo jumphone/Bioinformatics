@@ -18,7 +18,7 @@ norm_df = palantir.preprocess.normalize_counts(counts)
 norm_df = palantir.preprocess.log_transform(norm_df)
 
 pca_projections, _ = palantir.utils.run_pca(norm_df)
-dm_res = palantir.utils.run_diffusion_maps(pca_projections, n_components=5)
+dm_res = palantir.utils.run_diffusion_maps(pca_projections, n_components=20)
 ms_data = palantir.utils.determine_multiscale_space(dm_res)
 tsne = palantir.utils.run_tsne(ms_data)
 imp_df = palantir.utils.run_magic_imputation(norm_df, dm_res)
@@ -45,16 +45,24 @@ palantir.plot.plot_gene_expression(norm_df, tsne, ['PDGFRA'])
 plt.show()
 ##############################
 
-
+cells=['MGH54_P13_G06']
+palantir.plot.highlight_cells_on_tsne(tsne, cells)
+plt.show()
 
 
 start_cell='MGH54_P13_G06'
-pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=200)
+pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=500)
 palantir.plot.plot_palantir_results(pr_res, tsne)
 plt.show()
 
+
+
+
+
 genes = ['PDGFRA']
 gene_trends = palantir.presults.compute_gene_trends( pr_res, imp_df.loc[:, genes])
+palantir.plot.plot_gene_trends(gene_trends)
+plt.show()
 
 #import rpy2
 #import rpy2.robjects as RObjects
@@ -62,8 +70,6 @@ gene_trends = palantir.presults.compute_gene_trends( pr_res, imp_df.loc[:, genes
 #importr("name package", lib_loc = "/Library/Frameworks/R.framework/Versions/3.5/Resources/")
 
 
-palantir.plot.plot_gene_trends(gene_trends)
-plt.show()
 
 
 ###########
