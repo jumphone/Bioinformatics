@@ -1,3 +1,5 @@
+sudo pip3 install tzlocal
+
 sudo pip3 install rpy2==2.9.3
 
 https://github.com/dpeerlab/Palantir
