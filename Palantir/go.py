@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 palantir_dir = os.path.expanduser('./')
-counts = palantir.io.from_csv(palantir_dir + 'MGH54_mat.txt',delimiter='\t')
+counts = palantir.io.from_csv(palantir_dir + 't_MGH54_mat.txt',delimiter=',')
 
 fig, ax = palantir.plot.plot_molecules_per_cell_and_gene(counts)
 plt.show()
