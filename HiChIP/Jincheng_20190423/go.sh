@@ -6,13 +6,16 @@ https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2644948
 sudo pip install cooler
 
 
-#cooler dump -b -t pixels --header --join -r chr3:10M-12M -r2 chr17  GSM2644947_Auxin2days-R1.100000.cool | less
-#cooler dump -b -t pixels --join GSM2644945_Untreated-R1.100000.cool > GSM2644945_Untreated-R1.100000.cool.bed
+cooler merge Untreated.cool GSM2644945_Untreated-R1.100000.cool GSM2644946_Untreated-R2.100000.cool
+cooler merge Auxin2days.cool GSM2644947_Auxin2days-R1.100000.cool GSM2644948_Auxin2days-R2.100000.cool
 
-cooler coarsen -k 10 GSM2644945_Untreated-R1.100000.cool -o GSM2644945_Untreated-R1.1000k.cool
+
+
+cooler coarsen -k 10 Untreated.cool -o Untreated.1000k.cool
+cooler coarsen -k 10 Auxin2days.cool -o Auxin2days.1000k.cool
+
+
 cooler dump --join -r chr1 GSM2644945_Untreated-R1.1000k.cool > GSM2644945_Untreated-R1.1000k.cool.chr1.txt
-
-cooler coarsen -k 10 GSM2644947_Auxin2days-R1.100000.cool -o GSM2644947_Auxin2days-R1.1000k.cool
 cooler dump --join -r chr1  GSM2644947_Auxin2days-R1.1000k.cool > GSM2644947_Auxin2days-R1.1000k.cool.chr1.txt
 
 
