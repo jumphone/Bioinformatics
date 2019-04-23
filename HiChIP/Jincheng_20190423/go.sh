@@ -7,3 +7,5 @@ sudo pip install cooler
 
 
 cooler dump -b -t pixels --header --join -r chr3:10M-12M -r2 chr17  GSM2644947_Auxin2days-R1.100000.cool | less
+
+cooler dump -b -t pixels --join GSM2644945_Untreated-R1.100000.cool > GSM2644945_Untreated-R1.100000.cool.bed
