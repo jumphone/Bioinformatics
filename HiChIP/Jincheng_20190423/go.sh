@@ -27,8 +27,22 @@ sh cool_inter_mouse.sh Auxin2days.1000k.cool
 
 
 library(HiCcompare)
-aux1000kb <- read.table("GSM2644947_Auxin2days-R1.1000k.cool.chr1.txt", header = FALSE)
-con1000kb <- read.table("GSM2644945_Untreated-R1.1000k.cool.chr1.txt", header = FALSE)
+con1000kb <- read.table("Untreated.1000k.cool.inter.txt", header = FALSE)
+aux1000kb <- read.table("Auxin2days.1000k.cool.inter.txt", header = FALSE)
+
+all.table <- create.hic.table(con1000kb,aux1000kb)
+
+
+hic.table <- hic_loess(all.table, Plot = TRUE, Plot.smooth = FALSE)
+
+filter_params(hic.table)
+hic.table <- hic_compare(hic.table, A.min = 15, adjust.dist = TRUE, p.method = 'fdr', Plot = TRUE)
+
+knitr::kable(head(hic.table))
+sig_index=which(hic.table$p.adj<0.05)
+
+sig.hic.table=hic.table[sig_index,]
+knitr::kable(head(sig.hic.table))
 
 
 
@@ -36,10 +50,6 @@ con1000kb <- read.table("GSM2644945_Untreated-R1.1000k.cool.chr1.txt", header = 
 
 
 
-
-
-cooler dump --join -r chr1 GSM2644945_Untreated-R1.1000k.cool > GSM2644945_Untreated-R1.1000k.cool.chr1.txt
-cooler dump --join -r chr1  GSM2644947_Auxin2days-R1.1000k.cool > GSM2644947_Auxin2days-R1.1000k.cool.chr1.txt
 
 
 
