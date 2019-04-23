@@ -41,8 +41,6 @@ import numpy as np
 
 tsne.index[np.where( (tsne.ix[:,0] > 5.5) * (tsne.ix[:,1] < -18) )]
 
-tsne.index[np.where(tsne.index=='PDGFRA')]
-
 
 
 
@@ -60,6 +58,17 @@ palantir.plot.plot_gene_expression(imp_df, tsne, ['PDGFRA'])
 plt.show()
 palantir.plot.plot_gene_expression(norm_df, tsne, ['PDGFRA'])
 plt.show()
+
+
+list(norm_df.columns).index('PDGFRA')
+norm_df.columns[6631]
+norm_df.ix[:,6631]
+pdgfra_max=np.max(norm_df.ix[:,6631])
+pdgfra_max_index=(np.where( norm_df.ix[:,6631] == pdgfra_max))[0][0]
+pdgfra_max_index_cell=norm_df.index[pdgfra_max_index]
+
+
+
 ##############################
 
 cells=['MGH54_P7_G06']
@@ -67,7 +76,8 @@ palantir.plot.highlight_cells_on_tsne(tsne, cells)
 plt.show()
 
 
-start_cell='MGH54_P7_G06'
+#start_cell='MGH54_P7_G06'
+start_cell=pdgfra_max_index_cell
 pr_res = palantir.core.run_palantir(ms_data, start_cell, num_waypoints=500)
 palantir.plot.plot_palantir_results(pr_res, tsne)
 plt.show()
