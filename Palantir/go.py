@@ -18,9 +18,10 @@ norm_df = palantir.preprocess.normalize_counts(counts)
 norm_df = palantir.preprocess.log_transform(norm_df)
 
 pca_projections, _ = palantir.utils.run_pca(norm_df)
-dm_res = palantir.utils.run_diffusion_maps(pca_projections, n_components=10)
+dm_res = palantir.utils.run_diffusion_maps(pca_projections, n_components=200)
 ms_data = palantir.utils.determine_multiscale_space(dm_res)
 tsne = palantir.utils.run_tsne(ms_data)
+
 imp_df = palantir.utils.run_magic_imputation(norm_df, dm_res)
 
 
@@ -39,6 +40,9 @@ import numpy as np
 
 
 tsne.index[np.where( (tsne.ix[:,0] > 5.5) * (tsne.ix[:,1] < -18) )]
+
+tsne.index[np.where(tsne.index=='PDGFRA')]
+
 
 
 
