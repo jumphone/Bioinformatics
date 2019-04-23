@@ -19,6 +19,9 @@ sh cool_inter_mouse.sh Untreated.1000k.cool
 sh cool_inter_mouse.sh Auxin2days.1000k.cool 
 
 
+
+
+
 #R
 #https://bioconductor.org/packages/release/bioc/vignettes/HiCcompare/inst/doc/HiCcompare-vignette.html
 #if (!requireNamespace("BiocManager", quietly=TRUE))
@@ -30,10 +33,10 @@ library(HiCcompare)
 con1000kb <- read.table("Untreated.1000k.cool.inter.txt", header = FALSE)
 aux1000kb <- read.table("Auxin2days.1000k.cool.inter.txt", header = FALSE)
 
-all.table <- create.hic.table(con1000kb,aux1000kb)
+chr1.table <- create.hic.table(con1000kb,aux1000kb,chr='chr1')
 
 
-hic.table <- hic_loess(all.table, Plot = TRUE, Plot.smooth = FALSE)
+hic.table <- hic_loess(chr1.table, Plot = TRUE, Plot.smooth = FALSE)
 
 filter_params(hic.table)
 hic.table <- hic_compare(hic.table, A.min = 15, adjust.dist = TRUE, p.method = 'fdr', Plot = TRUE)
