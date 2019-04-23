@@ -33,7 +33,7 @@ library(HiCcompare)
 CHR=c('chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9','chr10','chr11','chr12','chr13','chr14','chr15',
 'chr16','chr17','chr18','chr19','chrX')
 OUT='./OUT/'
-
+RESULT=c()
 for(this_chr in CHR){
 #this_chr='chr1'
 con1000kb <- read.table(paste0("Untreated.1000k.cool.tmp/",this_chr,'.txt'), header = FALSE)
@@ -52,11 +52,15 @@ dev.off()
 
 #sig.hic.table=hic.table[sig_index,]
 #knitr::kable(head(sig.hic.table))
-write.table(hic.table,file=paste0(OUT,this_chr,'_out.txt'),quote=F,sep='\t',row.names=F,col.names=T)
+#write.table(hic.table,file=paste0(OUT,this_chr,'_out.txt'),quote=F,sep='\t',row.names=F,col.names=T)
+RESULT=cbind(RESULT,t(hic.table))
 print(this_chr)
 }
 
-
+RESULT=t(RESULT)
+colnames(RESULT)=colnames(hic.table)
+RESULT[,18]=as.character(p.adjust(as.numeric(RESULT[,17]),method='fdr'))
+write.table(RESULT,file=paste0('OUT.txt'),quote=F,sep='\t',row.names=F,col.names=T)
 
 
 
