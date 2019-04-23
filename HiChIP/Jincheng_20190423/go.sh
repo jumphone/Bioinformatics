@@ -48,7 +48,7 @@ hic.table <- hic_compare(hic.table, A.min = 15, adjust.dist = TRUE, p.method = '
 dev.off()
 
 #knitr::kable(head(hic.table))
-sig_index=which(hic.table$p.adj<0.05)
+sig_index=which(hic.table$p.value<0.05)
 
 sig.hic.table=hic.table[sig_index,]
 #knitr::kable(head(sig.hic.table))
