@@ -70,8 +70,8 @@ write.table(RESULT,file=paste0('OUT.txt'),quote=F,sep='\t',row.names=F,col.names
 
 
 
-
-
+bedtools intersect -a COMPARE.123.txt -b Mus_musculus.NCBIM37.67.chr.gtf.combined.pc.bed -wa -wb > gene123.txt
+bedtools intersect -a COMPARE.456.txt -b Mus_musculus.NCBIM37.67.chr.gtf.combined.pc.bed -wa -wb > gene456.txt
 
 
 
