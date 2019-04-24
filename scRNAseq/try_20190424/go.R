@@ -95,7 +95,8 @@ if(this_l %in% GENE & this_r %in% GENE){
        this_r_bin_index=1
        while(this_r_bin_index<=ncol(CMAT)){
            CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ 
-               PMAT[this_l_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] 
+               PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
+               #PMAT[this_l_index,this_l_bin_index]  + PMAT[this_r_index,this_r_bin_index]
            this_r_bin_index=this_r_bin_index+1
            }      
        this_l_bin_index=this_l_bin_index+1
