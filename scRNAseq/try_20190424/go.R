@@ -44,13 +44,20 @@ MEAN[,i]=this_mean
 i=i+1
 if(i%%100==1){print(i)}}
 
-saveRDS(MEAN,file=paste0('permutation.RDS' ))
+saveRDS(MEAN,file=paste0('MEAN.RDS' ))
 
 ################################################
 EXP_LR=EXP[permu_gene_index,]
 
-PMAT = MEAN[,c(1:ncol(BIN))]*0
 
+ECDF=c()
+j=1
+while(j<=nrow(MEAN)){
+ECDF=c(ECDF,ecdf(as.numeric(MEAN[j,])))
+j=j+1}
+
+
+PMAT = MEAN[,c(1:ncol(BIN))]*0
 i=1
 while(i<=ncol(BIN)){
 this_bin_index=BIN[,i]
@@ -59,13 +66,47 @@ this_bin_mean_exp=apply(EXP_LR[,this_bin_index],1,mean)
 this_p_list=c()
 j=1
 while(j<=length(this_bin_mean_exp)){
-  this_p=log(1-ecdf(as.numeric(MEAN[j,]))(this_bin_mean_exp[j]),10)
+  this_p=-log(1+1/TIME-ECDF[[j]](this_bin_mean_exp[j]),10)
   this_p_list=c(this_p_list,this_p)
   j=j+1
 }
 PMAT[,i]=this_p_list
 print(i)
+i=i+1
 }
+saveRDS(PMAT,file=paste0('PMAT.RDS' ))
+
+################################################
+CMAT=PMAT[c(1:ncol(PMAT)),]*0
+rownames(CMAT)=colnames(CMAT)
+rownames(CMAT)=paste0('L_',rownames(CMAT))
+colnames(CMAT)=paste0('R_',colnames(CMAT))
+
+i=1
+while(i<=nrow(LR)){
+
+this_l=LR[i,1]
+this_r=LR[i,2]
+if(this_l %in% GENE & this_r %in% GENE){
+    this_l_index=which(rownames(PMAT)==this_l)
+    this_r_index=which(rownames(PMAT)==this_r)
+    this_l_bin_index=1
+    while(this_l_bin_index<=nrow(CMAT)){
+       this_r_bin_index=1
+       while(this_r_bin_index<=ncol(CMAT)){
+           CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ 
+               PMAT[this_l_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] 
+           this_r_bin_index=this_r_bin_index+1
+           }      
+       this_l_bin_index=this_l_bin_index+1
+       } 
+    }
+if(i%%10==1){print(i)}
+i=i+1}
+
+CMAT=as.matrix(CMAT)
+
+heatmap(CMAT)
 
 
 
