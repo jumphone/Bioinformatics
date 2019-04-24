@@ -49,11 +49,8 @@ MEAN[,i]=this_mean
 i=i+1
 if(i%%100==1){print(i)}}
 
-  
-saveRDS(MEAN,file=paste0('PERMUTATION/',one,'.RDS' ))
-print(one)
+saveRDS(MEAN,file=paste0('permutation.RDS' ))
 
- 
 ################################################
 
 
