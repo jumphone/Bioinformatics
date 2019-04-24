@@ -24,11 +24,6 @@ i=i+1
 EXP=pbmc.data
 GENE=rownames(EXP)
 
-this_l=as.character(LR[1,1])
-this_r=as.character(LR[1,2])
-
-this_l_index=which(GENE==this_l)
-this_r_index=which(GENE==this_r)
 
 
 ################################################
@@ -52,5 +47,25 @@ if(i%%100==1){print(i)}}
 saveRDS(MEAN,file=paste0('permutation.RDS' ))
 
 ################################################
+EXP_LR=EXP[permu_gene_index,]
+
+PMAT = MEAN[,c(1:ncol(BIN))]*0
+
+i=1
+while(i<=ncol(BIN)){
+this_bin_index=BIN[,i]
+  
+this_bin_mean_exp=apply(EXP_LR[,this_bin_index],1,mean)  
+this_p_list=c()
+j=1
+while(j<=length(this_bin_mean_exp)){
+  this_p=log(1-ecdf(as.numeric(MEAN[j,]))(this_bin_mean_exp[j]),10)
+  this_p_list=c(this_p_list,this_p)
+  j=j+1
+}
+PMAT[,i]=this_p_list
+print(i)
+}
+
 
 
