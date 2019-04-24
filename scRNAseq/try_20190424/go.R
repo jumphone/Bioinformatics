@@ -176,15 +176,30 @@ points(LS,type='l',col='red')
 which(scale(RS)>1)
 which(scale(LS)>1)
 
-LL=which(BIN_FLAG %in% c(2,3,5))
-RR=which(BIN_FLAG %in% c(15,18,20,24))
+
+which(RS==max(RS))
+which(LS==max(LS))
+
+
+
+which(CMAT[,20])
+
+LL=which(BIN_FLAG %in% c(3))
+LLL=which(BIN_FLAG %in% c(18))
+
+RR=which(BIN_FLAG %in% c(20))
 pbmc@meta.data$lr=rep(NA,length(pbmc@ident))
 pbmc@meta.data$lr[LL]='LL'
+pbmc@meta.data$lr[LLL]='LLL'
 pbmc@meta.data$lr[RR]='RR'
+pbmc@meta.data$ls=LS
 TSNEPlot(object = pbmc,do.label=T,group.by='lr')
 
 
+plot(BIN_FLAG,pbmc@dr$tsne@cell.embeddings[,1])
+plot(BIN_FLAG,pbmc@dr$tsne@cell.embeddings[,2])
 
+FeaturePlot(object = pbmc, cols.use = c("blue",'grey90', "red"), features.plot =c("PDGFRA",'BMI1','TP53','OLIG2','EGFR','GFAP'))
 
-
-
+FeaturePlot(object = pbmc, cols.use = c("blue",'grey90', "red"), features.plot =c('ADAR','ADARB1','ADARB2'))
+FeaturePlot(object = pbmc, cols.use = c("blue",'grey90', "red"), features.plot =c('ADAR','ADARB1','ADARB2'))
