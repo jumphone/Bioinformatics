@@ -11,12 +11,12 @@ ONE=.data2one(pbmc.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
 WINDOW=50
 
-ORDER=order(ONE)
+RANK=rank(ONE)
 LENGTH=length(ONE)
 BIN=c()
 i=1
 while(i<=LENGTH/WINDOW  ){
-this_index=which((i-1)*WINDOW< ORDER & i*WINDOW>=ORDER)
+this_index=which((i-1)*WINDOW< RANK & i*WINDOW>=RANK)
 BIN=cbind(BIN,this_index)
 i=i+1
 }
@@ -96,6 +96,9 @@ if(this_l %in% GENE & this_r %in% GENE){
        while(this_r_bin_index<=ncol(CMAT)){
            CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ 
                PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
+        
+               #PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
+               #max(PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index],0)+ max(PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index],0)
                #PMAT[this_l_index,this_l_bin_index]  + PMAT[this_r_index,this_r_bin_index]
            this_r_bin_index=this_r_bin_index+1
            }      
@@ -142,7 +145,43 @@ heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=
 
 
 
+##################
 
+
+pbmc_data=EXP
+pbmc= CreateSeuratObject(raw.data = pbmc_data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
+pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  scale.factor = 10000)
+pbmc <- FindVariableGenes(object = pbmc,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+length(x = pbmc@var.genes)
+pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI"))
+PCNUM=50
+pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = FALSE, pcs.print = 1:5, genes.print = 5)
+
+PCUSE=1:50
+pbmc <- RunTSNE(object = pbmc, dims.use = PCUSE, do.fast = TRUE, check_duplicates = FALSE)
+TSNEPlot(object = pbmc,do.label=T)
+
+
+pbmc@meta.data$bin=BIN_FLAG
+
+TSNEPlot(object = pbmc,do.label=T,group.by='bin')
+
+
+RS=apply(CMAT,2,sum)
+LS=apply(CMAT,1,sum)
+
+plot(RS,type='l')
+points(LS,type='l',col='red')
+
+which(scale(RS)>1)
+which(scale(LS)>1)
+
+LL=which(BIN_FLAG %in% c(2,3,5))
+RR=which(BIN_FLAG %in% c(15,18,20,24))
+pbmc@meta.data$lr=rep(NA,length(pbmc@ident))
+pbmc@meta.data$lr[LL]='LL'
+pbmc@meta.data$lr[RR]='RR'
+TSNEPlot(object = pbmc,do.label=T,group.by='lr')
 
 
 
