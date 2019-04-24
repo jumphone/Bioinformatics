@@ -106,7 +106,45 @@ i=i+1}
 
 CMAT=as.matrix(CMAT)
 
-heatmap(CMAT)
+heatmap(CMAT,scale='none')
+
+library('gplots')
+heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+
+
+BIN_FLAG=rep(NA,ncol(EXP))
+i=1
+while(i<=ncol(BIN)){
+BIN_FLAG[BIN[,i]]=i
+i=i+1
+}
+
+vis_gene='PDGFRA'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG)
+
+vis_gene='SOX2'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG)
+
+vis_gene='OLIG2'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG)
+
+vis_gene='GFAP'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG)
+
+vis_gene='CD83'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG)
+
+plot(as.numeric(EXP[which(GENE==vis_gene),])~jitter(BIN_FLAG))
+
+library('gplots')
+heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+
+
+
+
+
+
+
 
 
 
