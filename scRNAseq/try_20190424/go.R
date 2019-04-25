@@ -4,7 +4,7 @@ library(Matrix)
 #pbmc.data <- read.table("MGH54_mat.txt", sep='\t',row.names=1, header=T)
 
 load('Seurat_EXP_cluster.Robj')
-#pbmc.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
+pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
 pbmc.data=as.matrix(EXP_cluster@scale.data)
 #pbmc.data=as.matrix(EXP_cluster@data)
 
@@ -16,7 +16,7 @@ source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 rm(EXP_cluster)
 gc()
 
-ONE=.data2one(pbmc.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
+ONE=.data2one(pbmc.raw.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
 WINDOW=300
 
@@ -180,13 +180,48 @@ i=i+1
 #heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
 
 
-par(mfrow=c(1,2))
+par(mfrow=c(2,1))
 hist(as.numeric(CMAT),xlab='SCORE',breaks=100,freq=F,main='Histogram of SCORE')
 abline(v=CUTOFF,col='red')
 text(x=CUTOFF,y=0,pos=4,col='red',label=as.character(round(CUTOFF)))
 
+plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
+                                                 '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
+                                                 '; CUTOFF:',as.character(round(CUTOFF))))
+
+legend("topleft", legend=c("Ligand", "Recepter"),
+       fill=c("red", "blue"))
+
+i=1
+while(i<=I){
+this_pair=PAIR[i,]
+this_l=which(BIN_FLAG==this_pair[1])
+this_r=which(BIN_FLAG==this_pair[2])
+this_l_vec=VEC[this_l,]
+this_r_vec=VEC[this_r,]
+
+start_point= this_l_vec[round(runif(1)*nrow(this_l_vec)),]
+end_point= this_r_vec[round(runif(1)*nrow(this_r_vec)),]
+points(start_point[1],start_point[2],col='red',pch=16,cex=2)
+points(end_point[1],end_point[2],col='blue',pch=16,cex=2)
+points(this_l_vec,col='black',pch=16,cex=0.3)
+points(this_r_vec,col='black',pch=16,cex=0.3)
+
+segments(start_point[1], start_point[2], end_point[1],end_point[2],col='grey40',lty=3,lwd=1)
+i=i+1}
 
 
+
+
+
+
+
+
+
+
+library(animation)
+saveGIF({
+ 
 
 I=1
 while(I<=nrow(PAIR)){
@@ -225,8 +260,22 @@ i=i-1
 text(x=max(VEC[,1]),y=max(VEC[,2]),label=paste0('TOP:',as.character(i)),pos=2)  
 text(x=max(VEC[,1]),y=min(VEC[,2]),label=paste0('SCORE:',as.character(SCORE[i])),pos=2) 
 text(x=min(VEC[,1]),y=min(VEC[,2]),label=paste0('PERCENT:',as.character(round((i)/length(SNCMAT)*100)),'%'),pos=4)  
+print(I)
 I=I+1
+
 }
+
+
+ 
+}, movie.name = "OK.gif", interval = runif(30, 
+  0.01, 1))
+#, nmax = 500
+
+
+
+
+
+
 
 
 
