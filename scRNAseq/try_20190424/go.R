@@ -132,7 +132,7 @@ SNCMAT=sort(NCMAT,decreasing=T)
 length(SNCMAT)*0.05
 
 #TOP=round(length(SNCMAT)*0.05)
-TOP=50
+TOP=200
 CUTOFF=SNCMAT[TOP]
 #CUTOFF=SNCMAT[1]
 TMP=CMAT
@@ -221,10 +221,13 @@ i=i+1}
 
 
 ##
-pdf('OK.pdf',width=10,height=7)
+
 
 I=1
 while(I<=nrow(PAIR)){
+  
+png(paste0('OK/',as.character(I),'.png'),width=800,height=700)  
+
 plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
                                                  '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
                                                  '; CUTOFF:',as.character(round(CUTOFF))))
@@ -234,6 +237,7 @@ legend("topleft", legend=c("Ligand", "Recepter"),
 
 i=1
 while(i<=I){
+set.seed(123)
 this_pair=PAIR[i,]
 this_l=which(BIN_FLAG==this_pair[1])
 this_r=which(BIN_FLAG==this_pair[2])
@@ -262,13 +266,16 @@ text(x=max(VEC[,1]),y=min(VEC[,2]),label=paste0('SCORE:',as.character(SCORE[i]))
 text(x=min(VEC[,1]),y=min(VEC[,2]),label=paste0('PERCENT:',as.character(round((i)/length(SNCMAT)*100)),'%'),pos=4)  
 print(I)
 I=I+1
-
+dev.off()
 }
 
 
  
-dev.off()
-#, nmax = 500
+
+
+
+
+
 
 
 
