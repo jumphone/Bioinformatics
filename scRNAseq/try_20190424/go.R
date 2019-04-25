@@ -6,8 +6,8 @@ library(Matrix)
 load('Seurat_EXP_cluster.Robj')
 pbmc.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
 
-
-LR=read.table('RL.txt',header=T,sep='\t')
+#LR=read.table('RL.txt',header=T,sep='\t')
+LR=read.table('RL_mouse.txt',header=T,sep='\t')
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
@@ -16,7 +16,7 @@ gc()
 
 ONE=.data2one(pbmc.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
-WINDOW=50
+WINDOW=300
 
 RANK=rank(ONE)
 LENGTH=length(ONE)
@@ -116,8 +116,92 @@ if(i%%10==1){print(i)}
 i=i+1}
 
 CMAT=as.matrix(CMAT)
+saveRDS(CMAT,file=paste0('CMAT.RDS' ))
 
-heatmap(CMAT,scale='none')
+##########
+#load('Seurat_EXP_cluster.Robj')
+
+#######################
+NCMAT=as.numeric(CMAT)
+SNCMAT=sort(NCMAT,decreasing=T)
+
+CUTOFF=SNCMAT[200]
+
+TMP=CMAT
+TMP[which(TMP<CUTOFF)]=0
+PAIR=c()
+i=1
+while(i<=ncol(TMP)){
+
+    if(max(TMP[,i])>0){
+    this_r=i
+    j=1
+    while(j<=nrow(TMP)){
+        if(TMP[j,i]>0){
+            this_l=j
+            PAIR=cbind(PAIR,c(this_l,this_r))}
+        j=j+1}
+    }
+
+    i=i+1}
+
+PAIR=t(PAIR)
+colnames(PAIR)=c('L','R')
+#######################
+#load('Seurat_EXP_cluster.Robj')
+pbmc=EXP_cluster
+pbmc@meta.data$bin=BIN_FLAG
+VEC=pbmc@dr$tsne@cell.embeddings
+
+BIN_FLAG=rep(NA,ncol(EXP))
+i=1
+while(i<=ncol(BIN)){
+BIN_FLAG[BIN[,i]]=i
+i=i+1
+}
+
+
+plot(VEC,col='grey80',pch=16,cex=0.3)
+
+legend("topleft", legend=c("Ligand", "Recepter"),
+       fill=c("red", "blue"))
+
+i=1
+while(i<=nrow(PAIR)){
+this_pair=PAIR[i,]
+this_l=which(BIN_FLAG==this_pair[1])
+this_r=which(BIN_FLAG==this_pair[2])
+this_l_vec=VEC[this_l,]
+this_r_vec=VEC[this_r,]
+
+start_point= this_l_vec[round(runif(1)*nrow(this_l_vec)),]
+end_point= this_r_vec[round(runif(1)*nrow(this_r_vec)),]
+points(this_l_vec,col='black',pch=16,cex=0.3)
+points(this_r_vec,col='black',pch=16,cex=0.3)
+  
+points(start_point[1],start_point[2],col='red',pch=16,cex=2)
+points(end_point[1],end_point[2],col='blue',pch=16,cex=2)
+segments(start_point[1], start_point[2], end_point[1],end_point[2],col='grey40',lty=3,lwd=1)
+i=i+1}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 library('gplots')
 heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
@@ -129,6 +213,88 @@ while(i<=ncol(BIN)){
 BIN_FLAG[BIN[,i]]=i
 i=i+1
 }
+
+
+library('gplots')
+heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+
+
+
+
+
+##################
+load('Seurat_EXP_cluster.Robj')
+pbmc=EXP_cluster
+pbmc@meta.data$bin=BIN_FLAG
+
+TSNEPlot(object = pbmc,do.label=T,group.by='bin')
+
+RS=apply(CMAT,2,sum)
+LS=apply(CMAT,1,sum)
+
+
+which(scale(RS)>1)
+which(scale(LS)>1)
+
+plot(RS,type='l')
+points(LS,type='l',col='red')
+
+
+which(RS==max(RS))
+which(LS==max(LS))
+
+
+LL=which(BIN_FLAG %in% c(59:83))
+RR=which(BIN_FLAG %in% c(51,52,53,54,55,56,57,57,90,91,92,93))
+pbmc@meta.data$lr=rep(NA,length(pbmc@ident))
+pbmc@meta.data$lr[LL]='LL'
+pbmc@meta.data$lr[RR]='RR'
+pbmc@meta.data$ls=LS
+TSNEPlot(object = pbmc,do.label=T,group.by='lr')
+
+
+
+
+
+
+
+
+
+
+##########
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 vis_gene='PDGFRA'
 boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG)
@@ -146,14 +312,6 @@ vis_gene='CD83'
 boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG)
 
 plot(as.numeric(EXP[which(GENE==vis_gene),])~jitter(BIN_FLAG))
-
-library('gplots')
-heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
-
-
-
-##################
-
 
 pbmc_data=EXP
 pbmc= CreateSeuratObject(raw.data = pbmc_data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
