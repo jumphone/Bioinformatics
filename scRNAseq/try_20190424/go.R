@@ -233,8 +233,8 @@ while(I<=nrow(PAIR)){
 
   
 NAME=as.character(I)
-if(length(NAME)==1){NAME=paste0('00',NAME)}
-if(length(NAME)==2){NAME=paste0('0',NAME)}
+if(nchar(NAME)==1){NAME=paste0('00',NAME)}
+if(nchar(NAME)==2){NAME=paste0('0',NAME)}
 png(paste0('OK/',NAME,'.png'),width=800,height=700)  
 
 plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
