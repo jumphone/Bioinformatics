@@ -1,7 +1,12 @@
 library(Seurat)
 library(dplyr)
 library(Matrix)
-pbmc.data <- read.table("MGH54_mat.txt", sep='\t',row.names=1, header=T)
+#pbmc.data <- read.table("MGH54_mat.txt", sep='\t',row.names=1, header=T)
+
+load('Seurat_EXP_cluster.Robj')
+pbmc.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
+
+
 LR=read.table('RL.txt',header=T,sep='\t')
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
