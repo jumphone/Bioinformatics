@@ -11,6 +11,8 @@ LR=read.table('RL.txt',header=T,sep='\t')
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
+rm(EXP_cluster)
+gc()
 
 ONE=.data2one(pbmc.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
