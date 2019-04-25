@@ -4,7 +4,9 @@ library(Matrix)
 #pbmc.data <- read.table("MGH54_mat.txt", sep='\t',row.names=1, header=T)
 
 load('Seurat_EXP_cluster.Robj')
-pbmc.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
+#pbmc.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
+pbmc.data=as.matrix(EXP_cluster@scale.data)
+#pbmc.data=as.matrix(EXP_cluster@data)
 
 #LR=read.table('RL.txt',header=T,sep='\t')
 LR=read.table('RL_mouse.txt',header=T,sep='\t')
@@ -116,7 +118,10 @@ if(i%%10==1){print(i)}
 i=i+1}
 
 CMAT=as.matrix(CMAT)
+
 saveRDS(CMAT,file=paste0('CMAT.RDS' ))
+library('gplots')
+heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
 
 ##########
 #load('Seurat_EXP_cluster.Robj')
@@ -124,12 +129,15 @@ saveRDS(CMAT,file=paste0('CMAT.RDS' ))
 #######################
 NCMAT=as.numeric(CMAT)
 SNCMAT=sort(NCMAT,decreasing=T)
+length(SNCMAT)*0.05
 
-CUTOFF=SNCMAT[1]
-
+TOP=round(length(SNCMAT)*0.05)
+CUTOFF=SNCMAT[TOP]
+#CUTOFF=SNCMAT[1]
 TMP=CMAT
 TMP[which(TMP<CUTOFF)]=0
 PAIR=c()
+SCORE=c()
 i=1
 while(i<=ncol(TMP)){
 
@@ -139,7 +147,8 @@ while(i<=ncol(TMP)){
     while(j<=nrow(TMP)){
         if(TMP[j,i]>0){
             this_l=j
-            PAIR=cbind(PAIR,c(this_l,this_r))}
+            PAIR=cbind(PAIR,c(this_l,this_r))
+            SCORE=c(SCORE,TMP[j,i])}
         j=j+1}
     }
 
@@ -147,6 +156,12 @@ while(i<=ncol(TMP)){
 
 PAIR=t(PAIR)
 colnames(PAIR)=c('L','R')
+
+PAIR=PAIR[order(SCORE,decreasing=T),]
+SCORE=SCORE[order(SCORE,decreasing=T)]
+SCORE=round(SCORE)
+
+
 #######################
 #load('Seurat_EXP_cluster.Robj')
 pbmc=EXP_cluster
@@ -161,13 +176,29 @@ i=i+1
 }
 
 
-plot(VEC,col='grey80',pch=16,cex=0.3)
+#library('gplots')
+#heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+
+
+par(mfrow=c(1,2))
+hist(as.numeric(CMAT),xlab='SCORE',breaks=100,freq=F,main='Histogram of SCORE')
+abline(v=CUTOFF,col='red')
+text(x=CUTOFF,y=0,pos=4,col='red',label=as.character(round(CUTOFF)))
+
+
+
+
+I=1
+while(I<=nrow(PAIR)){
+plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
+                                                 '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
+                                                 '; CUTOFF:',as.character(round(CUTOFF))))
 
 legend("topleft", legend=c("Ligand", "Recepter"),
        fill=c("red", "blue"))
 
 i=1
-while(i<=nrow(PAIR)){
+while(i<=I){
 this_pair=PAIR[i,]
 this_l=which(BIN_FLAG==this_pair[1])
 this_r=which(BIN_FLAG==this_pair[2])
@@ -176,21 +207,37 @@ this_r_vec=VEC[this_r,]
 
 start_point= this_l_vec[round(runif(1)*nrow(this_l_vec)),]
 end_point= this_r_vec[round(runif(1)*nrow(this_r_vec)),]
-points(this_l_vec,col='black',pch=16,cex=0.3)
-points(this_r_vec,col='black',pch=16,cex=0.3)
-  
 points(start_point[1],start_point[2],col='red',pch=16,cex=2)
 points(end_point[1],end_point[2],col='blue',pch=16,cex=2)
+points(this_l_vec,col='black',pch=16,cex=0.3)
+points(this_r_vec,col='black',pch=16,cex=0.3)
+
 segments(start_point[1], start_point[2], end_point[1],end_point[2],col='grey40',lty=3,lwd=1)
+
+#if(i!=1){
+#text(x=max(VEC[,1]),y=max(VEC[,2]),label=paste0('TOP:',as.character(i-1)),pos=2,col='white')  
+#text(x=max(VEC[,1]),y=min(VEC[,2]),label=paste0('SCORE:',as.character(SCORE[i-1])),pos=2,col='white')  }
+#text(x=min(VEC[,1]),y=min(VEC[,2]),label=paste0('PERCENT:',as.character(round((i-1)/length(SNCMAT)*100)),'%'),pos=4,col='white') 
+#}
+
 i=i+1}
+i=i-1
+text(x=max(VEC[,1]),y=max(VEC[,2]),label=paste0('TOP:',as.character(i)),pos=2)  
+text(x=max(VEC[,1]),y=min(VEC[,2]),label=paste0('SCORE:',as.character(SCORE[i])),pos=2) 
+text(x=min(VEC[,1]),y=min(VEC[,2]),label=paste0('PERCENT:',as.character(round((i)/length(SNCMAT)*100)),'%'),pos=4)  
+I=I+1
+}
 
 
 
 
 
 
-this_l_exp=PMAT[,64]
-this_r_exp=PMAT[,93]
+ALLOUT=c()
+
+
+this_l_exp=PMAT[,83]
+this_r_exp=PMAT[,30]
 
 tag_list=c()
 out_list=c()
@@ -212,8 +259,12 @@ i=i+1
 }
 
 names(out_list)=tag_list
+
+
+
+
 sort_out_list=sort(out_list,decreasing=T)
-sort_out_list
+sort_out_list[1:100]
 
 
 
@@ -278,6 +329,16 @@ TSNEPlot(object = pbmc,do.label=T,group.by='lr')
 
 
 ##########
+
+
+
+
+
+
+
+
+
+
 
 
 
