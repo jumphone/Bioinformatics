@@ -31,8 +31,8 @@ i=i+1
 EXP=pbmc.data
 GENE=rownames(EXP)
 
-
-
+saveRDS(BIN,'BIN.RDS')
+saveRDS(ONE,'ONE.RDS')
 ################################################
 
 ALL=c(as.character(LR[,1]),as.character(LR[,2]) )
