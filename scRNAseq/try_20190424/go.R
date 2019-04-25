@@ -131,7 +131,8 @@ NCMAT=as.numeric(CMAT)
 SNCMAT=sort(NCMAT,decreasing=T)
 length(SNCMAT)*0.05
 
-TOP=round(length(SNCMAT)*0.05)
+#TOP=round(length(SNCMAT)*0.05)
+TOP=50
 CUTOFF=SNCMAT[TOP]
 #CUTOFF=SNCMAT[1]
 TMP=CMAT
@@ -193,7 +194,7 @@ legend("topleft", legend=c("Ligand", "Recepter"),
        fill=c("red", "blue"))
 
 i=1
-while(i<=I){
+while(i<=nrow(PAIR)){
 this_pair=PAIR[i,]
 this_l=which(BIN_FLAG==this_pair[1])
 this_r=which(BIN_FLAG==this_pair[2])
@@ -219,9 +220,8 @@ i=i+1}
 
 
 
-library(animation)
-saveGIF({
- 
+##
+pdf('OK.pdf',width=10,height=7)
 
 I=1
 while(I<=nrow(PAIR)){
@@ -267,8 +267,7 @@ I=I+1
 
 
  
-}, movie.name = "OK.gif", interval = runif(30, 
-  0.01, 1))
+dev.off()
 #, nmax = 500
 
 
