@@ -40,7 +40,7 @@ ALL=c(as.character(LR[,1]),as.character(LR[,2]) )
 permu_gene_index=which(GENE %in% ALL)
 
 set.seed(123)
-TIME=1000
+TIME=10000
 MEAN=EXP[permu_gene_index,c(1:TIME)]*0
 colnames(MEAN)=as.character(c(1:TIME))
 i=1
@@ -125,7 +125,7 @@ saveRDS(CMAT,file=paste0('CMAT.RDS' ))
 NCMAT=as.numeric(CMAT)
 SNCMAT=sort(NCMAT,decreasing=T)
 
-CUTOFF=SNCMAT[200]
+CUTOFF=SNCMAT[1]
 
 TMP=CMAT
 TMP[which(TMP<CUTOFF)]=0
@@ -189,15 +189,31 @@ i=i+1}
 
 
 
+this_l_exp=PMAT[,64]
+this_r_exp=PMAT[,93]
+
+tag_list=c()
+out_list=c()
 
 
+i=1
+while(i<=nrow(LR)){
 
+this_l=LR[i,1]
+this_r=LR[i,2]
+this_tag=paste0(this_l,"_",this_r)
+if(this_l %in% GENE & this_r %in% GENE){
+    this_out=this_l_exp[which(names(this_l_exp)==this_l)]+this_r_exp[which(names(this_r_exp)==this_r)]
+    tag_list=c(tag_list,this_tag)
+    out_list=c(out_list,this_out)
+    }  
+  
+i=i+1
+}
 
-
-
-
-
-
+names(out_list)=tag_list
+sort_out_list=sort(out_list,decreasing=T)
+sort_out_list
 
 
 
