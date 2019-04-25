@@ -127,6 +127,11 @@ heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=
 #load('Seurat_EXP_cluster.Robj')
 
 #######################
+CMAT=readRDS('CMAT.RDS')
+BIN=readRDS('BIN.RDS')
+library(Seurat)
+load('Seurat_EXP_cluster.Robj')
+
 NCMAT=as.numeric(CMAT)
 SNCMAT=sort(NCMAT,decreasing=T)
 length(SNCMAT)*0.05
@@ -169,7 +174,7 @@ pbmc=EXP_cluster
 pbmc@meta.data$bin=BIN_FLAG
 VEC=pbmc@dr$tsne@cell.embeddings
 
-BIN_FLAG=rep(NA,ncol(EXP))
+BIN_FLAG=rep(NA,ncol(as.matrix(pbmc@data)))
 i=1
 while(i<=ncol(BIN)){
 BIN_FLAG[BIN[,i]]=i
@@ -225,8 +230,12 @@ i=i+1}
 
 I=1
 while(I<=nrow(PAIR)){
+
   
-png(paste0('OK/',as.character(I),'.png'),width=800,height=700)  
+NAME=as.character(I)
+if(length(NAME)==1){NAME=paste0('00',NAME)}
+if(length(NAME)==2){NAME=paste0('0',NAME)}
+png(paste0('OK/',NAME,'.png'),width=800,height=700)  
 
 plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
                                                  '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
@@ -271,6 +280,19 @@ dev.off()
 
 
  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
