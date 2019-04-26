@@ -137,7 +137,7 @@ SNCMAT=sort(NCMAT,decreasing=T)
 length(SNCMAT)*0.05
 
 #TOP=round(length(SNCMAT)*0.05)
-TOP=500
+TOP=200
 CUTOFF=SNCMAT[TOP]
 #CUTOFF=SNCMAT[1]
 TMP=CMAT
@@ -191,27 +191,51 @@ hist(as.numeric(CMAT),xlab='SCORE',breaks=100,freq=F,main='Histogram of SCORE')
 abline(v=CUTOFF,col='red')
 text(x=CUTOFF,y=0,pos=4,col='red',label=as.character(round(CUTOFF)))
 
+
 plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
                                                  '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
                                                  '; CUTOFF:',as.character(round(CUTOFF))))
 
 legend("topleft", legend=c("Ligand", "Recepter"),
-       fill=c("red", "blue"))
+       fill=c("yellowgreen", "cornflowerblue"))
 
+SIZE=c()
 i=1
 while(i<=nrow(PAIR)){
+#set.seed(123)
 this_pair=PAIR[i,]
 this_l=which(BIN_FLAG==this_pair[1])
 this_r=which(BIN_FLAG==this_pair[2])
 this_l_vec=VEC[this_l,]
 this_r_vec=VEC[this_r,]
 
-start_point= this_l_vec[round(runif(1)*nrow(this_l_vec)),]
-end_point= this_r_vec[round(runif(1)*nrow(this_r_vec)),]
-points(start_point[1],start_point[2],col='red',pch=16,cex=2)
-points(end_point[1],end_point[2],col='blue',pch=16,cex=2)
-points(this_l_vec,col='black',pch=16,cex=0.3)
-points(this_r_vec,col='black',pch=16,cex=0.3)
+#used_index=0.5
+#start_point= this_l_vec[round(used_index*nrow(this_l_vec)),]
+#end_point= this_r_vec[round(used_index*nrow(this_r_vec)),]
+library(cluster)
+  
+start_point=pam(this_l_vec, 1)$medoids
+end_point= pam(this_r_vec, 1)$medoids
+#transparent_ratio =  
+#points(start_point[1],start_point[2],pch=16,cex=2,col=rgb(255, 0, 0, transparent_ratio, maxColorValue=255) )
+#points(end_point[1],end_point[2],pch=16,cex=2,col=rgb(0, 0, 255, transparent_ratio, maxColorValue=255) )
+size_ratio = (nrow(PAIR)-i+1)/nrow(PAIR)
+SIZE=c(SIZE,size_ratio)
+base_size=4
+points(start_point[1],start_point[2],pch=16,cex=base_size*size_ratio, col='yellowgreen' )
+points(end_point[1],end_point[2],pch=16,cex=base_size*size_ratio, col='cornflowerblue' )
+ 
+points(this_l_vec,col='grey50',pch=16,cex=0.3)
+points(this_r_vec,col='grey50',pch=16,cex=0.3)
+#text(x= this_l_vec[,1],y=this_l_vec[,2],label= as.character(this_pair[1]),cex=0.3,col='grey50')
+#text(x= this_r_vec[,1],y=this_r_vec[,2],label= as.character(this_pair[2]),cex=0.3,col='grey50')
+  
+#coral1
+text_col='red'
+text_cex=1
+text(x=start_point[1],y=start_point[2],label=as.character(this_pair[1]),pos=as.numeric(this_pair[1])%%4+1, col=text_col,cex=text_cex)  
+text(x=end_point[1],y=end_point[2],label=as.character(this_pair[2]),pos=as.numeric(this_pair[2])%%4+1, col=text_col,cex=text_cex)  
+  
 
 segments(start_point[1], start_point[2], end_point[1],end_point[2],col='grey40',lty=3,lwd=1)
 i=i+1}
@@ -219,6 +243,41 @@ i=i+1}
 
 
 
+
+DimPlot(pbmc, reduction.use='tsne', group.by='ident', pt.size=0.1,do.label=T)
+CC=as.numeric(as.character(pbmc@ident))
+TAG=rep('NA',length(pbmc@ident))
+TAG[CC %in% c(23,19)]='Normal_Schwann'
+TAG[CC %in% c(9,2,14,17)]='Tumor'
+TAG[CC %in% c(22,20,24)]='Tumor_PlotCenter'
+TAG[CC %in% c(15,25,30)]='Endothelial'
+TAG[CC %in% c(0,3,10,13,8,16,11,28,18)]='Fibroblast'
+TAG[CC %in% c(1,4,5,6,7,21)]='Macrophage'
+TAG[CC %in% c(12,27,26)]='T_Cell'
+TAG[CC %in% c(29)]='B_Cell'
+
+pbmc@meta.data$newtag=TAG
+DimPlot(pbmc, reduction.use='tsne', group.by='newtag', pt.size=0.1,do.label=T)
+
+
+TT=table(TAG,BIN_FLAG)
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+tag=.get_tag_max(TT)
+
+
+PP=c()
+i=1
+while(i<=nrow(PAIR)){
+this_pair=PAIR[i,]
+this_tag1=tag[which(tag[,1]==as.character(this_pair[1])),2]
+this_tag2=tag[which(tag[,1]==as.character(this_pair[2])),2]
+PP=cbind(PP,c(this_tag1,this_tag2))
+i=i+1}
+PP=t(PP)
+
+OUTPUT=cbind(PAIR,PP,SIZE)
+colnames(OUTPUT)=c('L','R','LT','RT','SIZE')
+write.table(OUTPUT,file='OUTPUT.txt',row.names=F,col.names=T,sep='\t',quote=F)
 
 
 
