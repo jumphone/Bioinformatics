@@ -3,41 +3,41 @@ library(dplyr)
 library(Matrix)
 #pbmc.data <- read.table("MGH54_mat.txt", sep='\t',row.names=1, header=T)
 
+#load('Seurat_EXP_cluster.Robj')
+#pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
+#pbmc.data=as.matrix(EXP_cluster@scale.data)
+
+
 load('Seurat_EXP_cluster.Robj')
-
-
 pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
-pbmc.data=as.matrix(EXP_cluster@data[,which(colnames(EXP_cluster@data) %in% colnames(EXP_cluster@scale.data))])
+pbmc.data=as.matrix(EXP_cluster@data[which(rownames(EXP_cluster@data) %in% rownames(EXP_cluster@scale.data)),])
 
 used=which(as.numeric(as.character(EXP_cluster@ident)) %in% c(2,9,14,17,19,23))
 pbmc.raw.data=pbmc.raw.data[,used]
 pbmc.data=pbmc.data[,used]
 
 
-
 ###########
-#pbmc=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
+#tmp=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
 #mito.genes <- grep(pattern = "^Mt", x = rownames(x = pbmc@data), value = TRUE)
 #percent.mito <- colSums(pbmc@data[mito.genes, ]) / colSums(pbmc@data)
 #pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
-#pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  scale.factor = 10000)
-#pbmc <- FindVariableGenes(object = pbmc,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
-#length(x = pbmc@var.genes)
+#tmp <- NormalizeData(object = tmp, normalization.method = "LogNormalize",  scale.factor = 10000)
+#tmp <- FindVariableGenes(object = tmp,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+#length(x = tmp@var.genes)
 #pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI",'percent.mito'), genes.use = pbmc@var.genes)
 ###########
 
-#pbmc.data=as.matrix(EXP_cluster@data)
+#pbmc.data=EXP_cluster@data[which(rownames(EXP_cluster@data) %in% tmp@var.genes),]
 
 #LR=read.table('RL.txt',header=T,sep='\t')
-LR=read.table('RL_mouse.txt',header=T,sep='\t')
-
 
 
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
-rm(EXP_cluster)
-gc()
+#rm(EXP_cluster)
+#gc()
 
 ONE=.data2one(pbmc.raw.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
@@ -53,12 +53,24 @@ BIN=cbind(BIN,this_index)
 i=i+1
 }
 
+pbmc=EXP_cluster
+VEC=pbmc@dr$tsne@cell.embeddings
 
+BIN_FLAG=rep(NA,length(pbmc@ident))
+i=1
+while(i<=ncol(BIN)){
+BIN_FLAG[used][BIN[,i]]=i
+i=i+1
+}
+
+pbmc@meta.data$bin=BIN_FLAG
+DimPlot(pbmc,group.by='bin',reduction.use='tsne')
 
 saveRDS(BIN,'BIN.RDS')
 saveRDS(ONE,'ONE.RDS')
 ################################################
 
+LR=read.table('RL_mouse.txt',header=T,sep='\t')
 
 EXP=pbmc.data
 GENE=rownames(EXP)
