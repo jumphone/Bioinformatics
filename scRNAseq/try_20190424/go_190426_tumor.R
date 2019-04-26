@@ -219,6 +219,8 @@ abline(v=CUTOFF,col='red')
 text(x=CUTOFF,y=0,pos=4,col='red',label=as.character(round(CUTOFF)))
 '''
 
+
+png('COMMUNICATION_TUMOR.png',width=1200,height=1000)
 plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
                                                  '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
                                                  '; CUTOFF:',as.character(round(CUTOFF))))
@@ -266,7 +268,7 @@ text(x=end_point[1],y=end_point[2],label=as.character(this_pair[2]),pos=as.numer
 
 segments(start_point[1], start_point[2], end_point[1],end_point[2],col='grey40',lty=3,lwd=1)
 i=i+1}
-
+dev.off()
 
 
 
@@ -347,8 +349,9 @@ write.table(file='SIG_PAIR.txt',sort_out_list,col.names=F,row.names=T,quote=F,se
 
 
 
-vis_gene='Ccr6'
-boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used])
-boxplot(as.numeric(pbmc.raw.data[which(GENE==vis_gene),])~BIN_FLAG[used])
+vis_gene='Itga7'
+par(mfrow=c(1,2))
+plot(as.numeric(EXP[which(GENE==vis_gene),])~jitter(BIN_FLAG[used]))
+plot(as.numeric(pbmc.raw.data[which(GENE==vis_gene),])~jitter(BIN_FLAG[used]))
 
 
