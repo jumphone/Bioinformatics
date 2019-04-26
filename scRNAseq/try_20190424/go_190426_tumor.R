@@ -4,8 +4,15 @@ library(Matrix)
 #pbmc.data <- read.table("MGH54_mat.txt", sep='\t',row.names=1, header=T)
 
 load('Seurat_EXP_cluster.Robj')
+
+
 pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
 pbmc.data=as.matrix(EXP_cluster@scale.data)
+
+used=which(as.numeric(as.character(EXP_cluster@ident)) %in% c(2,9,14,17,19,23))
+pbmc.raw.data=pbmc.raw.data[,used]
+pbmc.data=pbmc.data[,used]
+
 #pbmc.data=as.matrix(EXP_cluster@data)
 
 #LR=read.table('RL.txt',header=T,sep='\t')
@@ -18,8 +25,8 @@ gc()
 
 ONE=.data2one(pbmc.raw.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
-WINDOW=300
-
+WINDOW= round(length(ONE)/50)
+#WINDOW=300
 RANK=rank(ONE)
 LENGTH=length(ONE)
 BIN=c()
@@ -43,11 +50,13 @@ permu_gene_index=which(GENE %in% ALL)
 
 set.seed(123)
 TIME=10000
-MEAN=EXP[permu_gene_index,c(1:TIME)]*0
+MEAN=  matrix(nrow=nrow(EXP[permu_gene_index,]),ncol=TIME)#EXP[permu_gene_index,c(1:TIME)]*0
+MEAN[which(is.na(MEAN))]=0
+rownames(MEAN)=rownames(EXP[permu_gene_index,])
 colnames(MEAN)=as.character(c(1:TIME))
 i=1
 while(i<=TIME){
-this_index=sample(ncol(EXP),WINDOW)
+this_index=sample(c(1:ncol(EXP)),WINDOW)
 this_mean=apply(EXP[permu_gene_index,this_index],1,mean)
 MEAN[,i]=this_mean
 i=i+1
@@ -127,17 +136,17 @@ heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=
 #load('Seurat_EXP_cluster.Robj')
 
 #######################
-CMAT=readRDS('CMAT.RDS')
-BIN=readRDS('BIN.RDS')
-library(Seurat)
-load('Seurat_EXP_cluster.Robj')
+#CMAT=readRDS('CMAT.RDS')
+#BIN=readRDS('BIN.RDS')
+#library(Seurat)
+#load('Seurat_EXP_cluster.Robj')
 
 NCMAT=as.numeric(CMAT)
 SNCMAT=sort(NCMAT,decreasing=T)
 length(SNCMAT)*0.05
 
 #TOP=round(length(SNCMAT)*0.05)
-TOP=200
+TOP=100
 CUTOFF=SNCMAT[TOP]
 #CUTOFF=SNCMAT[1]
 TMP=CMAT
@@ -171,19 +180,21 @@ SCORE=round(SCORE)
 #######################
 #load('Seurat_EXP_cluster.Robj')
 pbmc=EXP_cluster
-pbmc@meta.data$bin=BIN_FLAG
+#pbmc@meta.data$bin=BIN_FLAG
 VEC=pbmc@dr$tsne@cell.embeddings
 
 BIN_FLAG=rep(NA,ncol(as.matrix(pbmc@data)))
 i=1
 while(i<=ncol(BIN)){
-BIN_FLAG[BIN[,i]]=i
+BIN_FLAG[used][BIN[,i]]=i
 i=i+1
 }
 
-
+pbmc@meta.data$bin=BIN_FLAG
 #library('gplots')
 #heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+DimPlot(pbmc,group.by='bin',reduction.use='tsne')
+
 
 
 par(mfrow=c(2,1))
