@@ -333,6 +333,9 @@ this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
 
 tag_list=c()
 out_list=c()
+l_list=c()
+r_list=c()
+
 i=1
 while(i<=nrow(LR)){
 
@@ -341,14 +344,28 @@ this_r=LR[i,2]
 this_tag=paste0(this_l,"_",this_r)
 if(this_l %in% GENE & this_r %in% GENE){
     this_out=this_l_exp[which(names(this_l_exp)==this_l)]+this_r_exp[which(names(this_r_exp)==this_r)]
+    this_l_out=this_l_exp[which(names(this_l_exp)==this_l)]
+    this_r_out=this_r_exp[which(names(this_r_exp)==this_r)]
     tag_list=c(tag_list,this_tag)
     out_list=c(out_list,this_out)
+    l_list=c(l_list,this_l_out)
+    r_list=c(r_list,this_r_out)
     }  
   
 i=i+1
 }
 
 names(out_list)=tag_list
+
+set.seed(1234567)
+names(l_list)=paste0(tag_list,'_L')
+names(r_list)=paste0(tag_list,'_R')
+
+plot(r_list,l_list,pch=16,xlab='R',ylab='L',xlim=c(-0.3,4),ylim=c(-0.3,4))
+text(r_list,l_list,label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
+
+
+
 
 
 
@@ -370,6 +387,22 @@ vis_gene='Sdc4'
 par(mfrow=c(1,2))
 boxplot(as.numeric(EXP[which(rownames(EXP)==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16,las=2)
 boxplot(as.numeric(pbmc.raw.data[which(rownames(pbmc.raw.data)==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16,las=2)
+
+vis_gene='Serpine1'
+par(mfrow=c(1,2))
+boxplot(as.numeric(EXP[which(rownames(EXP)==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16,las=2)
+boxplot(as.numeric(pbmc.raw.data[which(rownames(pbmc.raw.data)==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16,las=2)
+
+vis_gene='Lrp1'
+par(mfrow=c(1,2))
+boxplot(as.numeric(EXP[which(rownames(EXP)==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16,las=2)
+boxplot(as.numeric(pbmc.raw.data[which(rownames(pbmc.raw.data)==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16,las=2)
+
+vis_gene='Lrp2'
+par(mfrow=c(1,2))
+boxplot(as.numeric(EXP[which(rownames(EXP)==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16,las=2)
+boxplot(as.numeric(pbmc.raw.data[which(rownames(pbmc.raw.data)==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16,las=2)
+
 dev.off()
 
 
