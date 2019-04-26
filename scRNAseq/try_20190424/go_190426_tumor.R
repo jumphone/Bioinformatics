@@ -361,7 +361,7 @@ set.seed(1234567)
 names(l_list)=paste0(tag_list,'_L')
 names(r_list)=paste0(tag_list,'_R')
 
-plot(r_list,l_list,pch=16,xlab='R',ylab='L',xlim=c(-0.3,4),ylim=c(-0.3,4))
+plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Normal',ylab='EXP of Ligand in Tumor',xlim=c(-0.3,4),ylim=c(-0.3,4))
 text(r_list,l_list,label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
 
 
