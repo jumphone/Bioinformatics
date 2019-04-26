@@ -193,15 +193,15 @@ i=i+1
 pbmc@meta.data$bin=BIN_FLAG
 #library('gplots')
 #heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
-DimPlot(pbmc,group.by='bin',reduction.use='tsne')
+#DimPlot(pbmc,group.by='bin',reduction.use='tsne')
 
 
-
+'''
 par(mfrow=c(2,1))
 hist(as.numeric(CMAT),xlab='SCORE',breaks=100,freq=F,main='Histogram of SCORE')
 abline(v=CUTOFF,col='red')
 text(x=CUTOFF,y=0,pos=4,col='red',label=as.character(round(CUTOFF)))
-
+'''
 
 plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
                                                  '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
@@ -289,3 +289,44 @@ PP=t(PP)
 OUTPUT=cbind(PAIR,PP,SIZE)
 colnames(OUTPUT)=c('L','R','LT','RT','SIZE')
 write.table(OUTPUT,file='OUTPUT.txt',row.names=F,col.names=T,sep='\t',quote=F)
+saveRDS(OUTPUT,file='OUTPUT.RDS')
+
+
+VP=OUTPUT[which(OUTPUT[,3]=='Tumor' & OUTPUT[,4]=='Normal_Schwann'),]
+
+
+
+
+this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
+this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
+
+tag_list=c()
+out_list=c()
+
+
+i=1
+while(i<=nrow(LR)){
+
+this_l=LR[i,1]
+this_r=LR[i,2]
+this_tag=paste0(this_l,"_",this_r)
+if(this_l %in% GENE & this_r %in% GENE){
+    this_out=this_l_exp[which(names(this_l_exp)==this_l)]+this_r_exp[which(names(this_r_exp)==this_r)]
+    tag_list=c(tag_list,this_tag)
+    out_list=c(out_list,this_out)
+    }  
+  
+i=i+1
+}
+
+names(out_list)=tag_list
+
+
+
+
+sort_out_list=sort(out_list,decreasing=T)
+sort_out_list[1:100]
+
+write.table(file='SIG_PAIR.txt',sort_out_list,col.names=F,row.names=T,quote=F,sep='\t')
+
+
