@@ -14,18 +14,16 @@ pbmc.raw.data=pbmc.raw.data[,used]
 pbmc.data=pbmc.data[,used]
 
 
+###########
 pbmc=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
-
 mito.genes <- grep(pattern = "^Mt", x = rownames(x = pbmc@data), value = TRUE)
 percent.mito <- colSums(pbmc@data[mito.genes, ]) / colSums(pbmc@data)
 pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
-
-
 pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  scale.factor = 10000)
 pbmc <- FindVariableGenes(object = pbmc,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
 length(x = pbmc@var.genes)
 pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI",'percent.mito'), genes.use = pbmc@var.genes)
-
+###########
 
 pbmc.data=pbmc@scale.data
 #pbmc.data=as.matrix(EXP_cluster@data)
