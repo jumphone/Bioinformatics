@@ -7,25 +7,25 @@ load('Seurat_EXP_cluster.Robj')
 
 
 pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
-pbmc.data=as.matrix(EXP_cluster@scale.data)
+pbmc.data=as.matrix(EXP_cluster@data[,which(colnames(EXP_cluster@data) %in% colnames(EXP_cluster@scale.data))])
 
 used=which(as.numeric(as.character(EXP_cluster@ident)) %in% c(2,9,14,17,19,23))
 pbmc.raw.data=pbmc.raw.data[,used]
 pbmc.data=pbmc.data[,used]
 
 
+
 ###########
-pbmc=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
-mito.genes <- grep(pattern = "^Mt", x = rownames(x = pbmc@data), value = TRUE)
-percent.mito <- colSums(pbmc@data[mito.genes, ]) / colSums(pbmc@data)
-pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
-pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  scale.factor = 10000)
-pbmc <- FindVariableGenes(object = pbmc,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
-length(x = pbmc@var.genes)
-pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI",'percent.mito'), genes.use = pbmc@var.genes)
+#pbmc=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
+#mito.genes <- grep(pattern = "^Mt", x = rownames(x = pbmc@data), value = TRUE)
+#percent.mito <- colSums(pbmc@data[mito.genes, ]) / colSums(pbmc@data)
+#pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
+#pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  scale.factor = 10000)
+#pbmc <- FindVariableGenes(object = pbmc,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+#length(x = pbmc@var.genes)
+#pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI",'percent.mito'), genes.use = pbmc@var.genes)
 ###########
 
-pbmc.data=pbmc@scale.data
 #pbmc.data=as.matrix(EXP_cluster@data)
 
 #LR=read.table('RL.txt',header=T,sep='\t')
@@ -53,13 +53,15 @@ BIN=cbind(BIN,this_index)
 i=i+1
 }
 
-EXP=pbmc.data
-GENE=rownames(EXP)
+
 
 saveRDS(BIN,'BIN.RDS')
 saveRDS(ONE,'ONE.RDS')
 ################################################
 
+
+EXP=pbmc.data
+GENE=rownames(EXP)
 ALL=c(as.character(LR[,1]),as.character(LR[,2]) )
 
 permu_gene_index=which(GENE %in% ALL)
