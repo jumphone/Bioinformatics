@@ -10,11 +10,11 @@ library(Matrix)
 
 load('Seurat_EXP_cluster.Robj')
 pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
-#pbmc.data=as.matrix(EXP_cluster@data)
+pbmc.data=as.matrix(EXP_cluster@data)
 
 used=which(as.numeric(as.character(EXP_cluster@ident)) %in% c(2,9,14,17,19,23))
 pbmc.raw.data=pbmc.raw.data[,used]
-#pbmc.data=pbmc.data[,used]
+pbmc.data=pbmc.data[,used]
 
 
 ###########
@@ -30,6 +30,7 @@ tmp <- ScaleData(object = tmp, vars.to.regress = c("nUMI",'percent.mito'), genes
 pbmc.nonscale.data=as.matrix(EXP_cluster@data)[,used]
 pbmc.data=tmp@scale.data #pbmc.data[which(rownames(pbmc.data) %in% tmp@var.genes),]
 
+#pbmc.data=pbmc.data[which(rownames(pbmc.data) %in% tmp@var.genes),]
 #LR=read.table('RL.txt',header=T,sep='\t')
 
 
@@ -323,19 +324,15 @@ colnames(OUTPUT)=c('L','R','LT','RT','SIZE')
 write.table(OUTPUT,file='OUTPUT.txt',row.names=F,col.names=T,sep='\t',quote=F)
 saveRDS(OUTPUT,file='OUTPUT.RDS')
 
+########################
 
 VP=OUTPUT[which(OUTPUT[,3]=='Tumor' & OUTPUT[,4]=='Normal_Schwann'),]
-
-
-
 
 this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
 this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
 
 tag_list=c()
 out_list=c()
-
-
 i=1
 while(i<=nrow(LR)){
 
@@ -363,14 +360,17 @@ write.table(file='SIG_PAIR.txt',sort_out_list,col.names=F,row.names=T,quote=F,se
 
 
 
+pdf('EXP.pdf',width=16,height=6)
+vis_gene='Thbs1'
+par(mfrow=c(1,2))
+boxplot(as.numeric(EXP[which(rownames(EXP)==vis_gene),])~BIN_FLAG[used],ylab='Nomalized_Expression',main=vis_gene,pch=16,las=2)
+boxplot(as.numeric(pbmc.raw.data[which(rownames(pbmc.raw.data)==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16,las=2)
+
 vis_gene='Sdc4'
-boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16)
-
-vis_gene='Tnc'
-boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16)
-
-vis_gene='Cd9'
-boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16)
+par(mfrow=c(1,2))
+boxplot(as.numeric(EXP[which(rownames(EXP)==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16,las=2)
+boxplot(as.numeric(pbmc.raw.data[which(rownames(pbmc.raw.data)==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16,las=2)
+dev.off()
 
 
 
@@ -379,9 +379,6 @@ boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Normalized_
 
 
 
-
-vis_gene='Cd9'
-boxplot(as.numeric(pbmc.raw.data[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16)
 
 
 
