@@ -10,25 +10,25 @@ library(Matrix)
 
 load('Seurat_EXP_cluster.Robj')
 pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
-pbmc.data=as.matrix(EXP_cluster@data[which(rownames(EXP_cluster@data) %in% rownames(EXP_cluster@scale.data)),])
+#pbmc.data=as.matrix(EXP_cluster@data)
 
 used=which(as.numeric(as.character(EXP_cluster@ident)) %in% c(2,9,14,17,19,23))
 pbmc.raw.data=pbmc.raw.data[,used]
-pbmc.data=pbmc.data[,used]
+#pbmc.data=pbmc.data[,used]
 
 
 ###########
-#tmp=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
-#mito.genes <- grep(pattern = "^Mt", x = rownames(x = pbmc@data), value = TRUE)
-#percent.mito <- colSums(pbmc@data[mito.genes, ]) / colSums(pbmc@data)
-#pbmc <- AddMetaData(object = pbmc, metadata = percent.mito, col.name = "percent.mito")
-#tmp <- NormalizeData(object = tmp, normalization.method = "LogNormalize",  scale.factor = 10000)
-#tmp <- FindVariableGenes(object = tmp,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
-#length(x = tmp@var.genes)
-#pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI",'percent.mito'), genes.use = pbmc@var.genes)
+tmp=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
+mito.genes <- grep(pattern = "^Mt", x = rownames(x = tmp@data), value = TRUE)
+percent.mito <- colSums(tmp@data[mito.genes, ]) / colSums(tmp@data)
+tmp <- AddMetaData(object = tmp, metadata = percent.mito, col.name = "percent.mito")
+tmp <- NormalizeData(object = tmp, normalization.method = "LogNormalize",  scale.factor = 10000)
+tmp <- FindVariableGenes(object = tmp,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+length(x = tmp@var.genes)
+tmp <- ScaleData(object = tmp, vars.to.regress = c("nUMI",'percent.mito'), genes.use = tmp@var.genes)
 ###########
-
-#pbmc.data=EXP_cluster@data[which(rownames(EXP_cluster@data) %in% tmp@var.genes),]
+pbmc.nonscale.data=as.matrix(EXP_cluster@data)[,used]
+pbmc.data=tmp@scale.data #pbmc.data[which(rownames(pbmc.data) %in% tmp@var.genes),]
 
 #LR=read.table('RL.txt',header=T,sep='\t')
 
@@ -64,7 +64,7 @@ i=i+1
 }
 
 pbmc@meta.data$bin=BIN_FLAG
-DimPlot(pbmc,group.by='bin',reduction.use='tsne')
+DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
 
 saveRDS(BIN,'BIN.RDS')
 saveRDS(ONE,'ONE.RDS')
@@ -300,7 +300,7 @@ TAG[CC %in% c(12,27,26)]='T_Cell'
 TAG[CC %in% c(29)]='B_Cell'
 
 pbmc@meta.data$newtag=TAG
-DimPlot(pbmc, reduction.use='tsne', group.by='newtag', pt.size=0.1,do.label=T)
+#DimPlot(pbmc, reduction.use='tsne', group.by='newtag', pt.size=0.1,do.label=T)
 
 
 TT=table(TAG,BIN_FLAG)
@@ -363,9 +363,27 @@ write.table(file='SIG_PAIR.txt',sort_out_list,col.names=F,row.names=T,quote=F,se
 
 
 
-vis_gene='Itga7'
-par(mfrow=c(1,2))
-plot(as.numeric(EXP[which(GENE==vis_gene),])~jitter(BIN_FLAG[used]))
-plot(as.numeric(pbmc.raw.data[which(GENE==vis_gene),])~jitter(BIN_FLAG[used]))
+vis_gene='Sdc4'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16)
+
+vis_gene='Tnc'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16)
+
+vis_gene='Cd9'
+boxplot(as.numeric(EXP[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Normalized_Expression',main=vis_gene,pch=16)
 
 
+
+
+
+
+
+
+
+vis_gene='Cd9'
+boxplot(as.numeric(pbmc.raw.data[which(GENE==vis_gene),])~BIN_FLAG[used],ylab='Raw_Expression',main=vis_gene,pch=16)
+
+
+
+
+#plot(as.numeric(pbmc.raw.data[which(GENE==vis_gene),])~jitter(BIN_FLAG[used]))
