@@ -225,7 +225,7 @@ text(x=CUTOFF,y=0,pos=4,col='red',label=as.character(round(CUTOFF)))
 '''
 
 
-png('COMMUNICATION_TUMOR.png',width=1200,height=1000)
+png('COMMUNICATION.png',width=1200,height=1000)
 plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
                                                  '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
                                                  '; CUTOFF:',as.character(round(CUTOFF))))
