@@ -319,12 +319,11 @@ dev.off()
 
 
 
-
-
-
-
-
-
+png('PIE.png',width=1200,height=1200)
+TOT=paste0(OUTPUT[,3],'_to_',OUTPUT[,4])
+par(mar=c(15,15,15,15))
+pie(sort(table(TOT)))
+dev.off()
 
 
 
