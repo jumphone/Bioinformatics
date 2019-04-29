@@ -313,8 +313,9 @@ saveRDS(OUTPUT,file='OUTPUT.RDS')
 
 ########################
 
+png('LABEL.png',width=1200,height=1000)
 DimPlot(pbmc,group.by='RohitAnnotation',reduction.use='tsne',do.label=T)
-
+dev.off()
 
 
 
