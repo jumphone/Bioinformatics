@@ -9,26 +9,16 @@ library(Matrix)
 
 
 load('NewWeinanWorkspace.RData')
-pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
-pbmc.data=as.matrix(EXP_cluster@data)
 
-used=which(as.numeric(as.character(EXP_cluster@ident)) %in% c(2,9,14,17,19,23))
-pbmc.raw.data=pbmc.raw.data[,used]
-pbmc.data=pbmc.data[,used]
+pbmc=mmap
+pbmc.raw.data=as.matrix(pbmc@raw.data[,which(colnames(pbmc@raw.data) %in% colnames(pbmc@scale.data))])
+pbmc.data=as.matrix(pbmc@scale.data)
 
+used=c(1:ncol(pbmc.raw.data))
 
 ###########
-tmp=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
-mito.genes <- grep(pattern = "^Mt", x = rownames(x = tmp@data), value = TRUE)
-percent.mito <- colSums(tmp@data[mito.genes, ]) / colSums(tmp@data)
-tmp <- AddMetaData(object = tmp, metadata = percent.mito, col.name = "percent.mito")
-tmp <- NormalizeData(object = tmp, normalization.method = "LogNormalize",  scale.factor = 10000)
-tmp <- FindVariableGenes(object = tmp,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
-length(x = tmp@var.genes)
-tmp <- ScaleData(object = tmp, vars.to.regress = c("nUMI",'percent.mito'), genes.use = tmp@var.genes)
-###########
-pbmc.nonscale.data=as.matrix(EXP_cluster@data)[,used]
-pbmc.data=tmp@scale.data #pbmc.data[which(rownames(pbmc.data) %in% tmp@var.genes),]
+#pbmc.nonscale.data=as.matrix(EXP_cluster@data)[,used]
+#pbmc.data=tmp@scale.data #pbmc.data[which(rownames(pbmc.data) %in% tmp@var.genes),]
 
 #pbmc.data=pbmc.data[which(rownames(pbmc.data) %in% tmp@var.genes),]
 #LR=read.table('RL.txt',header=T,sep='\t')
@@ -42,7 +32,7 @@ source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
 ONE=.data2one(pbmc.raw.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
-WINDOW= round(length(ONE)/50)
+WINDOW= round(length(ONE)/200)
 #WINDOW=300
 RANK=rank(ONE)
 LENGTH=length(ONE)
@@ -54,7 +44,7 @@ BIN=cbind(BIN,this_index)
 i=i+1
 }
 
-pbmc=EXP_cluster
+pbmc=mmap
 VEC=pbmc@dr$tsne@cell.embeddings
 
 BIN_FLAG=rep(NA,length(pbmc@ident))
@@ -177,7 +167,7 @@ SNCMAT=sort(NCMAT,decreasing=T)
 length(SNCMAT)*0.05
 
 #TOP=round(length(SNCMAT)*0.05)
-TOP=100
+TOP=1000
 CUTOFF=SNCMAT[TOP]
 #CUTOFF=SNCMAT[1]
 TMP=CMAT
@@ -288,19 +278,15 @@ dev.off()
 
 
 
-DimPlot(pbmc, reduction.use='tsne', group.by='ident', pt.size=0.1,do.label=T)
-CC=as.numeric(as.character(pbmc@ident))
-TAG=rep('NA',length(pbmc@ident))
-TAG[CC %in% c(23,19)]='Normal_Schwann'
-TAG[CC %in% c(9,2,14,17)]='Tumor'
-TAG[CC %in% c(22,20,24)]='Tumor_PlotCenter'
-TAG[CC %in% c(15,25,30)]='Endothelial'
-TAG[CC %in% c(0,3,10,13,8,16,11,28,18)]='Fibroblast'
-TAG[CC %in% c(1,4,5,6,7,21)]='Macrophage'
-TAG[CC %in% c(12,27,26)]='T_Cell'
-TAG[CC %in% c(29)]='B_Cell'
 
-pbmc@meta.data$newtag=TAG
+
+
+
+
+DimPlot(pbmc, reduction.use='tsne', group.by='ident', pt.size=0.1,do.label=T)
+
+TAG=pbmc@meta.data$RohitAnnotatio
+pbmc@meta.data$newtag=pbmc@meta.data$RohitAnnotatio
 #DimPlot(pbmc, reduction.use='tsne', group.by='newtag', pt.size=0.1,do.label=T)
 
 
@@ -325,6 +311,25 @@ write.table(OUTPUT,file='OUTPUT.txt',row.names=F,col.names=T,sep='\t',quote=F)
 saveRDS(OUTPUT,file='OUTPUT.RDS')
 
 ########################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 VP=OUTPUT[which(OUTPUT[,3]=='Tumor' & OUTPUT[,4]=='Normal_Schwann'),]
 
