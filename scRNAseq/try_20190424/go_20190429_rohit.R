@@ -286,7 +286,8 @@ dev.off()
 DimPlot(pbmc, reduction.use='tsne', group.by='ident', pt.size=0.1,do.label=T)
 
 TAG=pbmc@meta.data$RohitAnnotatio
-pbmc@meta.data$newtag=pbmc@meta.data$RohitAnnotatio
+TAG[which(TAG=='Border\nMacrophages')]='Border_Macrophages'
+pbmc@meta.data$newtag=TAG
 #DimPlot(pbmc, reduction.use='tsne', group.by='newtag', pt.size=0.1,do.label=T)
 
 
