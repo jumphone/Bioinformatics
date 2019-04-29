@@ -8,7 +8,7 @@ library(Matrix)
 #pbmc.data=as.matrix(EXP_cluster@scale.data)
 
 
-load('Seurat_EXP_cluster.Robj')
+load('NewWeinanWorkspace.RData')
 pbmc.raw.data=as.matrix(EXP_cluster@raw.data[,which(colnames(EXP_cluster@raw.data) %in% colnames(EXP_cluster@scale.data))])
 pbmc.data=as.matrix(EXP_cluster@data)
 
