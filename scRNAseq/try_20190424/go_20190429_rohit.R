@@ -334,7 +334,7 @@ dev.off()
 
 
 
-VP=OUTPUT[which(OUTPUT[,3]=='Tumor' & OUTPUT[,4]=='Normal_Schwann'),]
+VP=OUTPUT[which(OUTPUT[,3]=='Microglia' & OUTPUT[,4]=='Tumor Cells'),]
 
 this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
 this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
@@ -365,12 +365,74 @@ i=i+1
 
 names(out_list)=tag_list
 
+png('Microglia_Tumor.png',width=1200,height=1000)
 set.seed(1234567)
 names(l_list)=paste0(tag_list,'_L')
 names(r_list)=paste0(tag_list,'_R')
 
-plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Normal',ylab='EXP of Ligand in Tumor',xlim=c(-0.3,4),ylim=c(-0.3,4))
+#plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Tumor Cell',ylab='EXP of Ligand in Microglia',xlim=c(-0.3,4),ylim=c(-0.3,4))
+plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Tumor Cell',ylab='EXP of Ligand in Microglia')
 text(r_list,l_list,label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
+dev.off()
+
+
+
+
+
+VP=OUTPUT[which(OUTPUT[,3]=='Tumor Cells' & OUTPUT[,4]=='Monocyte-Derived Cells'),]
+
+this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
+this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
+
+tag_list=c()
+out_list=c()
+l_list=c()
+r_list=c()
+
+i=1
+while(i<=nrow(LR)){
+
+this_l=LR[i,1]
+this_r=LR[i,2]
+this_tag=paste0(this_l,"_",this_r)
+if(this_l %in% GENE & this_r %in% GENE){
+    this_out=this_l_exp[which(names(this_l_exp)==this_l)]+this_r_exp[which(names(this_r_exp)==this_r)]
+    this_l_out=this_l_exp[which(names(this_l_exp)==this_l)]
+    this_r_out=this_r_exp[which(names(this_r_exp)==this_r)]
+    tag_list=c(tag_list,this_tag)
+    out_list=c(out_list,this_out)
+    l_list=c(l_list,this_l_out)
+    r_list=c(r_list,this_r_out)
+    }  
+  
+i=i+1
+}
+
+names(out_list)=tag_list
+
+png('Tumor_MonocyteDerived.png',width=1200,height=1000)
+#set.seed(12345)
+names(l_list)=paste0(tag_list,'_L')
+names(r_list)=paste0(tag_list,'_R')
+
+#plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Tumor Cell',ylab='EXP of Ligand in Microglia',xlim=c(-0.3,4),ylim=c(-0.3,4))
+plot(r_list,l_list,pch=16,xlab='EXP of Receptor in MonocyteDerived',ylab='EXP of Ligand in Tumor')
+text(r_list,l_list,label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
