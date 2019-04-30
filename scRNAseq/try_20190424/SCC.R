@@ -166,9 +166,7 @@ CCPlot<-function(VEC, PAIR, BINTAG){
     
     library(cluster)
     BIN_FLAG=BINTAG
-    plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
-                                                 '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
-                                                 '; CUTOFF:',as.character(round(CUTOFF))))
+    plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('Cell Communication Plot (CCPlot)'))
 
     legend("topleft", legend=c("Ligand", "Recepter"),fill=c("green", "blue"))
 
@@ -185,7 +183,7 @@ CCPlot<-function(VEC, PAIR, BINTAG){
   
         start_point=pam(this_l_vec, 1)$medoids
         end_point= pam(this_r_vec, 1)$medoids
-
+        size_ratio = (nrow(PAIR)-i+1)/nrow(PAIR)
         base_size=4
 
         transparent_ratio =150
