@@ -12,6 +12,8 @@ pbmc.data=as.matrix(pbmc@scale.data)
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 ONE=.data2one(pbmc.raw.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
+#ONE=readRDS('ONE.RDS')
+
 
 OUT=getBIN(ONE)
 BIN=OUT$BIN
@@ -34,37 +36,16 @@ CMAT=getCMAT(EXP,LR,PMAT)
 
 
 
-CUTOFF=0  #SNCMAT[TOP]
-#CUTOFF=SNCMAT[1]
-TMP=CMAT
-TMP[which(TMP<CUTOFF)]=0
-PAIR=c()
-SCORE=c()
-i=1
-while(i<=ncol(TMP)){
+OUT=getPAIR(CMAT)
 
-    if(max(TMP[,i])>0){
-    this_r=i
-    j=1
-    while(j<=nrow(TMP)){
-        if(TMP[j,i]>0){
-            this_l=j
-            PAIR=cbind(PAIR,c(this_l,this_r))
-            SCORE=c(SCORE,TMP[j,i])}
-        j=j+1}
-    }
-
-    i=i+1}
-
-PAIR=t(PAIR)
-colnames(PAIR)=c('L','R')
-
-PAIR=PAIR[order(SCORE,decreasing=T),]
-SCORE=SCORE[order(SCORE,decreasing=T)]
-SCORE=round(SCORE)
+PAIR=OUT$PAIR
+SCORE=OUT$SCORE
+RANK=OUT$RANK
 
 
-PAIR=PAIR[which(SCORE>0),]
+
+
+
 
 
 TAG=as.character(pbmc@ident)#pbmc@meta.data$RohitAnnotation
