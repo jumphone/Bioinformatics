@@ -3,10 +3,10 @@ getBIN <- function(ONE, NUM=100){
 
     RANK=rank(ONE)
     LENGTH=length(ONE)
-    WINDOW= LENGTH%/%(NUM)
+    WINDOW= round(LENGTH/(NUM))
     BIN=c()
     i=1
-    while(i<=NUM){
+    while(i<=round(LENGTH/(WINDOW))){
         this_index=which((i-1)*WINDOW< RANK & i*WINDOW>=RANK)
         BIN=cbind(BIN,this_index)
         i=i+1
@@ -32,7 +32,7 @@ getMEAN <- function(EXP, LR, NUM=100,TIME=10000, SEED=123){
     GENE=rownames(EXP)  
     TIME=TIME
     permu_gene_index=which(GENE %in% ALL)
-    WINDOW= LENGTH%/%(NUM)
+    WINDOW= round(LENGTH/(NUM))
   
     MEAN=matrix(nrow=nrow(EXP[permu_gene_index,]),ncol=TIME)
     MEAN[which(is.na(MEAN))]=0
