@@ -161,3 +161,46 @@ getPAIR <- function(CMAT){
     }
 
 
+
+CCPlot<-function(VEC, PAIR, BINTAG){
+    
+    library(cluster)
+    BIN_FLAG=BINTAG
+    plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP), 
+                                                 '; PERCENT:', as.character(round(TOP/length(SNCMAT)*100)),'%',
+                                                 '; CUTOFF:',as.character(round(CUTOFF))))
+
+    legend("topleft", legend=c("Ligand", "Recepter"),fill=c("green", "blue"))
+
+    i=1
+    while(i<=nrow(PAIR)){
+
+        this_pair=PAIR[i,]
+        this_l=which(BIN_FLAG==this_pair[1])
+        this_r=which(BIN_FLAG==this_pair[2])
+        this_l_vec=VEC[this_l,]
+        this_r_vec=VEC[this_r,]
+
+        
+  
+        start_point=pam(this_l_vec, 1)$medoids
+        end_point= pam(this_r_vec, 1)$medoids
+
+        base_size=4
+
+        transparent_ratio =150
+        points(start_point[1],start_point[2],pch=16,cex=base_size*size_ratio, col=rgb(0, 255, 0, transparent_ratio, maxColorValue=255)  )
+        points(end_point[1],end_point[2],pch=16,cex=base_size*size_ratio, col=rgb(0, 0, 255, transparent_ratio, maxColorValue=255) )
+
+        points(this_l_vec,col='grey50',pch=16,cex=0.3)
+        points(this_r_vec,col='grey50',pch=16,cex=0.3)
+
+        text_col='red'
+        text_cex=1
+        text(x=start_point[1],y=start_point[2],label=as.character(this_pair[1]),pos=as.numeric(this_pair[1])%%4+1, col=text_col,cex=text_cex)  
+        text(x=end_point[1],y=end_point[2],label=as.character(this_pair[2]),pos=as.numeric(this_pair[2])%%4+1, col=text_col,cex=text_cex)  
+        segments(start_point[1], start_point[2], end_point[1],end_point[2],col='grey40',lty=3,lwd=1)
+   
+        i=i+1}
+
+    }
