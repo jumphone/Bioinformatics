@@ -14,7 +14,7 @@ getBIN <- function(ONE, NUM=100){
     TAG=rep(NA,length(ONE))
     i=1
     while(i<=ncol(BIN)){
-        TAG[used][BIN[,i]]=i
+        TAG[BIN[,i]]=i
         i=i+1
         } 
     OUT=list(BIN=BIN,TAG=TAG,WINDOW=WINDOW)
