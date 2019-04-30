@@ -320,15 +320,152 @@ DimPlot(pbmc,group.by='newtag',reduction.use='umap',do.label=T)
 dev.off()
 
 
-
 png('PIE.png',width=1200,height=1200)
 TOT=paste0(OUTPUT[,3],'_to_',OUTPUT[,4])
 par(mar=c(15,15,15,15))
 pie(sort(table(TOT)))
 dev.off()
 
+#######################
+#load('Seurat_EXP_cluster.Robj')
+pbmc=EXP_cluster
+#pbmc@meta.data$bin=BIN_FLAG
+#VEC=pbmc@dr$tsne@cell.embeddings
+VEC=pbmc@dr$umap@cell.embeddings
+BIN_FLAG=rep(NA,ncol(as.matrix(pbmc@data)))
+i=1
+while(i<=ncol(BIN)){
+BIN_FLAG[used][BIN[,i]]=i
+i=i+1
+}
+
+pbmc@meta.data$bin=BIN_FLAG
 
 
+
+
+
+
+
+
+
+
+##############
+#TOP=1000
+CUTOFF=0  #SNCMAT[TOP]
+#CUTOFF=SNCMAT[1]
+TMP=CMAT
+TMP[which(TMP<CUTOFF)]=0
+PAIR=c()
+SCORE=c()
+i=1
+while(i<=ncol(TMP)){
+
+    if(max(TMP[,i])>0){
+    this_r=i
+    j=1
+    while(j<=nrow(TMP)){
+        if(TMP[j,i]>0){
+            this_l=j
+            PAIR=cbind(PAIR,c(this_l,this_r))
+            SCORE=c(SCORE,TMP[j,i])}
+        j=j+1}
+    }
+
+    i=i+1}
+
+PAIR=t(PAIR)
+colnames(PAIR)=c('L','R')
+
+PAIR=PAIR[order(SCORE,decreasing=T),]
+SCORE=SCORE[order(SCORE,decreasing=T)]
+SCORE=round(SCORE)
+
+
+PAIR=PAIR[which(SCORE>0),]
+
+
+TAG=as.character(pbmc@ident)#pbmc@meta.data$RohitAnnotation
+TAG[which(TAG=='Pericyte/\nFibroblast')]='Pericyte Fibroblast'
+
+TT=table(TAG,BIN_FLAG)
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+tag=.get_tag_max(TT)
+
+PP=c()
+i=1
+while(i<=nrow(PAIR)){
+this_pair=PAIR[i,]
+this_tag1=tag[which(tag[,1]==as.character(this_pair[1])),2]
+this_tag2=tag[which(tag[,1]==as.character(this_pair[2])),2]
+PP=cbind(PP,c(this_tag1,this_tag2))
+i=i+1}
+PP=t(PP)
+
+
+YES=cbind(PAIR,PP)
+TOT=paste0(YES[,3],'_to_',YES[,4])
+CCLR=names(sort(table(TOT),decreasing=T)[which(sort(table(TOT),decreasing=T)>3)])
+
+
+par(mfrow=c(round((length(CCLR)+1)/2),2))
+i=1
+while(i<=length(CCLR)){
+this_cclr=CCLR[i]
+this_p=ks.test(which(TOT==this_cclr),1:length(TOT),alternative='greater')$p.value
+this_p=signif(this_p, digits = 2)
+this_p=format(this_p, scientific = T)
+plot(main=paste0(as.character(i),': ',this_cclr,'; KS p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col=i)
+ 
+i=i+1}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+par(mfrow=c(5,5))
+STEP=500
+i=1
+while(i<=nrow(YES)){
+  
+TOT=paste0(YES[1:(i+STEP-1),3],'_to_',YES[1:(i+STEP-1),4])
+par(mar=c(15,15,15,15))
+pie(sort(table(TOT)))
+
+i=i+STEP}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############
 
 
 
