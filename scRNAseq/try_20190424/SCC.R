@@ -150,7 +150,7 @@ getPAIR <- function(CMAT){
 
     PAIR=PAIR[order(SCORE,decreasing=T),]
     SCORE=SCORE[order(SCORE,decreasing=T)]
-    SCORE=round(SCORE)
+    
 
     PAIR=PAIR[which(SCORE>0),]
     SCORE=SCORE[which(SCORE>0)]
