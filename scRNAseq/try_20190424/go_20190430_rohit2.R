@@ -8,9 +8,9 @@ library(Matrix)
 #pbmc.data=as.matrix(EXP_cluster@scale.data)
 
 
-load('NewWeinanWorkspace.RData')
+load('HDN_Wkspace.RData')
 
-pbmc=mmap
+pbmc=tumor2
 pbmc.raw.data=as.matrix(pbmc@raw.data[,which(colnames(pbmc@raw.data) %in% colnames(pbmc@scale.data))])
 pbmc.data=as.matrix(pbmc@scale.data)
 
@@ -32,7 +32,7 @@ source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
 ONE=.data2one(pbmc.raw.data, rownames(pbmc.data), CPU=4, PCNUM=50, SEED=123,  PP=30)
 
-WINDOW= round(length(ONE)/200)
+WINDOW= round(length(ONE)/100)
 #WINDOW=300
 RANK=rank(ONE)
 LENGTH=length(ONE)
@@ -55,8 +55,9 @@ i=i+1
 }
 
 pbmc@meta.data$bin=BIN_FLAG
-DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
-
+png('ID.png',width=1200,height=1000)
+DimPlot(pbmc,group.by='bin',reduction.use='umap',do.label=T)
+dev.off()
 saveRDS(BIN,'BIN.RDS')
 saveRDS(ONE,'ONE.RDS')
 ################################################
@@ -150,9 +151,10 @@ i=i+1}
 CMAT=as.matrix(CMAT)
 
 saveRDS(CMAT,file=paste0('CMAT.RDS' ))
+png('HEAT.png',width=1200,height=1000)
 library('gplots')
 heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
-
+dev.off()
 ##########
 #load('Seurat_EXP_cluster.Robj')
 
@@ -202,8 +204,8 @@ SCORE=round(SCORE)
 #load('Seurat_EXP_cluster.Robj')
 pbmc=EXP_cluster
 #pbmc@meta.data$bin=BIN_FLAG
-VEC=pbmc@dr$tsne@cell.embeddings
-
+#VEC=pbmc@dr$tsne@cell.embeddings
+VEC=pbmc@dr$umap@cell.embeddings
 BIN_FLAG=rep(NA,ncol(as.matrix(pbmc@data)))
 i=1
 while(i<=ncol(BIN)){
@@ -231,7 +233,7 @@ plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('TOP:',as.character(TOP),
                                                  '; CUTOFF:',as.character(round(CUTOFF))))
 
 legend("topleft", legend=c("Ligand", "Recepter"),
-       fill=c("yellowgreen", "cornflowerblue"))
+       fill=c("green", "blue"))
 
 SIZE=c()
 i=1
@@ -250,15 +252,15 @@ library(cluster)
   
 start_point=pam(this_l_vec, 1)$medoids
 end_point= pam(this_r_vec, 1)$medoids
-#transparent_ratio =  
-#points(start_point[1],start_point[2],pch=16,cex=2,col=rgb(255, 0, 0, transparent_ratio, maxColorValue=255) )
-#points(end_point[1],end_point[2],pch=16,cex=2,col=rgb(0, 0, 255, transparent_ratio, maxColorValue=255) )
 size_ratio = (nrow(PAIR)-i+1)/nrow(PAIR)
 SIZE=c(SIZE,size_ratio)
 base_size=4
-points(start_point[1],start_point[2],pch=16,cex=base_size*size_ratio, col='yellowgreen' )
-points(end_point[1],end_point[2],pch=16,cex=base_size*size_ratio, col='cornflowerblue' )
- 
+#points(start_point[1],start_point[2],pch=16,cex=base_size*size_ratio, col='yellowgreen' )
+#points(end_point[1],end_point[2],pch=16,cex=base_size*size_ratio, col='cornflowerblue' )
+transparent_ratio =150
+points(start_point[1],start_point[2],pch=16,cex=base_size*size_ratio, col=rgb(0, 255, 0, transparent_ratio, maxColorValue=255)  )
+points(end_point[1],end_point[2],pch=16,cex=base_size*size_ratio, col=rgb(0, 0, 255, transparent_ratio, maxColorValue=255) )
+
 points(this_l_vec,col='grey50',pch=16,cex=0.3)
 points(this_r_vec,col='grey50',pch=16,cex=0.3)
 #text(x= this_l_vec[,1],y=this_l_vec[,2],label= as.character(this_pair[1]),cex=0.3,col='grey50')
@@ -269,9 +271,9 @@ text_col='red'
 text_cex=1
 text(x=start_point[1],y=start_point[2],label=as.character(this_pair[1]),pos=as.numeric(this_pair[1])%%4+1, col=text_col,cex=text_cex)  
 text(x=end_point[1],y=end_point[2],label=as.character(this_pair[2]),pos=as.numeric(this_pair[2])%%4+1, col=text_col,cex=text_cex)  
-  
-
 segments(start_point[1], start_point[2], end_point[1],end_point[2],col='grey40',lty=3,lwd=1)
+  
+  
 i=i+1}
 dev.off()
 
@@ -283,12 +285,12 @@ dev.off()
 
 
 
-DimPlot(pbmc, reduction.use='tsne', group.by='ident', pt.size=0.1,do.label=T)
+DimPlot(pbmc, reduction.use='umap', group.by='ident', pt.size=0.1,do.label=T)
 
-TAG=pbmc@meta.data$RohitAnnotation
-TAG[which(TAG=='Border\nMacrophages')]='Border_Macrophages'
+TAG=as.character(pbmc@ident)#pbmc@meta.data$RohitAnnotation
+TAG[which(TAG=='Pericyte/\nFibroblast')]='Pericyte Fibroblast'
 pbmc@meta.data$newtag=TAG
-#DimPlot(pbmc, reduction.use='tsne', group.by='newtag', pt.size=0.1,do.label=T)
+DimPlot(pbmc, reduction.use='umap', group.by='newtag', pt.size=0.1,do.label=T)
 
 
 TT=table(TAG,BIN_FLAG)
@@ -314,7 +316,7 @@ saveRDS(OUTPUT,file='OUTPUT.RDS')
 ########################
 
 png('LABEL.png',width=1200,height=1000)
-DimPlot(pbmc,group.by='RohitAnnotation',reduction.use='tsne',do.label=T)
+DimPlot(pbmc,group.by='newtag',reduction.use='umap',do.label=T)
 dev.off()
 
 
@@ -331,9 +333,9 @@ dev.off()
 
 
 
+######
 
-
-VP=OUTPUT[which(OUTPUT[,3]=='Microglia' & OUTPUT[,4]=='Tumor Cells'),]
+VP=OUTPUT[which(OUTPUT[,3]=='Tumor Cells' & OUTPUT[,4]=='Tumor Cells'),]
 
 this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
 this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
@@ -364,21 +366,24 @@ i=i+1
 
 names(out_list)=tag_list
 
-png('Microglia_Tumor.png',width=1200,height=1000)
+png('Tumor_Tumor.png',width=1200,height=1000)
 set.seed(1234567)
 names(l_list)=paste0(tag_list,'_L')
 names(r_list)=paste0(tag_list,'_R')
 
 #plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Tumor Cell',ylab='EXP of Ligand in Microglia',xlim=c(-0.3,4),ylim=c(-0.3,4))
-plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Tumor Cell',ylab='EXP of Ligand in Microglia')
+plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Tumor',ylab='EXP of Ligand in Tumor')
 text(r_list,l_list,label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
 dev.off()
 
+######
 
 
 
 
-VP=OUTPUT[which(OUTPUT[,3]=='Tumor Cells' & OUTPUT[,4]=='Monocyte-Derived Cells'),]
+######
+
+VP=OUTPUT[which(OUTPUT[,3]=='Tumor Cells' & OUTPUT[,4]=='Proliferating Cells'),]
 
 this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
 this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
@@ -409,16 +414,17 @@ i=i+1
 
 names(out_list)=tag_list
 
-png('Tumor_MonocyteDerived.png',width=1200,height=1000)
-#set.seed(12345)
+png('Tumor_Proliferating.png',width=1200,height=1000)
+set.seed(1234567)
 names(l_list)=paste0(tag_list,'_L')
 names(r_list)=paste0(tag_list,'_R')
 
 #plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Tumor Cell',ylab='EXP of Ligand in Microglia',xlim=c(-0.3,4),ylim=c(-0.3,4))
-plot(r_list,l_list,pch=16,xlab='EXP of Receptor in MonocyteDerived',ylab='EXP of Ligand in Tumor')
+plot(r_list,l_list,pch=16,xlab='EXP of Receptor in Proliferating Cells',ylab='EXP of Ligand in Tumor')
 text(r_list,l_list,label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
 dev.off()
 
+######
 
 
 
@@ -438,11 +444,6 @@ dev.off()
 
 
 
-
-sort_out_list=sort(out_list,decreasing=T)
-sort_out_list[1:100]
-
-write.table(file='SIG_PAIR.txt',sort_out_list,col.names=F,row.names=T,quote=F,sep='\t')
 
 
 
