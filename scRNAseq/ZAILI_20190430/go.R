@@ -62,6 +62,13 @@ write.table(pbmc@meta.data,file='META.tsv',sep='\t',quote=F,row.names=T,col.name
 
 
 
+TAB1=table(pbmc@meta.data$dev,pbmc@meta.data$newtag)
+TAB2=table(pbmc@meta.data$tag,pbmc@meta.data$newtag)
+
+
+write.table(TAB1,file='TAB1.tsv',sep='\t',quote=F,row.names=T,col.names=T)
+write.table(TAB2,file='TAB2.tsv',sep='\t',quote=F,row.names=T,col.names=T)
+
 
 
 
