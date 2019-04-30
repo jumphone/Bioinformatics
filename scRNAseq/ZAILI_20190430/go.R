@@ -44,8 +44,12 @@ gc()
 
 out=.get_cor(exp_sc_mat, LocalRef, method='spearman',CPU=2, print_step=10)
 tag=.get_tag_max(out)
+saveRDS(tag,'37cluster.RDS')
 
 
+rm(exp_sc_mat)
+gc()
+pbmc=readRDS('cb_seurat.RDS')
 
 
 
