@@ -1,12 +1,4 @@
 
-
-#EXP=pbmc.data
-#GENE=rownames(EXP)
-#ALL=c(as.character(LR[,1]),as.character(LR[,2]) )
-
-
-
-
 getBIN <- function(ONE, NUM=100){
 
     RANK=rank(ONE)
@@ -130,10 +122,3 @@ getCMAT <- function(EXP,LR,PMAT){
 
 
 
-
-
-
-
-
-
-#saveRDS(MEAN,file=paste0('MEAN.RDS' ))
