@@ -38,11 +38,11 @@ gc()
 
 
 VAR=apply(exp_sc_mat,1,var)
-used=which(VAR>=quantile(VAR,0.8))
+used=which(VAR>=quantile(VAR,0.9))
 exp_sc_mat=exp_sc_mat[used,]
 gc()
 
-out=.get_cor(exp_sc_mat, LocalRef, method='spearman',CPU=2, print_step=10)
+out=.get_cor(exp_sc_mat, LocalRef, method='spearman',CPU=1, print_step=10)
 tag=.get_tag_max(out)
 saveRDS(tag,'37cluster.RDS')
 
@@ -50,6 +50,18 @@ saveRDS(tag,'37cluster.RDS')
 rm(exp_sc_mat)
 gc()
 pbmc=readRDS('cb_seurat.RDS')
+pbmc@meta.data$newtag=as.numeric(tag[,2])
+
+tiff('PNG.tiff',width=1200,height=1000)
+DimPlot(pbmc,group.by='newtag',reduction.use='tsne',do.label=T)
+dev.off()
+
+write.table(pbmc@meta.data,file='META.tsv',sep='\t',quote=F,row.names=T,col.names=T)
+
+
+
+
+
 
 
 
