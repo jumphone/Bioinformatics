@@ -32,7 +32,7 @@ getMEAN <- function(EXP, LR, NUM=100,TIME=10000, SEED=123){
     GENE=rownames(EXP)  
     TIME=TIME
     permu_gene_index=which(GENE %in% ALL)
-    WINDOW= round(LENGTH/(NUM))
+    WINDOW= round(TIME/(NUM))
   
     MEAN=matrix(nrow=nrow(EXP[permu_gene_index,]),ncol=TIME)
     MEAN[which(is.na(MEAN))]=0
