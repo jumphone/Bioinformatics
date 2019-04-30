@@ -137,7 +137,7 @@ if(this_l %in% GENE & this_r %in% GENE){
        this_r_bin_index=1
        while(this_r_bin_index<=ncol(CMAT)){
            this_add=PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
-           if(this_l_bin_index==this_l_bin_index){this_add=0}
+           if(this_l_bin_index==this_r_bin_index){this_add=0}
            CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ this_add
                #PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
                #max(PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index],0)+ max(PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index],0)
