@@ -1,8 +1,8 @@
 
 
-EXP=pbmc.data
-GENE=rownames(EXP)
-ALL=c(as.character(LR[,1]),as.character(LR[,2]) )
+#EXP=pbmc.data
+#GENE=rownames(EXP)
+#ALL=c(as.character(LR[,1]),as.character(LR[,2]) )
 
 
 
