@@ -106,9 +106,10 @@ getCMAT <- function(EXP,LR,PMAT){
             while(this_l_bin_index<=nrow(CMAT)){
                 this_r_bin_index=1
                 while(this_r_bin_index<=ncol(CMAT)){
-                    CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ 
-                    PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
-
+                    if(this_l_bin_index==this_l_bin_index){this_add=0}else{
+                    this_add=PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
+                    }
+                    CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ this_add
                     this_r_bin_index=this_r_bin_index+1
                     }      
                 this_l_bin_index=this_l_bin_index+1
