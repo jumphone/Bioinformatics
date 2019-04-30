@@ -152,7 +152,7 @@ getPAIR <- function(CMAT){
     PAIR=PAIR[order(SCORE,decreasing=T),]
     SCORE=SCORE[order(SCORE,decreasing=T)]
     
-    CUTOFF=1
+    CUTOFF=0
     PAIR=PAIR[which(SCORE>CUTOFF),]
     SCORE=SCORE[which(SCORE>CUTOFF)]
     RANK=rank(-SCORE, ties.method = c( "min"))
