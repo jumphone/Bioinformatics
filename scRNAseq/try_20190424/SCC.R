@@ -121,6 +121,41 @@ getCMAT <- function(EXP,LR,PMAT){
     }
 
 
+getPAIR <- function(CMAT){
 
+    CUTOFF=0 
+    TMP=CMAT
+    TMP[which(TMP<CUTOFF)]=0
+    PAIR=c()
+    SCORE=c()
+    i=1
+    while(i<=ncol(TMP)){
+
+        if(max(TMP[,i])>0){
+        this_r=i
+        j=1
+        while(j<=nrow(TMP)){
+            if(TMP[j,i]>0){
+                this_l=j
+                PAIR=cbind(PAIR,c(this_l,this_r))
+                SCORE=c(SCORE,TMP[j,i])}
+            j=j+1}
+        }
+
+        i=i+1}
+
+    PAIR=t(PAIR)
+    colnames(PAIR)=c('L','R')
+
+    PAIR=PAIR[order(SCORE,decreasing=T),]
+    SCORE=SCORE[order(SCORE,decreasing=T)]
+    SCORE=round(SCORE)
+
+    PAIR=PAIR[which(SCORE>0),]
+    SCORE=SCORE[which(SCORE>0)]
+    RANK=rank(-SCORE, ties.method = c( "min"))
+    OUT=list(PAIR=PAIR,SCORE=SCORE,RANK=RANK)
+    return(OUT)
+    }
 
 
