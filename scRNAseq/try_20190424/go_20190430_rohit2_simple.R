@@ -34,6 +34,8 @@ MEAN=getMEAN(EXP, LR)
 PMAT=getPMAT(EXP, LR, BIN, MEAN)
 CMAT=getCMAT(EXP,LR,PMAT)
 
+library('gplots')
+heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
 
 
 OUT=getPAIR(CMAT)
@@ -41,6 +43,19 @@ OUT=getPAIR(CMAT)
 PAIR=OUT$PAIR
 SCORE=OUT$SCORE
 RANK=OUT$RANK
+
+VEC=pbmc@dr$umap@cell.embeddings
+CCPlot(VEC,PAIR[1:1000,],BINTAG)
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -78,7 +93,7 @@ this_cclr=CCLR[i]
 this_p=ks.test(which(TOT==this_cclr),1:length(TOT),alternative='greater')$p.value
 this_p=signif(this_p, digits = 2)
 this_p=format(this_p, scientific = T)
-plot(main=paste0(as.character(i),': ',this_cclr,'; KS p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col=i)
+plot(main=paste0(as.character(i),': ',this_cclr,'; KS p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col='green3')
  
 i=i+1}
 
