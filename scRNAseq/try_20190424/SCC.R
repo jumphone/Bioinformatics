@@ -83,6 +83,8 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
     return(PMAT)
     }
 
+
+
 getCMAT <- function(EXP,LR,PMAT){
     
     GENE=rownames(EXP)
