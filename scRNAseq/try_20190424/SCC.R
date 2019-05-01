@@ -180,6 +180,8 @@ CPlot<-function(VEC, PAIR, BINTAG){
 
     legend("topleft", legend=c("Ligand", "Recepter"),fill=c("green", "blue"))
 
+    
+    PAIR=matrix(PAIR, ncol=2)
     i=1
     while(i<=nrow(PAIR)){
 
