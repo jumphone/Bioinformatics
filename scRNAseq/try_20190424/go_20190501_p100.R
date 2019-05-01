@@ -61,18 +61,29 @@ CPlot(VEC,PAIR[1:200,],BINTAG)
 dev.off()
 
 ORITAG=as.character(pbmc@ident)
-NET=getNET(PAIR, BINTAG,ORITAG )
+ORITAG[which(ORITAG %in% as.character(c(0,3,1)))]='Tumor SCs/Mesenchymal'
+ORITAG[which(ORITAG %in% as.character(c(9)))]='Stromal fibroblasts'
+ORITAG[which(ORITAG %in% as.character(c(2)))]='Monocytes/Macrophages'
+ORITAG[which(ORITAG %in% as.character(c(7)))]='Dividing Tumor cells'
+ORITAG[which(ORITAG %in% as.character(c(10)))]='T cells/NK cells'
+ORITAG[which(ORITAG %in% as.character(c(5)))]='Vessel/Endothelial'
+ORITAG[which(ORITAG %in% as.character(c(4)))]='Schwann cells'
+ORITAG[which(ORITAG %in% as.character(c(6)))]='Myelinating Schwann cells'
+ORITAG[which(ORITAG %in% as.character(c(8)))]='Fibroblasts'
+ORITAG[which(ORITAG %in% as.character(c(11)))]='Mast cells'
+
+NET=getNET(PAIR, BINTAG, ORITAG )
 write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
    
 CN=getCN(NET)
-pdf('4DPlot.pdf',width=20,height=20)
+pdf('4DPlot.pdf',width=20,height=40)
 DP=DPlot(NET, CN, COL=3)
 dev.off()
 
 SIG_INDEX=which(DP<0.05)
 SIG_PAIR=names(SIG_INDEX)
 
-pdf('5LPlot.pdf',width=20,height=20)
+pdf('5LPlot.pdf',width=30,height=30)
 RCN=trunc(sqrt(length(SIG_PAIR))+1)
 par(mfrow=c(RCN,RCN))
 i=1
