@@ -70,5 +70,10 @@ write.table(TAB1,file='TAB1.tsv',sep='\t',quote=F,row.names=T,col.names=T)
 write.table(TAB2,file='TAB2.tsv',sep='\t',quote=F,row.names=T,col.names=T)
 
 
+###################
+library(Seurat)
+pbmc=readRDS('cb_seurat.RDS')
+FeaturePlot(object = pbmc, features.plot = c('Prrx2'), cols.use = c("grey", "blue"), reduction.use = "tsne")
+FeaturePlot(object = pbmc, features.plot = c('Prrx2','Rgs5'), cols.use = c("grey", "blue"), reduction.use = "tsne")
 
 
