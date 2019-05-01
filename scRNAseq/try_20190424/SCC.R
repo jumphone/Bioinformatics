@@ -162,11 +162,11 @@ getPAIR <- function(CMAT){
 
 
 
-CCPlot<-function(VEC, PAIR, BINTAG){
+CPlot<-function(VEC, PAIR, BINTAG){
     
     library(cluster)
     BIN_FLAG=BINTAG
-    plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('Cell Communication Plot (CCPlot)'))
+    plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('Communication Plot (CPlot)'))
 
     legend("topleft", legend=c("Ligand", "Recepter"),fill=c("green", "blue"))
 
@@ -258,5 +258,60 @@ DPlot <- function(NET, CN, CUTOFF=3, COL=2,PLOT=TRUE){
     return(ALLP)
     }
 
-CN=getCN(NET)
-DP=DPlot(NET, CN,COL=3)
+LPlot <- function(LT,RT,NET,PMAT,SEED=123){
+    
+
+    set.seed(SEED)
+    OUTPUT=NET
+    GENE=rownames(PMAT )
+    VP=OUTPUT[which(OUTPUT[,3]==LT & OUTPUT[,4]==RT),]
+    this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
+    this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
+    
+    tag_list=c()
+    #out_list=c()
+    l_list=c()
+    r_list=c()
+
+    i=1
+    while(i<=nrow(LR)){
+
+        this_l=LR[i,1]
+        this_r=LR[i,2]
+        this_tag=paste0(this_l,"_",this_r)
+        if(this_l %in% GENE & this_r %in% GENE){
+            #this_out=this_l_exp[which(names(this_l_exp)==this_l)]+this_r_exp[which(names(this_r_exp)==this_r)]
+            this_l_out=this_l_exp[which(names(this_l_exp)==this_l)]
+            this_r_out=this_r_exp[which(names(this_r_exp)==this_r)]
+            tag_list=c(tag_list,this_tag)
+            #out_list=c(out_list,this_out)
+            l_list=c(l_list,this_l_out)
+            r_list=c(r_list,this_r_out)
+            }  
+   
+        i=i+1
+        }
+    names(l_list)=paste0(tag_list,'_L')
+    names(r_list)=paste0(tag_list,'_R')
+    
+    XLIM=c(0,max(as.numeric(r_list))+0.2)
+    YLIM=c(0,max(as.numeric(l_list))+0.2)
+    
+    
+    plot(main=paste0('Max expression is ',as.numeric(as.numeric(PMAT))), r_list, l_list, pch=16, xlab=paste0('Receptor expression of ',RT),ylab=paste0('Ligend expression of ',LT) ,xlim=XLIM,ylim=YLIM)
+    text(r_list, l_list, label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
+    OUT=cbind(l_list,r_list)
+    rownames(OUT)=tag_list
+    colnames(OUT)=c('Lexp','Rexp')
+    return(OUT)
+}
+
+
+
+
+
+
+
+
+
+
