@@ -69,23 +69,136 @@ CPlot(VEC,PAIR[1:100,],BINTAG)
 
 
 ###################
-LT='1.5mo_53,41,40_tumorSCs'
-RT='30,32_Tcell'
+LT='1.5mo_21,22,23,24,25_tumorSCs'
+RT='47,48,49_differentiatedSCs'
 ORITAG=rep('NA',length(pbmc@ident))
-ORITAG[which(BINTAG %in% c(53,41,40))]=LT
-ORITAG[which(BINTAG %in% c(30,32))]=RT
+ORITAG[which(BINTAG %in% c(21,22,23,24,25))]=LT
+ORITAG[which(BINTAG %in% c(47,48,49))]=RT
 
 NET=getNET(PAIR[1:100,], BINTAG,ORITAG )
 CN=getCN(NET)
 DP=DPlot(NET, CN,COL=3,PLOT=F)
 pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
-LP=LPlot(LT,RT,NET,PMAT,SEED=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
+
+###################
+LT='1.5mo_21,22,23,24,25_tumorSCs'
+RT='50_differentiatedSCs'
+ORITAG=rep('NA',length(pbmc@ident))
+ORITAG[which(BINTAG %in% c(21,22,23,24,25))]=LT
+ORITAG[which(BINTAG %in% c(50))]=RT
+
+NET=getNET(PAIR[1:100,], BINTAG,ORITAG )
+CN=getCN(NET)
+DP=DPlot(NET, CN,COL=3,PLOT=F)
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123)
 colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
 write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
 dev.off()
 ###################
 
 
+###################
+LT='4mo_41,42_tumorSCs'
+RT='47,48,49_differentiatedSCs'
+ORITAG=rep('NA',length(pbmc@ident))
+ORITAG[which(BINTAG %in% c(41,42))]=LT
+ORITAG[which(BINTAG %in% c(47,48,49))]=RT
+
+NET=getNET(PAIR[1:100,], BINTAG,ORITAG )
+CN=getCN(NET)
+DP=DPlot(NET, CN,COL=3,PLOT=F)
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
+
+###################
+LT='4mo_41,42_tumorSCs'
+RT='50_differentiatedSCs'
+ORITAG=rep('NA',length(pbmc@ident))
+ORITAG[which(BINTAG %in% c(41,42))]=LT
+ORITAG[which(BINTAG %in% c(50))]=RT
+
+NET=getNET(PAIR[1:100,], BINTAG,ORITAG )
+CN=getCN(NET)
+DP=DPlot(NET, CN,COL=3,PLOT=F)
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
+
+
+
+###################
+LT='4mo_2,4,5,7_tumorSCs'
+RT='47,48,49_differentiatedSCs'
+ORITAG=rep('NA',length(pbmc@ident))
+ORITAG[which(BINTAG %in% c(2,4,5,7))]=LT
+ORITAG[which(BINTAG %in% c(47,48,49))]=RT
+
+NET=getNET(PAIR[1:100,], BINTAG,ORITAG )
+CN=getCN(NET)
+DP=DPlot(NET, CN,COL=3,PLOT=F)
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123455)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
+
+
+###################
+LT='4mo_2,4,5,7_tumorSCs'
+RT='50_differentiatedSCs'
+ORITAG=rep('NA',length(pbmc@ident))
+ORITAG[which(BINTAG %in% c(2,4,5,7))]=LT
+ORITAG[which(BINTAG %in% c(50))]=RT
+NET=getNET(PAIR[1:100,], BINTAG,ORITAG )
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123455)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_to_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
+###################
+LT='4mo_2,4,5,7_tumorSCs'
+RT='46_differentiatedSCs'
+ORITAG=rep('NA',length(pbmc@ident))
+ORITAG[which(BINTAG %in% c(2,4,5,7))]=LT
+ORITAG[which(BINTAG %in% c(46))]=RT
+
+NET=getNET(PAIR[1:100,], BINTAG, ORITAG )
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT, RT,NET,PMAT,SEED=123455)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_to_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
+
+
+###################
+LT='4mo_2,4,5,7_tumorSCs'
+RT='27,28,29,30,38_tumorSCs'
+ORITAG=rep('NA',length(pbmc@ident))
+ORITAG[which(BINTAG %in% c(2,4,5,7))]=LT
+ORITAG[which(BINTAG %in% c(27,28,29,30,38))]=RT
+NET=getNET(PAIR[1:100,], BINTAG,ORITAG )
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123455)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_to_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
 
 
 
