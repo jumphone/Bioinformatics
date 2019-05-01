@@ -28,7 +28,10 @@
     pdf('ID.pdf',width=12,height=10)
     DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
     dev.off()
-       
+    
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/ID.png" width="200">
+
+
     LR=read.table('RL_mouse.txt',header=T,sep='\t')
     EXP=pbmc.data
     
