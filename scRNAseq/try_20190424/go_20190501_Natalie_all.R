@@ -62,25 +62,67 @@ CPlot(VEC,PAIR[1:200,],BINTAG)
 
 
 ORITAG=rep('NA',length(ONE))
-ORITAG[which(pbmc@meta.data$orig.ident=='S1.5MD' & BINTAG %in% c(73,74))]='1.5mo_73,74_Fibroblasts'
-ORITAG[which(pbmc@meta.data$orig.ident=='S1.5MD' & BINTAG %in% c(73,74))]='1.5mo_30,31,32,33_Tcell'
+ORITAG[which(BINTAG %in% c(73,74))]='1.5mo_73,74_Fibroblasts'
+ORITAG[which(BINTAG %in% c(75,76,64))]='4mo_75,76,64_Fibroblasts'
+ORITAG[which(BINTAG %in% c(30,31,32,33))]='30,31,32,33_Tcell'
 
-as.character(pbmc@ident)
-
-
-
-
-ORITAG[which(ORITAG=='Pericyte/\nFibroblast')]='Pericyte Fibroblast'
-NET=getNET(PAIR[1:200], BINTAG,ORITAG )
-
-
-
+NET=getNET(PAIR[1:200,], BINTAG,ORITAG )
 CN=getCN(NET)
-DP=DPlot(NET, CN,COL=3)
+DP=DPlot(NET, CN,COL=3,PLOT=F)
 
 
-par(mfrow=c(2,2))
-LP=LPlot('Pericyte Fibroblast','Tumor Cells',NET,PMAT,SEED=12345)
-LP=LPlot('Pericyte Fibroblast','Proliferating Cells',NET,PMAT,SEED=12345)
-LP=LPlot('Oligodendrocytes','Tumor Cells',NET,PMAT,SEED=12345)
-LP=LPlot('Oligodendrocytes','Proliferating Cells',NET,PMAT,SEED=12345)
+LT='1.5mo_73,74_Fibroblasts'
+RT='30,31,32,33_Tcell'
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=12)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+
+LT='4mo_75,76,64_Fibroblasts'
+RT='30,31,32,33_Tcell'
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=123)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+
+
+
+
+
+###################
+LT='4mo_76,81_Fibroblasts'
+RT='4mo_90,92,93_Endothelial'
+ORITAG=rep('NA',length(ONE))
+ORITAG[which(BINTAG %in% c(76,81))]=LT
+ORITAG[which(BINTAG %in% c(90,92,93))]=RT
+
+NET=getNET(PAIR[1:200,], BINTAG,ORITAG )
+CN=getCN(NET)
+DP=DPlot(NET, CN,COL=3,PLOT=F)
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=12)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
+
+
+
+###################
+LT='4mo_76,83_Fibroblasts'
+RT='4mo_17,23,26,28,16,34_macrophages'
+ORITAG=rep('NA',length(ONE))
+ORITAG[which(BINTAG %in% c(76,83))]=LT
+ORITAG[which(BINTAG %in% c(17,23,26,28,16,34))]=RT
+
+NET=getNET(PAIR[1:200,], BINTAG,ORITAG )
+CN=getCN(NET)
+DP=DPlot(NET, CN,COL=3,PLOT=F)
+pdf(paste0(LT,'_to_',RT,'.pdf'),width=12,height=12)
+LP=LPlot(LT,RT,NET,PMAT,SEED=12)
+colnames(LP)=paste0(colnames(LP),'_',c(LT,RT))
+write.table(LP,file=paste0(LT,'_',RT,'.tsv'),col.names=T,row.names=T,quote=F,sep='\t')
+dev.off()
+###################
