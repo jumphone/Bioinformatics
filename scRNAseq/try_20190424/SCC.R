@@ -298,7 +298,7 @@ LPlot <- function(LT,RT,NET,PMAT,SEED=123){
     YLIM=c(0,max(as.numeric(l_list))+0.2)
     
     
-    plot(main=paste0('Max expression is ',as.numeric(as.numeric(PMAT))), r_list, l_list, pch=16, xlab=paste0('Receptor expression of ',RT),ylab=paste0('Ligend expression of ',LT) ,xlim=XLIM,ylim=YLIM)
+    plot(main=paste0('Expression range: 0~',max(round(as.numeric(PMAT)))), r_list, l_list, pch=16, xlab=paste0('EXP of Receptor in',RT),ylab=paste0('EXP of Ligend in',LT) ,xlim=XLIM,ylim=YLIM)
     text(r_list, l_list, label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
     OUT=cbind(l_list,r_list)
     rownames(OUT)=tag_list
