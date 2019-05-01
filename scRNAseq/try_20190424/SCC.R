@@ -202,16 +202,14 @@ CPlot<-function(VEC, PAIR, BINTAG){
         this_l_vec=VEC[this_l,]
         this_r_vec=VEC[this_r,]
 
-        
-  
         start_point=pam(this_l_vec, 1)$medoids
         end_point= pam(this_r_vec, 1)$medoids
         size_ratio = (nrow(PAIR)-i+1)/nrow(PAIR)
         base_size=4
 
         transparent_ratio =150
-        points(start_point[1],start_point[2],pch=16,cex=base_size*size_ratio, col=rgb(0, 255, 0, transparent_ratio, maxColorValue=255)  )
-        points(end_point[1],end_point[2],pch=16,cex=base_size*size_ratio, col=rgb(0, 0, 255, transparent_ratio, maxColorValue=255) )
+        points(start_point[1],start_point[2],pch=16,cex=base_size*size_ratio+0.1, col=rgb(0, 255, 0, transparent_ratio, maxColorValue=255)  )
+        points(end_point[1],end_point[2],pch=16,cex=base_size*size_ratio+0.1, col=rgb(0, 0, 255, transparent_ratio, maxColorValue=255) )
 
         points(this_l_vec,col='grey50',pch=16,cex=0.3)
         points(this_r_vec,col='grey50',pch=16,cex=0.3)
