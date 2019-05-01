@@ -26,7 +26,7 @@
     
     pbmc@meta.data$bin=BINTAG
     pdf('ID.pdf',width=12,height=10)
-    DimPlot(pbmc,group.by='bin',reduction.use='umap',do.label=T)
+    DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
     dev.off()
        
     LR=read.table('RL_mouse.txt',header=T,sep='\t')
