@@ -258,7 +258,7 @@ getCN <- function(NET){
     return(sort(table(CN),decreasing=TRUE))
     }
 
-DPlot <- function(NET, CN, CUTOFF=3, COL=2,PLOT=TRUE){   
+DPlot <- function(NET, CN, CUTOFF=3, PCUT=0.05, COL=2,PLOT=TRUE){   
     CCLR=names(CN[which(CN>=CUTOFF)])
     if(PLOT==TRUE){
         par(mfrow=c(round((length(CCLR)+1)/COL),COL))}
@@ -268,11 +268,12 @@ DPlot <- function(NET, CN, CUTOFF=3, COL=2,PLOT=TRUE){
     while(i<=length(CCLR)){
         this_cclr=CCLR[i]
         this_p=ks.test(which(TOT==this_cclr),jitter(1:length(TOT)),alternative='greater')$p.value
+        if(this_p<PCUT){CM='red'}else{CM='black'}
         ALLP=c(ALLP,this_p)
         this_p=signif(this_p, digits = 2)
         this_p=format(this_p, scientific = T)
-        if(PLOT==TRUE){
-            plot(main=paste0(as.character(i),': ',this_cclr,'; KS p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col='green3') 
+        if(PLOT==TRUE){            
+            plot(col.main=CM, main=paste0(as.character(i),': ',this_cclr,'; KS p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col='green3') 
         }
         i=i+1}
     names(ALLP)=CCLR
