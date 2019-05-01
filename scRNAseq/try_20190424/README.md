@@ -1,4 +1,10 @@
+# Single-Cell Communication (SCC) Toolkit 
+
+## Author: Feng Zhang
+ 
+## Date: 20190501
     
+        
     library('Seurat')
     library(dplyr)
     library(Matrix)
