@@ -185,14 +185,13 @@ getPAIR <- function(CMAT){
 
 CPlot<-function(VEC, PAIR, BINTAG){
     
+    PAIR=matrix(PAIR, ncol=2)
     library(cluster)
     BIN_FLAG=BINTAG
-    plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('Communication Plot (CPlot)'))
+    plot(VEC,col='grey80',pch=16,cex=0.3,main=paste0('Communication Plot (CPlot), N=',as.chatacter(nrow(PAIR))))
 
     legend("topleft", legend=c("Ligand", "Recepter"),fill=c("green", "blue"))
 
-    
-    PAIR=matrix(PAIR, ncol=2)
     i=1
     while(i<=nrow(PAIR)){
 
