@@ -5,6 +5,11 @@
 
 ###########################
 
+getSeuratRAW <- function(SEURAT){
+    RAW=as.matrix(SEURAT@raw.data[,which(colnames(SEURAT@raw.data) %in% colnames(SEURAT@data))])
+    return(RAW)
+    }
+
 getBIN <- function(ONE, NUM=100){
 
     RANK=rank(ONE)
