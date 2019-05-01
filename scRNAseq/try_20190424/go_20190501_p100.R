@@ -5,7 +5,7 @@ library(Matrix)
 source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/scRNAseq/try_20190424/SCC.R')
 
 
-pbmc=load('p100-p98NPE-TSNElabel.RData')
+load('p100NPE-CCHMC.RData')
 
 pbmc.raw.data=getSeuratRAW(pbmc)
 pbmc.data=as.matrix(pbmc@scale.data)
