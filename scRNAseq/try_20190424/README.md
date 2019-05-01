@@ -49,7 +49,7 @@
     CMAT=getCMAT(EXP,LR,PMAT)
     saveRDS(CMAT,file='CMAT.RDS')
     
-    pdf('2HEAT.pdf',width=12,height=10)
+    pdf('2HEAT.pdf',width=15,height=13)
     library('gplots')
     heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
       col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
