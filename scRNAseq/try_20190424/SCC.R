@@ -202,3 +202,61 @@ CCPlot<-function(VEC, PAIR, BINTAG){
         i=i+1}
 
     }
+
+
+getNET <- function(PAIR, BINTAG, ORITAG){
+    
+    source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+    TT=table(ORITAG, BINTAG)
+    tag=.get_tag_max(TT)
+
+    PP=c()
+    i=1
+    while(i<=nrow(PAIR)){
+        this_pair=PAIR[i,]
+        this_tag1=tag[which(tag[,1]==as.character(this_pair[1])),2]
+        this_tag2=tag[which(tag[,1]==as.character(this_pair[2])),2]
+        PP=cbind(PP,c(this_tag1,this_tag2))
+        i=i+1}
+    PP=t(PP)
+    
+    
+    
+    SIZE=1-(1:nrow(PAIR))/(nrow(PAIR)+1)
+    
+    NET=cbind(PAIR,PP,SIZE)
+    NET=as.matrix(NET)
+    colnames(NET)=c('L','R','LT','RT','RANK')
+    return(NET)
+    }
+
+getCN <- function(NET){
+    OUTPUT=NET
+    CN=paste0(OUTPUT[,3],'_to_',OUTPUT[,4])
+    #par(mar=c(5,15,5,15))
+    return(sort(table(CN),decreasing=TRUE))
+    }
+
+DPlot <- function(NET, CN, CUTOFF=3, COL=2,PLOT=TRUE){   
+    CCLR=names(CN[which(CN>=CUTOFF)])
+    if(PLOT==TRUE){
+        par(mfrow=c(round((length(CCLR)+1)/COL),COL))}
+    TOT=paste0(as.character(NET[,3]),'_to_',as.character(NET[,4]))
+    ALLP=c()
+    i=1
+    while(i<=length(CCLR)){
+        this_cclr=CCLR[i]
+        this_p=ks.test(which(TOT==this_cclr),jitter(1:length(TOT)),alternative='greater')$p.value
+        ALLP=c(ALLP,this_p)
+        this_p=signif(this_p, digits = 2)
+        this_p=format(this_p, scientific = T)
+        if(PLOT==TRUE){
+            plot(main=paste0(as.character(i),': ',this_cclr,'; KS p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col='green3') 
+        }
+        i=i+1}
+    names(ALLP)=CCLR
+    return(ALLP)
+    }
+
+CN=getCN(NET)
+DP=DPlot(NET, CN,COL=3)
