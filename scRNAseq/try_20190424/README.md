@@ -29,7 +29,7 @@
     DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
     dev.off()
     
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/ID.png" width="300">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/ID.png" width="200">
 
     LR=read.table('RL_mouse.txt',header=T,sep='\t')
     EXP=pbmc.data
@@ -49,7 +49,7 @@
       col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
     dev.off()
 
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/HEAT.png" width="300">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/HEAT.png" width="200">
 
     OUT=getPAIR(CMAT)
     PAIR=OUT$PAIR
@@ -62,7 +62,7 @@
     CPlot(VEC,PAIR[1:200,],BINTAG)
     dev.off()
 
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CPlot.png" width="300">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CPlot.png" width="200">
 
     ORITAG=as.character(pbmc@ident)
     NET=getNET(PAIR, BINTAG,ORITAG )
