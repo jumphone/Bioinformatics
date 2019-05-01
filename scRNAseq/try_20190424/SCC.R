@@ -22,6 +22,16 @@ getBIN <- function(ONE, NUM=100){
     }
 
 
+BIN2BINTAG <- function(BIN, ONE){
+    BINTAG=rep(NA,length(ONE))
+    i=1
+    while(i<=ncol(BIN)){
+        BINTAG[BIN[,i]]=i
+        i=i+1
+        }
+    return(BINTAG)
+    }
+
 getMEAN <- function(EXP, LR, NUM=100,TIME=10000, SEED=123){
   
     LRgene=c(as.character(LR[,1]),as.character(LR[,2]))
