@@ -31,7 +31,7 @@
     saveRDS(BINTAG,file='BINTAG.RDS')
     
     pbmc@meta.data$bin=BINTAG
-    pdf('ID.pdf',width=12,height=10)
+    pdf('1ID.pdf',width=12,height=10)
     DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
     dev.off()
     
@@ -49,7 +49,7 @@
     CMAT=getCMAT(EXP,LR,PMAT)
     saveRDS(CMAT,file='CMAT.RDS')
     
-    pdf('HEAT.pdf',width=12,height=10)
+    pdf('2HEAT.pdf',width=12,height=10)
     library('gplots')
     heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
       col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
@@ -64,7 +64,7 @@
     saveRDS(PAIR,file='PAIR.RDS')
    
     VEC=pbmc@dr$tsne@cell.embeddings
-    pdf('CPlot.pdf',width=12,height=10)
+    pdf('3CPlot.pdf',width=12,height=10)
     CPlot(VEC,PAIR[1:200,],BINTAG)
     dev.off()
 
@@ -75,7 +75,7 @@
     write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
        
     CN=getCN(NET)
-    pdf('DPlot.pdf',width=20,height=20)
+    pdf('4DPlot.pdf',width=20,height=20)
     DP=DPlot(NET, CN, COL=3)
     dev.off()
 
@@ -84,7 +84,7 @@
     SIG_INDEX=which(DP<0.05)
     SIG_PAIR=names(SIG_INDEX)
     
-    pdf('LPlot.pdf',width=20,height=20)
+    pdf('5LPlot.pdf',width=20,height=20)
     RCN=trunc(sqrt(length(SIG_PAIR))+1)
     par(mfrow=c(RCN,RCN))
     i=1
