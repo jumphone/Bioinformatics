@@ -14,10 +14,10 @@ getBIN <- function(ONE, NUM=100){
 
     RANK=rank(ONE)
     LENGTH=length(ONE)
-    WINDOW= round(LENGTH/(NUM))
+    WINDOW= trunc(LENGTH/(NUM))
     BIN=c()
     i=1
-    while(i<=round(LENGTH/(WINDOW))){
+    while(i<=trunc(LENGTH/(WINDOW))){
         this_index=which((i-1)*WINDOW< RANK & i*WINDOW>=RANK)
         BIN=cbind(BIN,this_index)
         i=i+1
@@ -54,7 +54,7 @@ getMEAN <- function(EXP, LR, NUM=100,TIME=10000, SEED=123){
     TIME=TIME
     permu_gene_index=which(GENE %in% ALL)
     LENGTH=ncol(EXP)
-    WINDOW= round(LENGTH/(NUM))
+    WINDOW= trunc(LENGTH/(NUM))
   
     MEAN=matrix(nrow=nrow(EXP[permu_gene_index,]),ncol=TIME)
     MEAN[which(is.na(MEAN))]=0
@@ -261,7 +261,7 @@ getCN <- function(NET){
 DPlot <- function(NET, CN, CUTOFF=3, PCUT=0.05, COL=2,PLOT=TRUE){   
     CCLR=names(CN[which(CN>=CUTOFF)])
     if(PLOT==TRUE){
-        par(mfrow=c(round((length(CCLR)+1)/COL),COL))}
+        par(mfrow=c(trunc((length(CCLR)+1)/COL),COL))}
     TOT=paste0(as.character(NET[,3]),'_to_',as.character(NET[,4]))
     ALLP=c()
     i=1
