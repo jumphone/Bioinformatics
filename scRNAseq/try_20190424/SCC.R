@@ -275,8 +275,10 @@ LPlot <- function(LT,RT,NET,PMAT,SEED=123){
     OUTPUT=NET
     GENE=rownames(PMAT )
     VP=OUTPUT[which(OUTPUT[,3]==LT & OUTPUT[,4]==RT),]
+    if(length(VP)>5){
     this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
     this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)
+    }else{this_l_exp=PMAT[,as.numeric(VP[1])];this_r_exp=PMAT[,as.numeric(VP[2])] }
     
     tag_list=c()
     #out_list=c()
