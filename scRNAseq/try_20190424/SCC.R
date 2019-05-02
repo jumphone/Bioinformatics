@@ -5,8 +5,8 @@
 
 ###########################
 
-getSeuratRAW <- function(SEURAT){
-    RAW=as.matrix(SEURAT@raw.data[,which(colnames(SEURAT@raw.data) %in% colnames(SEURAT@data))])
+getSeuratRAW <- function(raw.data, scale.data){
+    RAW=as.matrix(raw.data[,which(colnames(raw.data) %in% colnames(scale.data))])
     return(RAW)
     }
 
