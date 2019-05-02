@@ -117,7 +117,7 @@ Date: 20190501
         this_pair=SIG_PAIR[i]
         LT=unlist(strsplit(this_pair, "_to_"))[1]
         RT=unlist(strsplit(this_pair, "_to_"))[2]
-        LP=LPlot(LT, RT, NET, PMAT,SEED=123)    
+        LP=LPlot(LT, RT, NET, PMAT,MAIN=as.character(SIG_INDEX[i]),SEED=123)    
         colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
         write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
         print(i)
