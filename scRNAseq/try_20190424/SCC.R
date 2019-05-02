@@ -107,7 +107,7 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
 
 
 
-getCMAT <- function(EXP,LR,PMAT，DIRECT=TRUE){
+getCMAT <- function(EXP, LR, PMAT, PLUS=FALSE){
     
     GENE=rownames(EXP)
     CMAT=PMAT[c(1:ncol(PMAT)),]*0
@@ -128,12 +128,20 @@ getCMAT <- function(EXP,LR,PMAT，DIRECT=TRUE){
                 this_r_bin_index=1
                 while(this_r_bin_index<=ncol(CMAT)){
                     if(this_l_bin_index==this_r_bin_index){this_add=0}else{
+                    
+                    l_bin_base = PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index]
+                    r_bin_base = PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
                         
-                    if(DIRECT==TRUE){
-                        this_add=PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
+                    ######################  
+                    if(PLUS==FALSE){
+                        this_add= l_bin_base + r_bin_base 
                     }else{
-                        this_add=max(0,PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index] + PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index])
-                        }
+                        if(l_bin_base<=0 | r_bin_base<=0){
+                            this_add=0}else{
+                            this_add= l_bin_base + r_bin_base
+                            }
+                         }
+                    ######################  
                         
                     }
                     CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ this_add
