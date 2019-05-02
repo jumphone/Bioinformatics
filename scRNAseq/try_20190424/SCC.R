@@ -107,7 +107,7 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
 
 
 
-getCMAT <- function(EXP, LR, PMAT, PLUS=FALSE){
+getCMAT <- function(EXP, LR, PMAT, PRO=FALSE){
     
     GENE=rownames(EXP)
     CMAT=PMAT[c(1:ncol(PMAT)),]*0
@@ -133,7 +133,7 @@ getCMAT <- function(EXP, LR, PMAT, PLUS=FALSE){
                     r_bin_base = PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
                         
                     ######################  
-                    if(PLUS==FALSE){
+                    if(PRO==FALSE){
                         this_add= l_bin_base + r_bin_base 
                     }else{
                         if(l_bin_base<=0 | r_bin_base<=0){
