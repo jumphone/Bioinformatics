@@ -36,7 +36,7 @@ saveRDS(MEAN,file='MEAN.RDS')
 PMAT=getPMAT(EXP, LR, BIN, MEAN)
 saveRDS(PMAT,file='PMAT.RDS')
 
-CMAT=getCMAT(EXP,LR,PMAT,PRO=TRUE)
+CMAT=getCMAT(EXP,LR,PMAT,PRO=F)
 saveRDS(CMAT,file='CMAT.RDS')
 
 pdf('2HEAT.pdf',width=15,height=13)
@@ -86,12 +86,19 @@ while(i<= length(SIG_PAIR) ){
     this_pair=SIG_PAIR[i]
     LT=unlist(strsplit(this_pair, "_to_"))[1]
     RT=unlist(strsplit(this_pair, "_to_"))[2]
-    LP=LPlot(LT, RT, NET, PMAT,SEED=123)    
+    LP=LPlot(LT, RT, NET, PMAT,MAIN=SIG_INDEX[i],SEED=123)    
     colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
     write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
     print(i)
     i=i+1}
 dev.off()
+
+
+
+
+
+
+
 
 
 
