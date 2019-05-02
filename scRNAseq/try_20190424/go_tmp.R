@@ -5,13 +5,27 @@ library(Matrix)
 source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/scRNAseq/try_20190424/SCC.R')
 
 
-pbmc=load('p100-p98NPE-TSNElabel.RData')
+load('Seurat_EXP_cluster.Robj')
 
-pbmc.raw.data=getSeuratRAW(pbmc)
-pbmc.data=as.matrix(pbmc@scale.data)
+pbmc=EXP_cluster
+used=which(as.numeric(as.character(EXP_cluster@ident)) %in% c(2,9,14,17,19,23))
 
+pbmc.raw.data=getSeuratRAW(pbmc@raw.data,pbmc@scale.data)[,used]
 
-used_gene=pbmc@var.genes
+############
+tmp=CreateSeuratObject(raw.data = pbmc.raw.data, min.cells = 0, min.genes = 0, project = "10X_PBMC")
+mito.genes <- grep(pattern = "^Mt", x = rownames(x = tmp@data), value = TRUE)
+percent.mito <- colSums(tmp@data[mito.genes, ]) / colSums(tmp@data)
+tmp <- AddMetaData(object = tmp, metadata = percent.mito, col.name = "percent.mito")
+tmp <- NormalizeData(object = tmp, normalization.method = "LogNormalize",  scale.factor = 10000)
+tmp <- FindVariableGenes(object = tmp,do.plot=FALSE, mean.function = ExpMean, dispersion.function = LogVMR, x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+length(x = tmp@var.genes)
+tmp <- ScaleData(object = tmp, vars.to.regress = c("nUMI",'percent.mito'), genes.use = tmp@var.genes)
+#################
+
+pbmc.data=as.matrix(tmp@scale.data)
+
+used_gene=tmp@var.genes
 pbmc.raw.data=pbmc.raw.data[which(rownames(pbmc.raw.data) %in% used_gene),]
 pbmc.data=pbmc.data[which(rownames(pbmc.data) %in% used_gene),]
 
@@ -39,7 +53,7 @@ saveRDS(MEAN,file='MEAN.RDS')
 PMAT=getPMAT(EXP, LR, BIN, MEAN)
 saveRDS(PMAT,file='PMAT.RDS')
 
-CMAT=getCMAT(EXP,LR,PMAT)
+CMAT=getCMAT(EXP,LR,PMAT,PLUS=TRUE)
 saveRDS(CMAT,file='CMAT.RDS')
 
 pdf('2HEAT.pdf',width=12,height=10)
@@ -79,7 +93,7 @@ while(i<= length(SIG_PAIR) ){
     this_pair=SIG_PAIR[i]
     LT=unlist(strsplit(this_pair, "_to_"))[1]
     RT=unlist(strsplit(this_pair, "_to_"))[2]
-    LP=LPlot(LT, RT, NET, PMAT,SEED=123)    
+    LP=LPlot(LT, RT, NET, PMAT,MAIN=as.character(SIG_INDEX[i]),SEED=123)    
     colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
     write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
     print(i)
