@@ -352,6 +352,11 @@ LPlot <- function(LT,RT,NET,PMAT,MAIN='',SEED=123){
 groupTAG <- function(BINTAG,LT,RT,LC,RC){
     LT=LT
     RT=RT
+    BINTAG=as.character(BINTAG)
+    LC=as.character(LC)
+    RC=as.character(RC)
+    LT=as.character(LT)
+    RT=as.character(RT)
     ORITAG=rep('NA',length(BINTAG))
     ORITAG[which(BINTAG %in% LC)]=LT
     ORITAG[which(BINTAG %in% RC)]=RT
