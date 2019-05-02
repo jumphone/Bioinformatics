@@ -107,7 +107,7 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
 
 
 
-getCMAT <- function(EXP, LR, PMAT, PRO=FALSE){
+getCMAT <- function(EXP, LR, PMAT, PRO=TRUE){
     
     GENE=rownames(EXP)
     CMAT=PMAT[c(1:ncol(PMAT)),]*0
@@ -281,13 +281,15 @@ DPlot <- function(NET, CN, CUTOFF=3, PCUT=0.05, COL=2,PLOT=TRUE){
     while(i<=length(CCLR)){
         this_cclr=CCLR[i]
         #this_p=ks.test(which(TOT==this_cclr),jitter(1:length(TOT)),alternative='greater')$p.value
-        this_p=wilcox.test(which(TOT==this_cclr),1:length(TOT),alternative='less')$p.value
+        A=which(TOT==this_cclr)
+        B=c(1:length(TOT))[which(!c(1:length(TOT)) %in% A)]
+        this_p=wilcox.test(A, B,alternative='less')$p.value
         if(this_p<PCUT){CM='red'}else{CM='black'}
         ALLP=c(ALLP,this_p)
         this_p=signif(this_p, digits = 2)
         this_p=format(this_p, scientific = T)
         if(PLOT==TRUE){            
-            plot(col.main=CM, main=paste0(as.character(i),': ',this_cclr,'; wilcox p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col='green3') 
+            plot(col.main=CM, main=paste0(as.character(i),': ',this_cclr,'; Wilcox p-value=',this_p),x=which(TOT==this_cclr),y=rep(1,length(which(TOT==this_cclr))),type='h',ylim=c(0,1),xlim=c(0,length(TOT)),xlab='RANK',ylab='',col='green3') 
         }
         i=i+1}
     names(ALLP)=CCLR
