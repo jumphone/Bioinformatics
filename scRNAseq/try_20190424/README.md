@@ -54,7 +54,9 @@ Date: 20190501
     
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/ID.png" width="200">
 
-    LR=read.table('RL_mouse.txt',header=T,sep='\t')
+    LR=read.table('ReceptorLigand.txt.mouse',header=T,sep='\t')
+    #https://github.com/jumphone/Bioinformatics/tree/master/scRNAseq/RecLig/
+    
     EXP=pbmc.data
     
     MEAN=getMEAN(EXP, LR)
