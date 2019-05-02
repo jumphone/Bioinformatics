@@ -39,11 +39,27 @@ saveRDS(PMAT,file='PMAT.RDS')
 CMAT=getCMAT(EXP,LR,PMAT,BI=T)
 saveRDS(CMAT,file='CMAT.RDS')
 
+
+plot(as.numeric(CMAT), as.numeric(t(CMAT)))
+
+
+
+
+
 pdf('2HEAT.pdf',width=15,height=13)
 library('gplots')
 heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
   col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
 dev.off()
+
+
+
+
+BMAT=CMAT+t(CMAT)
+heatmap.2(BMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
+  col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+
+
 
 OUT=getPAIR(CMAT)
 PAIR=OUT$PAIR
