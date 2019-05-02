@@ -128,46 +128,60 @@ dev.off()
 
 
 
-library('gplots')
-heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
+    
+    GENE=rownames(EXP)
+    CMAT=PMAT[c(1:ncol(PMAT)),]*0
+    rownames(CMAT)=colnames(CMAT)
+    rownames(CMAT)=paste0('L_',rownames(CMAT))
+    colnames(CMAT)=paste0('R_',colnames(CMAT))
 
+    i=1
+    while(i<=nrow(LR)){
 
-OUT=getPAIR(CMAT)
+        this_l=as.character(LR[i,1])
+        this_r=as.character(LR[i,2])
+        #########################
+        this_l_rs=LR[which(LR[,1]==this_l),2]
+        this_r_ls=LR[which(LR[,2]==this_r),1]
+        
+        
+        if(this_l %in% GENE & this_r %in% GENE){
+            this_l_index=which(rownames(PMAT)==this_l)
+            this_r_index=which(rownames(PMAT)==this_r)
+            this_l_bin_index=1
+            while(this_l_bin_index<=nrow(CMAT)){
+                this_r_bin_index=1
+                while(this_r_bin_index<=ncol(CMAT)){
+                    if(this_l_bin_index==this_r_bin_index){this_add=0}else{
+                    
+                    l_bin_base = PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index]
+                    r_bin_base = PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
+                        
+                    ######################  
+                    if(BI==FALSE){
+                        this_add= l_bin_base + r_bin_base 
+                    }else{
+                        if(l_bin_base<=0 | r_bin_base<=0){
+                            this_add=0}else{
+                            #this_add= (l_bin_base + r_bin_base)*( min(l_bin_base,r_bin_base)/max(l_bin_base,r_bin_base) )
+                            this_add= 
+                            
+                            min(l_bin_base,r_bin_base)
+                            }
+                         }
+                    ######################  
+                        
+                    }
+                    CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ this_add
+                    this_r_bin_index=this_r_bin_index+1
+                    }      
+                this_l_bin_index=this_l_bin_index+1
+                } 
+             }
+        if(i%%10==1){print(i)}
+        i=i+1}
 
-PAIR=OUT$PAIR
-SCORE=OUT$SCORE
-RANK=OUT$RANK
-
-VEC=pbmc@dr$umap@cell.embeddings
-CPlot(VEC,PAIR[1:10,],BINTAG)
-
-
-ORITAG=as.character(pbmc@ident)
-ORITAG[which(ORITAG=='Pericyte/\nFibroblast')]='Pericyte Fibroblast'
-NET=getNET(PAIR, BINTAG,ORITAG )
-
-
-
-CN=getCN(NET)
-DP=DPlot(NET, CN,COL=3)
-
-
-par(mfrow=c(2,2))
-LP=LPlot('Pericyte Fibroblast','Tumor Cells',NET,PMAT,SEED=12345)
-LP=LPlot('Pericyte Fibroblast','Proliferating Cells',NET,PMAT,SEED=12345)
-LP=LPlot('Oligodendrocytes','Tumor Cells',NET,PMAT,SEED=12345)
-LP=LPlot('Oligodendrocytes','Proliferating Cells',NET,PMAT,SEED=12345)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    CMAT=as.matrix(CMAT)
+    return(CMAT)
+    }
