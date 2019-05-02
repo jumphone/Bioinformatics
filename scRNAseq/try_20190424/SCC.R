@@ -120,6 +120,7 @@ getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
 
         this_l=as.character(LR[i,1])
         this_r=as.character(LR[i,2])
+        
         if(this_l %in% GENE & this_r %in% GENE){
             this_l_index=which(rownames(PMAT)==this_l)
             this_r_index=which(rownames(PMAT)==this_r)
@@ -139,7 +140,9 @@ getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
                         if(l_bin_base<=0 | r_bin_base<=0){
                             this_add=0}else{
                             #this_add= (l_bin_base + r_bin_base)*( min(l_bin_base,r_bin_base)/max(l_bin_base,r_bin_base) )
-                            this_add= min(l_bin_base,r_bin_base)
+                            this_add= 
+                            
+                            min(l_bin_base,r_bin_base)
                             }
                          }
                     ######################  
