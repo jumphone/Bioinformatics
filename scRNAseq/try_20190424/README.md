@@ -1,10 +1,11 @@
-# Single-Cell Communication (SCC) Toolkit 
 
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/SCC_LOGO.png" width="200">
 
-## Author: Feng Zhang
+### Single-Cell Communication (SCC) Toolkit 
+
+Author: Feng Zhang
  
-## Date: 20190501
+Date: 20190501
     
         
     library('Seurat')
