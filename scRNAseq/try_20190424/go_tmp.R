@@ -39,7 +39,11 @@ BINTAG=OUT$TAG
 saveRDS(BIN,file='BIN.RDS')
 saveRDS(BINTAG,file='BINTAG.RDS')
 
-pbmc@meta.data$bin=BINTAG
+
+
+
+pbmc@meta.data$bin=rep(NA,length(pbmc@ident))
+pbmc@meta.data$bin[used]=BINTAG
 pdf('1ID.pdf',width=12,height=10)
 DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
 dev.off()
@@ -53,10 +57,10 @@ saveRDS(MEAN,file='MEAN.RDS')
 PMAT=getPMAT(EXP, LR, BIN, MEAN)
 saveRDS(PMAT,file='PMAT.RDS')
 
-CMAT=getCMAT(EXP,LR,PMAT,PLUS=TRUE)
+CMAT=getCMAT(EXP,LR,PMAT,PRO=TRUE)
 saveRDS(CMAT,file='CMAT.RDS')
 
-pdf('2HEAT.pdf',width=12,height=10)
+pdf('2HEAT.pdf',width=15,height=13)
 library('gplots')
 heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
   col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
@@ -70,15 +74,26 @@ saveRDS(PAIR,file='PAIR.RDS')
 
 VEC=pbmc@dr$tsne@cell.embeddings
 pdf('3CPlot.pdf',width=12,height=10)
-CPlot(VEC,PAIR[1:200,],BINTAG)
+CPlot(VEC,PAIR[1:100,],pbmc@meta.data$bin)
 dev.off()
 
-ORITAG=as.character(pbmc@ident)
-NET=getNET(PAIR, BINTAG,ORITAG )
+CC=as.numeric(as.character(pbmc@ident))
+TAG=rep('NA',length(pbmc@ident))
+TAG[CC %in% c(23,19)]='Normal_Schwann'
+TAG[CC %in% c(9,2,14,17)]='Tumor'
+TAG[CC %in% c(22,20,24)]='Tumor_PlotCenter'
+TAG[CC %in% c(15,25,30)]='Endothelial'
+TAG[CC %in% c(0,3,10,13,8,16,11,28,18)]='Fibroblast'
+TAG[CC %in% c(1,4,5,6,7,21)]='Macrophage'
+TAG[CC %in% c(12,27,26)]='T_Cell'
+TAG[CC %in% c(29)]='B_Cell'
+
+ORITAG=TAG
+NET=getNET(PAIR, BINTAG,ORITAG[used] )
 write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
    
 CN=getCN(NET)
-pdf('4DPlot.pdf',width=20,height=20)
+pdf('4DPlot.pdf',width=20,height=5)
 DP=DPlot(NET, CN, COL=3)
 dev.off()
 
