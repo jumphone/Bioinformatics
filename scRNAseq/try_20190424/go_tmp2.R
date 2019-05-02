@@ -36,7 +36,7 @@ saveRDS(MEAN,file='MEAN.RDS')
 PMAT=getPMAT(EXP, LR, BIN, MEAN)
 saveRDS(PMAT,file='PMAT.RDS')
 
-CMAT=getCMAT(EXP,LR,PMAT)
+CMAT=getCMAT(EXP,LR,PMAT,PRO=FALSE)
 saveRDS(CMAT,file='CMAT.RDS')
 
 pdf('2HEAT.pdf',width=15,height=13)
