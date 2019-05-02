@@ -93,8 +93,8 @@ NET=getNET(PAIR, BINTAG,ORITAG[used] )
 write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
    
 CN=getCN(NET)
-pdf('4DPlot.pdf',width=20,height=5)
-DP=DPlot(NET, CN, COL=3)
+pdf('4DPlot.pdf',width=10,height=5)
+DP=DPlot(NET, CN, COL=2)
 dev.off()
 
 SIG_INDEX=which(DP<0.05)
@@ -114,6 +114,16 @@ while(i<= length(SIG_PAIR) ){
     print(i)
     i=i+1}
 dev.off()
+
+
+ORITAG=groupTAG(BINTAG,LT='7',RT='98',LC='7',RC='98')
+NET=getNET(PAIR, BINTAG,ORITAG )
+LPlot(LT='7', RT='98', NET, PMAT,MAIN=as.character(SIG_INDEX[i]),SEED=123)    
+
+
+ORITAG=groupTAG(BINTAG,LT='1',RT='2',LC='1',RC='2')
+NET=getNET(PAIR, BINTAG,ORITAG )
+LPlot(LT='1', RT='2', NET, PMAT,MAIN=as.character(SIG_INDEX[i]),SEED=123)    
 
 
 
