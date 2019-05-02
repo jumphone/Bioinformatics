@@ -82,7 +82,7 @@ dev.off()
 ORITAG=as.character(pbmc@ident)
 ORITAG[which(ORITAG=='Pericyte/\nFibroblast')]='Pericyte Fibroblast'
 
-NET=getNET(PAIR, BINTAG,ORITAG )
+NET=getNET(PAIR[1:200,], BINTAG,ORITAG )
 write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
    
 CN=getCN(NET)
@@ -135,18 +135,39 @@ getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
     rownames(CMAT)=colnames(CMAT)
     rownames(CMAT)=paste0('L_',rownames(CMAT))
     colnames(CMAT)=paste0('R_',colnames(CMAT))
-
+    
+    TP=apply(PMAT,1,sum)
+    
+    
     i=1
+    #i=956
     while(i<=nrow(LR)){
 
         this_l=as.character(LR[i,1])
         this_r=as.character(LR[i,2])
         #########################
-        this_l_rs=LR[which(LR[,1]==this_l),2]
-        this_r_ls=LR[which(LR[,2]==this_r),1]
         
+
         
         if(this_l %in% GENE & this_r %in% GENE){
+            
+            #########
+            this_l_rs=as.character(LR[which(LR[,1]==this_l),2])
+            this_r_ls=as.character(LR[which(LR[,2]==this_r),1])
+            
+            this_l_rs=this_l_rs[which(this_l_rs %in% GENE)]
+            this_r_ls=this_r_ls[which(this_r_ls %in% GENE)]
+            
+            this_l_rs_ratio=c()
+            this_r_ls_ratio=c()
+            
+            for(one in this_l_rs){this_l_rs_ratio=c(this_l_rs_ratio,TP[which(names(TP)==one)])}
+            for(one in this_r_ls){this_r_ls_ratio=c(this_r_ls_ratio,TP[which(names(TP)==one)])}
+            this_l_rs_ratio=this_l_rs_ratio/sum(this_l_rs_ratio)
+            this_r_ls_ratio=this_r_ls_ratio/sum(this_r_ls_ratio)
+            
+            #############
+                     
             this_l_index=which(rownames(PMAT)==this_l)
             this_r_index=which(rownames(PMAT)==this_r)
             this_l_bin_index=1
@@ -164,10 +185,13 @@ getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
                     }else{
                         if(l_bin_base<=0 | r_bin_base<=0){
                             this_add=0}else{
-                            #this_add= (l_bin_base + r_bin_base)*( min(l_bin_base,r_bin_base)/max(l_bin_base,r_bin_base) )
-                            this_add= 
                             
-                            min(l_bin_base,r_bin_base)
+                            p_l_bin_base=(l_bin_base * this_l_rs_ratio)[which(names(this_l_rs_ratio)==this_r)]
+                            p_r_bin_base=(r_bin_base * this_r_ls_ratio)[which(names(this_r_ls_ratio)==this_l)]
+                            
+                            
+                            #this_add= (l_bin_base + r_bin_base)*( min(l_bin_base,r_bin_base)/max(l_bin_base,r_bin_base) )
+                            this_add= min(p_l_bin_base, p_r_bin_base)
                             }
                          }
                     ######################  
