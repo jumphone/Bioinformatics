@@ -125,9 +125,12 @@ Date: 20190501
     dev.off()
     
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/LPlot.png" width="200">
-    
-    
-    
+
+
+    TAG=groupTAG(BINTAG,LT="LGroup",RT='RGroup',LC=c(1,2,3),RC=c(4,5,6))
+    TMP=getNET(PAIR, BINTAG, TAG )
+    LPlot(LT='LGroup', RT='RGroup', TMP, PMAT,SEED=123)    
+   
     
     
     
