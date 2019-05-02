@@ -107,7 +107,7 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
 
 
 
-getCMAT <- function(EXP, LR, PMAT, PRO=TRUE){
+getCMAT <- function(EXP, LR, PMAT, PRO=FALSE){
     
     GENE=rownames(EXP)
     CMAT=PMAT[c(1:ncol(PMAT)),]*0
