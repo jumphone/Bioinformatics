@@ -13,14 +13,21 @@
     
     pbmc=load('pbmc.RDS') # load Seurat Object
     
-    pbmc.raw.data=getSeuratRAW(pbmc)
+    pbmc.raw.data=getSeuratRAW(pbmc@raw.data,pbmc@scale.data)
     pbmc.data=as.matrix(pbmc@scale.data)
+    used_gene=pbmc@var.genes   
+    # For Seurat==3.0, please use:
+    # pbmc.raw.data=getSeuratRAW(pbmc@assays$RNA@counts, pbmc@assays$RNA@scale.data)
+    # pbmc.data=as.matrix(pbmc@assays$RNA@scale.data)
+    # used_gene=VariableFeatures(object = pbmc)
     
-    used_gene=pbmc@var.genes
     pbmc.raw.data=pbmc.raw.data[which(rownames(pbmc.raw.data) %in% used_gene),]
     pbmc.data=pbmc.data[which(rownames(pbmc.data) %in% used_gene),]
-       
-    source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+    
+    source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')    
+    # For Seurat==3.0, please use:
+    # source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER_Seurat3.R')
+    
     ONE=.data2one(pbmc.raw.data, used_gene, CPU=4, PCNUM=50, SEED=123,  PP=30)
     saveRDS(ONE,file='ONE.RDS')
     
@@ -64,6 +71,9 @@
     saveRDS(PAIR,file='PAIR.RDS')
    
     VEC=pbmc@dr$tsne@cell.embeddings
+    # For Seurat 3.0, please use:
+    # VEC=pbmc@reductions$tsne@cell.embeddings 
+    
     pdf('3CPlot.pdf',width=12,height=10)
     CPlot(VEC,PAIR[1:200,],BINTAG)
     dev.off()
