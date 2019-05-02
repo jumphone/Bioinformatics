@@ -16,6 +16,7 @@
     pbmc.raw.data=getSeuratRAW(pbmc@raw.data,pbmc@scale.data)
     pbmc.data=as.matrix(pbmc@scale.data)
     used_gene=pbmc@var.genes   
+    
     # For Seurat==3.0, please use:
     # pbmc.raw.data=getSeuratRAW(pbmc@assays$RNA@counts, pbmc@assays$RNA@scale.data)
     # pbmc.data=as.matrix(pbmc@assays$RNA@scale.data)
@@ -24,7 +25,8 @@
     pbmc.raw.data=pbmc.raw.data[which(rownames(pbmc.raw.data) %in% used_gene),]
     pbmc.data=pbmc.data[which(rownames(pbmc.data) %in% used_gene),]
     
-    source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')    
+    source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')  
+    
     # For Seurat==3.0, please use:
     # source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER_Seurat3.R')
     
@@ -71,6 +73,7 @@
     saveRDS(PAIR,file='PAIR.RDS')
    
     VEC=pbmc@dr$tsne@cell.embeddings
+    
     # For Seurat 3.0, please use:
     # VEC=pbmc@reductions$tsne@cell.embeddings 
     
