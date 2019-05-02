@@ -7,7 +7,8 @@ Author: Feng Zhang
  
 Date: 20190501
     
-        
+### Usage:
+
     library('Seurat')
     library(dplyr)
     library(Matrix)
