@@ -183,7 +183,8 @@ LI=48
 RI=27
 LI=12
 RI=16
-
+LI=72
+RI=9
 
 this_l=which(TAG==LI)
 this_r=which(TAG==RI)
