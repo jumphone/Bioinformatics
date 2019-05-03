@@ -299,7 +299,7 @@ DPlot <- function(NET, CN, CUTOFF=3, PCUT=0.05, COL=2,PLOT=TRUE){
     return(ALLP)
     }
 
-LPlot <- function(LT,RT,NET,PMAT,LR,MAIN='',SEED=123){
+LPlot <- function(LT,RT,NET,PMAT,LR,MAIN='',SEED=123,PCUT=0.05){
     
 
     set.seed(SEED)
@@ -341,10 +341,12 @@ LPlot <- function(LT,RT,NET,PMAT,LR,MAIN='',SEED=123){
     YLIM=c(0,max(as.numeric(l_list))+0.2)
     
     
-    plot(main=paste0(MAIN,' Expression range: 0~',max(round(as.numeric(PMAT)))), r_list, l_list, pch=16, xlab=paste0('EXP of Receptor in ',RT),ylab=paste0('EXP of Ligend in ',LT) ,xlim=XLIM,ylim=YLIM)
+    plot(main=paste0(MAIN,' Expression: 0~',max(round(as.numeric(PMAT)))), r_list, l_list, pch=16, xlab=paste0('EXP of Receptor in ',RT),ylab=paste0('EXP of Ligend in ',LT) ,xlim=XLIM,ylim=YLIM)
     text(r_list, l_list, label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
     abline(v=-log(0.05,10),col='red',lty=2)
     abline(h=-log(0.05,10),col='red',lty=2)
+    rect(xleft=-10, ybottom=-10, xright=max(round(as.numeric(PMAT)))*2, ytop=-log(PCUT,10), border=NA, col=rgb(200, 200, 200, 120, maxColorValue=255) )
+    rect(xleft=-10, ybottom=-10, ytop=max(round(as.numeric(PMAT)))*2, xright=-log(PCUT,10), border=NA, col=rgb(200, 200, 200, 120, maxColorValue=255) )
     OUT=cbind(l_list,r_list)
     rownames(OUT)=tag_list
     colnames(OUT)=c('Lexp','Rexp')
