@@ -107,7 +107,7 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
 
 
 
-getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
+    getCMAT <- function(EXP, LR, PMAT, BI=TRUE){
     
     GENE=rownames(PMAT)
     CMAT=matrix(data=0,nrow=ncol(PMAT),ncol=ncol(PMAT))#PMAT[c(1:ncol(PMAT)),]*0
