@@ -175,6 +175,7 @@ while(i<= length(SIG_PAIR) ){
     print(i)
     i=i+1}
 
+ 
 
 
 LI=48
@@ -184,9 +185,11 @@ RI=30
 
 this_l=which(TAG==LI)
 this_r=which(TAG==RI)
-LR[which(LR[,1]%in% names(this_l) & LR[,2] %in% names(this_r)),]
+this_ln=as.character(LR[which(LR[,1]%in% names(this_l) & LR[,2] %in% names(this_r)),1])
+this_rn=as.character(LR[which(LR[,1]%in% names(this_l) & LR[,2] %in% names(this_r)),2])
 
-
+LP=LPlot('Microglia', 'Proliferating Cells', NET, PMAT=PMAT,LR=LR,MAIN=SIG_INDEX[i],SEED=123)   
+LP[which(rownames(LP)==paste0(as.character(this_ln),'_',as.character(this_rn))),]
 
 
 
@@ -259,7 +262,7 @@ while(i<= length(SIG_PAIR) ){
     this_pair=SIG_PAIR[i]
     LT=unlist(strsplit(this_pair, "_to_"))[1]
     RT=unlist(strsplit(this_pair, "_to_"))[2]
-    LP=LPlot(LT, RT, NET, PMAT,MAIN=SIG_INDEX[i],SEED=123)    
+    c  
     colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
     write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
     print(i)
