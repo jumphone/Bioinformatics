@@ -36,6 +36,138 @@ saveRDS(MEAN,file='MEAN.RDS')
 PMAT=getPMAT(EXP, LR, BIN, MEAN)
 saveRDS(PMAT,file='PMAT.RDS')
 
+################################
+DIST=cor(t(PMAT),method='spearman')
+library('gplots')
+heatmap.2(DIST,scale='none',dendrogram='both',Colv=T,Rowv=T,trace='none',
+  col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15), labRow='',labCol='')
+
+
+out=heatmap.2(DIST,scale='none',dendrogram='both',Colv=T,Rowv=T,trace='none',
+  col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15), labRow='',labCol='')
+
+
+
+
+DISTLIST=c()
+PAIR=c()
+i=1
+while(i+1<=length(out$colInd)){
+    
+index1=out$colInd[i]
+index2=out$colInd[i+1]
+this_dist=DIST[index1,index2]
+DISTLIST=c(DISTLIST,this_dist)
+PAIR=cbind(PAIR,c(i,i+1))
+i=i+1
+}
+
+PAIR=t(PAIR)
+
+
+CCUT=0.7
+
+used_index=which(DISTLIST>CCUT)
+PAIR[used_index,]
+
+INUM=as.numeric(PAIR[used_index,])
+
+
+tag_tmp=1
+TAG=c(tag_tmp)
+i=2
+while(i<=length(out$colInd)){    
+index1=out$colInd[i-1]
+index2=out$colInd[i]
+if((i-1) %in% INUM & i %in% INUM){
+this_tag=tag_tmp
+}else{tag_tmp=tag_tmp+1;this_tag=tag_tmp}
+ TAG=c(TAG,this_tag)   
+i=i+1
+}
+
+COLC=as.numeric(names(table(TAG))[which(table(TAG)>1)])
+
+CCC=rainbow(length(unique(TAG)))
+RC=rep('grey80',length(TAG))
+i=1
+while(i<=length(TAG)){
+if(TAG[i] %in% COLC){
+RC[i]='grey20'}#CCC[TAG[i]] }
+i=i+1
+}
+
+heatmap.2(DIST[out$colInd[length(out$colInd):1],out$colInd],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
+  col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(out$colInd):1] ,margins=c(10,15), labRow='',labCol='')
+
+
+
+OGENE=colnames(DIST)[out$colInd]
+
+
+names(TAG)=OGENE
+MPMAT=PMAT[1:length(unique(TAG)),]
+rownames(MPMAT)=as.character(c(1:max(TAG)))
+MPMAT=MPMAT*0
+i=1
+while(i<=nrow(MPMAT)){
+this_row=which(TAG==i)
+if(length(which(TAG==i))>1){
+MPMAT[i,]=apply(PMAT[this_row,],2,mean)}else{
+MPMAT[i,]=PMAT[this_row,]}
+i=i+1}
+
+MLR=c()
+i=1
+while(i<=nrow(LR)){
+this_l=as.character(LR[i,1])
+this_r=as.character(LR[i,2])
+if(this_l %in% rownames(PMAT) & this_r %in% rownames(PMAT)){
+    M_this_l=TAG[which(names(TAG)==this_l)]
+    M_this_r=TAG[which(names(TAG)==this_r)]
+    MLR=cbind(MLR,c(M_this_l,M_this_r))
+    }
+i=i+1
+}
+
+MLR=t(MLR)
+colnames(MLR)=c('L','R')
+MLR=unique(MLR)
+
+
+
+################################
+
+MCMAT=getCMAT(EXP,LR=MLR,PMAT=MPMAT,BI=T)
+library('gplots')
+heatmap.2(MCMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
+  col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+
+OUT=getPAIR(MCMAT)
+PAIR=OUT$PAIR
+SCORE=OUT$SCORE
+RANK=OUT$RANK
+VEC=pbmc@dr$tsne@cell.embeddings
+CPlot(VEC,PAIR[1:200,],BINTAG)
+
+ORITAG=as.character(pbmc@ident)
+ORITAG[which(ORITAG=='Pericyte/\nFibroblast')]='Pericyte Fibroblast'
+
+NET=getNET(PAIR, BINTAG,ORITAG )
+
+DP=DPlot(NET, CN, COL=4)
+
+
+
+
+
+
+
+
+
+
+###################
+
 CMAT=getCMAT(EXP,LR,PMAT,BI=T)
 saveRDS(CMAT,file='CMAT.RDS')
 
