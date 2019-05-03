@@ -299,7 +299,7 @@ DPlot <- function(NET, CN, CUTOFF=3, PCUT=0.05, COL=2,PLOT=TRUE){
     return(ALLP)
     }
 
-LPlot <- function(LT,RT,NET,PMAT,MAIN='',SEED=123){
+LPlot <- function(LT,RT,NET,PMAT,LR,MAIN='',SEED=123){
     
 
     set.seed(SEED)
