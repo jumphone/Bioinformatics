@@ -132,6 +132,8 @@ Date: 20190501
     SIG_INDEX=which(DP<0.05)
     SIG_PAIR=names(SIG_INDEX)
     
+    TOP_NET=getNET(PAIR[1:500,], BINTAG,ORITAG )
+    
     pdf('6LPlot.pdf',width=20,height=20)
     RCN=trunc(sqrt(length(SIG_PAIR))+1)
     par(mfrow=c(RCN,RCN))
@@ -140,15 +142,16 @@ Date: 20190501
         this_pair=SIG_PAIR[i]
         LT=unlist(strsplit(this_pair, "_to_"))[1]
         RT=unlist(strsplit(this_pair, "_to_"))[2]
-        LP=LPlot(LT, RT, NET, PMAT,LR, MAIN=as.character(SIG_INDEX[i]),SEED=12345,PCUT=0.05)    
+        try({
+        LP=LPlot(LT, RT, TOP_NET, PMAT,LR, MAIN=as.character(SIG_INDEX[i]),SEED=12345,PCUT=0.05)    
         colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
         write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
+        })
         print(i)
         i=i+1}
     dev.off()
     
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/LPlot.png" width="300">
-
 
     TAG=groupTAG(BINTAG,LT="LGroup",RT='RGroup',LC=c(1,2,3),RC=c(4,5,6))
     TMP=getNET(PAIR, BINTAG, TAG )
