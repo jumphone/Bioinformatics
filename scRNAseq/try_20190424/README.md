@@ -9,8 +9,6 @@ Date: 20190501
     
 ### Usage:
 
-#### a. Non-clustered
-
     library('Seurat')
     library(dplyr)
     library(Matrix)
@@ -134,8 +132,7 @@ Date: 20190501
     LPlot(LT='LGroup', RT='RGroup', TMP, PMAT,SEED=123)    
    
     
-#### b. Clustered
-    
+
     
     
     
