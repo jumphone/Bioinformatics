@@ -343,6 +343,8 @@ LPlot <- function(LT,RT,NET,PMAT,LR,MAIN='',SEED=123){
     
     plot(main=paste0(MAIN,' Expression range: 0~',max(round(as.numeric(PMAT)))), r_list, l_list, pch=16, xlab=paste0('EXP of Receptor in ',RT),ylab=paste0('EXP of Ligend in ',LT) ,xlim=XLIM,ylim=YLIM)
     text(r_list, l_list, label=tag_list,pos=sample(c(1,2,3,4),length(l_list),replace = TRUE))
+    abline(v=-log(0.05,10),col='red',lty=2)
+    abline(h=-log(0.05,10),col='red',lty=2)
     OUT=cbind(l_list,r_list)
     rownames(OUT)=tag_list
     colnames(OUT)=c('Lexp','Rexp')
@@ -365,6 +367,109 @@ groupTAG <- function(BINTAG,LT,RT,LC,RC){
     ORITAG[which(BINTAG %in% RC)]=RT
     return(ORITAG)  
 }
+
+
+
+getPmatHEAT <- function(PMAT, SHOW=FALSE){   
+    DIST=cor(t(PMAT),method='spearman')
+    library('gplots')
+    if(SHOW==FALSE){
+        HEAT=heatmap.2(DIST,scale='none',dendrogram='both',Colv=TRUE,Rowv=TRUE,trace='none',symm=TRUE,
+            col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(5,5), labRow='',labCol='')
+        }else{
+        HEAT=heatmap.2(DIST,scale='none',dendrogram='both',Colv=TRUE,Rowv=TRUE,trace='none',symm=TRUE,
+            col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,10))
+        }
+    OUT=list()
+    OUT$HEAT=HEAT
+    OUT$DIST=DIST
+    return(OUT)}
+
+
+getCLUST <- function(HEAT, DIST, CCUT=0.7, SHOW=FALSE) {
+    
+    CCUT=CCUT
+    tag_tmp=1
+    TAG=c(tag_tmp)
+    i=2
+    while(i<=length(HEAT$colInd)){    
+        index1=HEAT$colInd[i-1]
+        index2=HEAT$colInd[i]
+        #if((i-1) %in% INUM & i %in% INUM & DIST[index1,index2]>CCUT){
+        if(DIST[index1,index2]>CCUT){
+            this_tag=tag_tmp
+            }else{tag_tmp=tag_tmp+1;this_tag=tag_tmp}
+        TAG=c(TAG,this_tag)   
+        i=i+1
+        }
+    OGENE=colnames(DIST)[HEAT$colInd]
+    names(TAG)=OGENE
+    
+    COLC=as.numeric(names(table(TAG))[which(table(TAG)>1)])
+
+    CCC=c('royalblue','indianred')#rainbow(10)
+    RC=rep('grey80',length(TAG))
+    i=1
+    while(i<=length(TAG)){
+        if(TAG[i] %in% COLC){
+        RC[i]=CCC[TAG[i]%%2+1] }
+        #RC[i]='grey20'}#CCC[TAG[i]] }
+        i=i+1
+        }
+    if(SHOW==FALSE){
+        heatmap.2(DIST[out$colInd[length(out$colInd):1],out$colInd],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
+            col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(out$colInd):1] ,margins=c(5,5), labRow='',labCol='') 
+        }else{
+        heatmap.2(DIST[out$colInd[length(out$colInd):1],out$colInd],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
+            col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(out$colInd):1] ,margins=c(10,10)) 
+        }
+    
+    return(TAG)
+    }
+
+
+
+getMLR <- function(CLUST, LR, PMAT){
+    
+    MLR=c()
+    i=1
+    while(i<=nrow(LR)){
+    this_l=as.character(LR[i,1])
+    this_r=as.character(LR[i,2])
+    if(this_l %in% rownames(PMAT) & this_r %in% rownames(PMAT)){
+        
+        M_this_l=TAG[which(names(CLUST)==this_l)]
+        M_this_r=TAG[which(names(CLUST)==this_r)]
+        
+        MLR=cbind(MLR,c(this_l,this_r,M_this_l,M_this_r))
+    }
+    i=i+1
+    }
+
+    MLR=t(MLR)
+    colnames(MLR)=c('L','R','LC','RC')
+    MLR=unique(MLR)
+    
+    #OUT=c()
+    #TMP=unique(MLR[,c(1,2)])
+    #i=1
+    #while(i<=nrow(TMP)){
+    #    this_index=which(MLR[,1]==TMP[i,1] & MLR[,2]==TMP[i,2])
+        
+    #    this_l=paste(MLR[this_index,3],collapse = ",")
+    #    this_r=paste(MLR[this_index,4],collapse = ",")
+    #    this_out=c(paste0(TMP[i,1],':',this_l),paste0(TMP[i,2],':',this_r))
+    #    print(this_out)
+    #    OUT=cbind(OUT,this_out)
+        
+    #    i=i+1
+    #    }
+    #OUT=t(OUT)
+    #colnames(OUT)=c('L','R')
+    #rownames(OUT)=NULL
+    return(MLR)
+    }
+
 
 
 
