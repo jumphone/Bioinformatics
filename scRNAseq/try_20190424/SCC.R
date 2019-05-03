@@ -277,7 +277,7 @@ getCN <- function(NET){
 DPlot <- function(NET, CN, CUTOFF=3, PCUT=0.05, COL=2,PLOT=TRUE){   
     CCLR=names(CN[which(CN>=CUTOFF)])
     if(PLOT==TRUE){
-        par(mfrow=c(trunc((length(CCLR)+1)/COL),COL))}
+        par(mfrow=c(trunc((length(CCLR))/COL)+1,COL))}
     TOT=paste0(as.character(NET[,3]),'_to_',as.character(NET[,4]))
     ALLP=c()
     i=1
