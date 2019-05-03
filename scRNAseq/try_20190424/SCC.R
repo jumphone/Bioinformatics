@@ -388,15 +388,15 @@ getPmatHEAT <- function(PMAT, SHOW=FALSE){
     return(OUT)}
 
 
-getCLUST <- function(HEAT, DIST, CCUT=0.7, SHOW=FALSE) {
-    
+getCLUST <- function(ORDER, DIST, CCUT=0.7, SHOW=FALSE) {
+    ORDER=ORDER
     CCUT=CCUT
     tag_tmp=1
     TAG=c(tag_tmp)
     i=2
-    while(i<=length(HEAT$colInd)){    
-        index1=HEAT$colInd[i-1]
-        index2=HEAT$colInd[i]
+    while(i<=length(ORDER)){    
+        index1=ORDER[i-1]
+        index2=ORDER[i]
         #if((i-1) %in% INUM & i %in% INUM & DIST[index1,index2]>CCUT){
         if(DIST[index1,index2]>CCUT){
             this_tag=tag_tmp
@@ -404,7 +404,7 @@ getCLUST <- function(HEAT, DIST, CCUT=0.7, SHOW=FALSE) {
         TAG=c(TAG,this_tag)   
         i=i+1
         }
-    OGENE=colnames(DIST)[HEAT$colInd]
+    OGENE=colnames(DIST)[ORDER]
     names(TAG)=OGENE
     
     COLC=as.numeric(names(table(TAG))[which(table(TAG)>1)])
@@ -419,11 +419,11 @@ getCLUST <- function(HEAT, DIST, CCUT=0.7, SHOW=FALSE) {
         i=i+1
         }
     if(SHOW==FALSE){
-        heatmap.2(DIST[out$colInd[length(out$colInd):1],out$colInd],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
-            col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(out$colInd):1] ,margins=c(5,5), labRow='',labCol='') 
+        heatmap.2(DIST[ORDER[length(ORDER):1],ORDER],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
+            col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(ORDER):1] ,margins=c(5,5), labRow='',labCol='') 
         }else{
-        heatmap.2(DIST[out$colInd[length(out$colInd):1],out$colInd],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
-            col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(out$colInd):1] ,margins=c(10,10)) 
+        heatmap.2(DIST[ORDER[length(ORDER):1],ORDER],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
+            col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(ORDER):1] ,margins=c(10,10)) 
         }
     
     return(TAG)
