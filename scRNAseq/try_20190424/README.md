@@ -52,7 +52,7 @@ Date: 20190501
     DimPlot(pbmc,group.by='bin',reduction.use='umap',do.label=T)
     dev.off()
     
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/ID.png" width="200">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/ID.png" width="300">
 
     LR=read.table('ReceptorLigand.txt.mouse',header=T,sep='\t')
     #https://github.com/jumphone/Bioinformatics/tree/master/scRNAseq/RecLig/
@@ -77,7 +77,7 @@ Date: 20190501
     HEAT=OUT$HEAT
     DIST=OUT$DIST
 
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CLUST.png" width="200">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CLUST.png" width="300">
 
     MLR=getMLR(CLUST, LR, PMAT)
     LR=MLR[,c(1:2)]
@@ -93,7 +93,7 @@ Date: 20190501
       col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
     dev.off()
 
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CMAT.png" width="200">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CMAT.png" width="300">
 
     OUT=getPAIR(CMAT)
     PAIR=OUT$PAIR
@@ -112,7 +112,7 @@ Date: 20190501
     CPlot(VEC,PAIR[1:200,],BINTAG)
     dev.off()
 
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CPlot.png" width="200">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CPlot.png" width="300">
 
     ORITAG=as.character(pbmc@ident)
     NET=getNET(PAIR, BINTAG,ORITAG )
@@ -123,7 +123,7 @@ Date: 20190501
     DP=DPlot(NET, CN, COL=3)
     dev.off()
 
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/DPlot.png" width="200">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/DPlot.png" width="300">
 
     SIG_INDEX=which(DP<0.05)
     SIG_PAIR=names(SIG_INDEX)
@@ -143,7 +143,7 @@ Date: 20190501
         i=i+1}
     dev.off()
     
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/LPlot.png" width="200">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/LPlot.png" width="300">
 
 
     TAG=groupTAG(BINTAG,LT="LGroup",RT='RGroup',LC=c(1,2,3),RC=c(4,5,6))
