@@ -46,66 +46,106 @@ heatmap.2(DIST,scale='none',dendrogram='both',Colv=T,Rowv=T,trace='none',
 out=heatmap.2(DIST,scale='none',dendrogram='both',Colv=T,Rowv=T,trace='none',
   col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15), labRow='',labCol='')
 
+OUT=getPmatHEAT(PMAT,SHOW=T)
+HEAT=OUT$HEAT
+DIST=OUT$DIST
+
+CLUST=getCLUST(HEAT, DIST, CCUT=0.7, SHOW=T)
 
 
+MLR=getMLR(CLUST, LR, PMAT)
+LR=MLR[,c(1:2)]
 
-DISTLIST=c()
-PAIR=c()
+
+CMAT=getCMAT(EXP,LR,PMAT,BI=T)
+saveRDS(CMAT,file='CMAT.RDS')
+
+pdf('2HEAT.pdf',width=15,height=13)
+library('gplots')
+heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
+  col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
+dev.off()
+
+
+OUT=getPAIR(CMAT)
+PAIR=OUT$PAIR
+SCORE=OUT$SCORE
+RANK=OUT$RANK
+saveRDS(PAIR,file='PAIR.RDS')
+
+#---- !!! Changed in Seurat 3.0 !!! ----
+VEC=pbmc@dr$umap@cell.embeddings
+#--------------------------------------- 
+# For Seurat 3.0, please use:
+# VEC=pbmc@reductions$tsne@cell.embeddings
+#---------------------------------------
+
+pdf('3CPlot.pdf',width=12,height=10)
+CPlot(VEC,PAIR[1:200,],BINTAG)
+dev.off()
+
+
+ORITAG=as.character(pbmc@ident)
+ORITAG[which(ORITAG=='Pericyte/\nFibroblast')]='Pericyte Fibroblast'
+
+NET=getNET(PAIR, BINTAG,ORITAG )
+write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
+   
+CN=getCN(NET)
+pdf('4DPlot.pdf',width=20,height=20)
+DP=DPlot(NET, CN, COL=3)
+dev.off()
+
+
+SIG_INDEX=which(DP<0.05)
+SIG_PAIR=names(SIG_INDEX)
+
+pdf('5LPlot.pdf',width=20,height=20)
+RCN=trunc(sqrt(length(SIG_PAIR))+1)
+par(mfrow=c(RCN,RCN))
 i=1
-while(i+1<=length(out$colInd)){
-    
-index1=out$colInd[i]
-index2=out$colInd[i+1]
-this_dist=DIST[index1,index2]
-DISTLIST=c(DISTLIST,this_dist)
-PAIR=cbind(PAIR,c(i,i+1))
-i=i+1
-}
-
-PAIR=t(PAIR)
-
-
-CCUT=0.7
-
-used_index=which(DISTLIST>CCUT)
-PAIR[used_index,]
-
-INUM=as.numeric(PAIR[used_index,])
-
-
-tag_tmp=1
-TAG=c(tag_tmp)
-i=2
-while(i<=length(out$colInd)){    
-index1=out$colInd[i-1]
-index2=out$colInd[i]
-if((i-1) %in% INUM & i %in% INUM){
-this_tag=tag_tmp
-}else{tag_tmp=tag_tmp+1;this_tag=tag_tmp}
- TAG=c(TAG,this_tag)   
-i=i+1
-}
-
-COLC=as.numeric(names(table(TAG))[which(table(TAG)>1)])
-
-CCC=rainbow(length(unique(TAG)))
-RC=rep('grey80',length(TAG))
-i=1
-while(i<=length(TAG)){
-if(TAG[i] %in% COLC){
-RC[i]='grey20'}#CCC[TAG[i]] }
-i=i+1
-}
-
-heatmap.2(DIST[out$colInd[length(out$colInd):1],out$colInd],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
-  col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(out$colInd):1] ,margins=c(10,15), labRow='',labCol='')
+while(i<= length(SIG_PAIR) ){
+    this_pair=SIG_PAIR[i]
+    LT=unlist(strsplit(this_pair, "_to_"))[1]
+    RT=unlist(strsplit(this_pair, "_to_"))[2]
+    LP=LPlot(LT, RT, NET, PMAT=PMAT,LR=LR,MAIN=SIG_INDEX[i],SEED=123)
+    colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
+    write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
+    print(i)
+    i=i+1}
+dev.off()
 
 
 
-OGENE=colnames(DIST)[out$colInd]
 
 
-names(TAG)=OGENE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 MPMAT=PMAT[1:length(unique(TAG)),]
 rownames(MPMAT)=as.character(c(1:max(TAG)))
 MPMAT=MPMAT*0
@@ -134,6 +174,9 @@ i=i+1
 MLR=t(MLR)
 colnames(MLR)=c('L','R')
 MLR=unique(MLR)
+
+
+
 
 
 
