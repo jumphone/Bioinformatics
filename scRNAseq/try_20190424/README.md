@@ -65,14 +65,19 @@ Date: 20190501
     PMAT=getPMAT(EXP, LR, BIN, MEAN)
     saveRDS(PMAT,file='PMAT.RDS')
     
-    pdf('2GCOR.pdf',width=20,height=20)
-    OUT=getPmatHEAT(PMAT,SHOW=T)
-    dev.off()
-    HEAT=OUT$HEAT
-    DIST=OUT$DIST
-
+    DIST=cor(t(PMAT),method='spearman')
+    OOO=.data2one((DIST+1), colnames(DIST), CPU=4, PCNUM=50, SEED=123,  PP=30)
+    ORDER=order(OOO)
+    
+    #pdf('2GCOR.pdf',width=20,height=20)
+    #OUT=getPmatHEAT(PMAT,SHOW=T)
+    #dev.off()
+    #HEAT=OUT$HEAT
+    #DIST=OUT$DIST
+    #ORDER=
+    
     pdf('3CLUST.pdf',width=20,height=20)
-    CLUST=getCLUST(HEAT, DIST, CCUT=0.7, SHOW=T)
+    CLUST=getCLUST(ORDER, DIST, CCUT=0.7, SHOW=T)
     dev.off()
     HEAT=OUT$HEAT
     DIST=OUT$DIST
