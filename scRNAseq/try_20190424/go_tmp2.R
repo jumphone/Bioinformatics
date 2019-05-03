@@ -39,13 +39,26 @@ LR=read.table('RL_mouse.txt',header=T,sep='\t')
     saveRDS(PMAT,file='PMAT.RDS')
     
 
+OOO=.data2one(t(PMAT), colnames(PMAT), CPU=4, PCNUM=50, SEED=123,  PP=5)
+
+
+CLUST=getCLUST(order(OOO), DIST, CCUT=0.7, SHOW=T)
+
+
+
+#heatmap.2(DIST[order(OOO)[length(order(OOO)):1],order(OOO)],scale='none',dendrogram='none',Colv=F,Rowv=F,trace='none',
+#            col=colorRampPalette(c('blue3','grey95','red3')), ColSideColors=RC ,RowSideColors=RC[length(out$colInd):1] ,margins=c(5,5), labRow='',labCol='') 
+        
+
+
+
 OUT=getPmatHEAT(PMAT,SHOW=T)
 HEAT=OUT$HEAT
 DIST=OUT$DIST
 
 
 
-CLUST=getCLUST(HEAT, DIST, CCUT=0.7, SHOW=T)
+CLUST=getCLUST(HEAT$colInd , DIST, CCUT=0.7, SHOW=T)
 
 
 MLR=getMLR(CLUST, LR, PMAT)
