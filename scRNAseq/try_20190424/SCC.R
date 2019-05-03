@@ -141,9 +141,7 @@ getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
                         if(l_bin_base<=0 | r_bin_base<=0){
                             this_add=0}else{
                             #this_add= (l_bin_base + r_bin_base)*( min(l_bin_base,r_bin_base)/max(l_bin_base,r_bin_base) )
-                            this_add= 
-                            
-                            min(l_bin_base,r_bin_base)
+                            this_add= min(l_bin_base,r_bin_base)
                             }
                          }
                     ######################  
