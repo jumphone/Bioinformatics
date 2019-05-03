@@ -77,6 +77,8 @@ Date: 20190501
     HEAT=OUT$HEAT
     DIST=OUT$DIST
 
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CLUST.png" width="200">
+
     MLR=getMLR(CLUST, LR, PMAT)
     LR=MLR[,c(1:2)]
 
@@ -91,7 +93,7 @@ Date: 20190501
       col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
     dev.off()
 
-<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/HEAT.png" width="200">
+<img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CMAT.png" width="200">
 
     OUT=getPAIR(CMAT)
     PAIR=OUT$PAIR
