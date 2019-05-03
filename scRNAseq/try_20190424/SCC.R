@@ -109,7 +109,7 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
 
 getCMAT <- function(EXP, LR, PMAT, BI=FALSE){
     
-    GENE=rownames(EXP)
+    GENE=rownames(PMAT)
     CMAT=PMAT[c(1:ncol(PMAT)),]*0
     rownames(CMAT)=colnames(CMAT)
     rownames(CMAT)=paste0('L_',rownames(CMAT))
