@@ -159,7 +159,32 @@ DP=DPlot(NET, CN, COL=4)
 
 
 
+SIG_INDEX=which(DP<0.05)
+SIG_PAIR=names(SIG_INDEX)
 
+RCN=trunc(sqrt(length(SIG_PAIR))+1)
+par(mfrow=c(RCN,RCN))
+i=1
+while(i<= length(SIG_PAIR) ){
+    this_pair=SIG_PAIR[i]
+    LT=unlist(strsplit(this_pair, "_to_"))[1]
+    RT=unlist(strsplit(this_pair, "_to_"))[2]
+    LP=LPlot(LT, RT, NET, PMAT=MPMAT,LR=MLR,MAIN=SIG_INDEX[i],SEED=123)    
+    colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
+    write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
+    print(i)
+    i=i+1}
+
+
+
+LI=48
+RI=27
+LI=74
+RI=30
+
+this_l=which(TAG==LI)
+this_r=which(TAG==RI)
+LR[which(LR[,1]%in% names(this_l) & LR[,2] %in% names(this_r)),]
 
 
 
