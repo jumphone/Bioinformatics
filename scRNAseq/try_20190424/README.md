@@ -69,14 +69,14 @@ Date: 20190501
     OOO=.data2one((DIST+1), colnames(DIST), CPU=4, PCNUM=50, SEED=123,  PP=30)
     ORDER=order(OOO)
     
-    #pdf('2GCOR.pdf',width=20,height=20)
+    #pdf('GCOR.pdf',width=20,height=20)
     #OUT=getPmatHEAT(PMAT,SHOW=T)
     #dev.off()
     #HEAT=OUT$HEAT
     #DIST=OUT$DIST
     #ORDER=
     
-    pdf('3CLUST.pdf',width=20,height=20)
+    pdf('2CLUST.pdf',width=20,height=20)
     CLUST=getCLUST(ORDER, DIST, CCUT=0.7, SHOW=T)
     dev.off()
     HEAT=OUT$HEAT
@@ -90,7 +90,7 @@ Date: 20190501
     CMAT=getCMAT(EXP,LR,PMAT,BI=TRUE)
     saveRDS(CMAT,file='CMAT.RDS')
     
-    pdf('4CMAT.pdf',width=15,height=13)
+    pdf('3CMAT.pdf',width=15,height=13)
     library('gplots')
     heatmap.2(log(CMAT+1,10),scale=c("none"),dendrogram='both',Colv=T,Rowv=T,trace='none',
       col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
@@ -113,7 +113,7 @@ Date: 20190501
     # VEC=pbmc@reductions$umap@cell.embeddings
     #---------------------------------------
     
-    pdf('5CPlot_TOP200.pdf',width=12,height=10)
+    pdf('4CPlot_TOP200.pdf',width=12,height=10)
     CPlot(VEC,PAIR[1:200,],BINTAG)
     dev.off()
 
@@ -124,7 +124,7 @@ Date: 20190501
     write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
        
     CN=getCN(NET)
-    pdf('6DPlot.pdf',width=20,height=20)
+    pdf('5DPlot.pdf',width=20,height=20)
     DP=DPlot(NET, CN, COL=3)
     dev.off()
 
@@ -133,7 +133,7 @@ Date: 20190501
     SIG_INDEX=which(DP<0.05)
     SIG_PAIR=names(SIG_INDEX)
     
-    pdf('7LPlot.pdf',width=20,height=20)
+    pdf('6LPlot.pdf',width=20,height=20)
     RCN=trunc(sqrt(length(SIG_PAIR))+1)
     par(mfrow=c(RCN,RCN))
     i=1
