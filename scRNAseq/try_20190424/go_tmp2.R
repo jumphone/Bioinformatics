@@ -111,7 +111,8 @@ rownames(MPMAT)=as.character(c(1:max(TAG)))
 MPMAT=MPMAT*0
 i=1
 while(i<=nrow(MPMAT)){
-this_row=which(TAG==i)
+this_gene=names(which(TAG==i))
+this_row=which(rownames(PMAT)%in% this_gene)
 if(length(which(TAG==i))>1){
 MPMAT[i,]=apply(PMAT[this_row,],2,mean)}else{
 MPMAT[i,]=PMAT[this_row,]}
@@ -147,7 +148,7 @@ OUT=getPAIR(MCMAT)
 PAIR=OUT$PAIR
 SCORE=OUT$SCORE
 RANK=OUT$RANK
-VEC=pbmc@dr$tsne@cell.embeddings
+VEC=pbmc@dr$umap@cell.embeddings
 CPlot(VEC,PAIR[1:200,],BINTAG)
 
 ORITAG=as.character(pbmc@ident)
@@ -180,17 +181,20 @@ while(i<= length(SIG_PAIR) ){
 
 LI=48
 RI=27
-LI=74
-RI=30
+LI=12
+RI=16
+
 
 this_l=which(TAG==LI)
 this_r=which(TAG==RI)
 this_ln=as.character(LR[which(LR[,1]%in% names(this_l) & LR[,2] %in% names(this_r)),1])
 this_rn=as.character(LR[which(LR[,1]%in% names(this_l) & LR[,2] %in% names(this_r)),2])
-
-LP=LPlot('Microglia', 'Proliferating Cells', NET, PMAT=PMAT,LR=LR,MAIN=SIG_INDEX[i],SEED=123)   
+this_ln
+this_rn
+LP=LPlot('Proliferating Cells', 'Microglia', NET, PMAT=PMAT,LR=LR,SEED=123)   
 LP[which(rownames(LP)==paste0(as.character(this_ln),'_',as.character(this_rn))),]
 
+LP=LPlot('Microglia', 'Proliferating Cells', NET, PMAT=MPMAT,LR=MLR,SEED=123)   
 
 
 
