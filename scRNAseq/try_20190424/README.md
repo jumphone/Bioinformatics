@@ -49,7 +49,7 @@ Date: 20190501
     
     pbmc@meta.data$bin=BINTAG
     pdf('1ID.pdf',width=12,height=10)
-    DimPlot(pbmc,group.by='bin',reduction.use='tsne',do.label=T)
+    DimPlot(pbmc,group.by='bin',reduction.use='umap',do.label=T)
     dev.off()
     
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/ID.png" width="200">
@@ -65,11 +65,28 @@ Date: 20190501
     PMAT=getPMAT(EXP, LR, BIN, MEAN)
     saveRDS(PMAT,file='PMAT.RDS')
     
-    CMAT=getCMAT(EXP,LR,PMAT)
+    pdf('2GCOR.pdf',width=20,height=20)
+    OUT=getPmatHEAT(PMAT,SHOW=T)
+    dev.off()
+    HEAT=OUT$HEAT
+    DIST=OUT$DIST
+
+    pdf('3CLUST.pdf',width=20,height=20)
+    CLUST=getCLUST(HEAT, DIST, CCUT=0.7, SHOW=T)
+    dev.off()
+    HEAT=OUT$HEAT
+    DIST=OUT$DIST
+
+    MLR=getMLR(CLUST, LR, PMAT)
+    LR=MLR[,c(1:2)]
+
+    CMAT=getCMAT(EXP,LR,PMAT,BI=TRUE)
     saveRDS(CMAT,file='CMAT.RDS')
     
-    pdf('2HEAT.pdf',width=15,height=13)
+    pdf('4CMAT.pdf',width=15,height=13)
     library('gplots')
+    heatmap.2(log(CMAT+1,10),scale=c("none"),dendrogram='both',Colv=T,Rowv=T,trace='none',
+      col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
     heatmap.2(CMAT,scale=c("none"),dendrogram='none',Colv=F,Rowv=F,trace='none',
       col=colorRampPalette(c('blue3','grey95','red3')) ,margins=c(10,15))
     dev.off()
@@ -83,13 +100,13 @@ Date: 20190501
     saveRDS(PAIR,file='PAIR.RDS')
    
     #---- !!! Changed in Seurat 3.0 !!! ----
-    VEC=pbmc@dr$tsne@cell.embeddings
+    VEC=pbmc@dr$umap@cell.embeddings
     #--------------------------------------- 
     # For Seurat 3.0, please use:
-    # VEC=pbmc@reductions$tsne@cell.embeddings
+    # VEC=pbmc@reductions$umap@cell.embeddings
     #---------------------------------------
     
-    pdf('3CPlot.pdf',width=12,height=10)
+    pdf('5CPlot_TOP200.pdf',width=12,height=10)
     CPlot(VEC,PAIR[1:200,],BINTAG)
     dev.off()
 
@@ -100,7 +117,7 @@ Date: 20190501
     write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
        
     CN=getCN(NET)
-    pdf('4DPlot.pdf',width=20,height=20)
+    pdf('6DPlot.pdf',width=20,height=20)
     DP=DPlot(NET, CN, COL=3)
     dev.off()
 
@@ -109,7 +126,7 @@ Date: 20190501
     SIG_INDEX=which(DP<0.05)
     SIG_PAIR=names(SIG_INDEX)
     
-    pdf('5LPlot.pdf',width=20,height=20)
+    pdf('7LPlot.pdf',width=20,height=20)
     RCN=trunc(sqrt(length(SIG_PAIR))+1)
     par(mfrow=c(RCN,RCN))
     i=1
@@ -117,7 +134,7 @@ Date: 20190501
         this_pair=SIG_PAIR[i]
         LT=unlist(strsplit(this_pair, "_to_"))[1]
         RT=unlist(strsplit(this_pair, "_to_"))[2]
-        LP=LPlot(LT, RT, NET, PMAT,LR, MAIN=as.character(SIG_INDEX[i]),SEED=123)    
+        LP=LPlot(LT, RT, NET, PMAT,LR, MAIN=as.character(SIG_INDEX[i]),SEED=12345,PCUT=0.05)    
         colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
         write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
         print(i)
