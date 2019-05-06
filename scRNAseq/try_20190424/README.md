@@ -41,7 +41,9 @@ Date: 20190501
     ONE=.data2one(pbmc.raw.data, used_gene, CPU=4, PCNUM=50, SEED=123,  PP=30)
     saveRDS(ONE,file='ONE.RDS')
     
-    OUT=getBIN(ONE)
+    NUM=150
+    
+    OUT=getBIN(ONE,NUM=NUM)
     BIN=OUT$BIN
     BINTAG=OUT$TAG
     saveRDS(BIN,file='BIN.RDS')
@@ -59,7 +61,7 @@ Date: 20190501
     
     EXP=pbmc.data
     
-    MEAN=getMEAN(EXP, LR)
+    MEAN=getMEAN(EXP, LR, NUM=NUM)
     saveRDS(MEAN,file='MEAN.RDS')
         
     PMAT=getPMAT(EXP, LR, BIN, MEAN)
