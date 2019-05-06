@@ -117,8 +117,13 @@ Date: 20190501
     dev.off()
 
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/CPlot.png" width="300">
-
+    
+    #---- !!! Changed in Seurat 3.0 !!! ----
     ORITAG=as.character(pbmc@ident)
+    #--------------------------------------- 
+    #ORITAG=as.character(pbmc@active.ident)
+    #--------------------------------------- 
+    
     NET=getNET(PAIR, BINTAG,ORITAG )
     write.table(NET,file='NET.txt',sep='\t',row.names=F,col.names=T,quote=F)
        
