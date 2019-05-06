@@ -134,19 +134,23 @@ Date: 20190501
     DP=DPlot(NET, CN, COL=3)
     dev.off()
     
-    IDP=DP
+    ADP=p.adjust(DP,method='fdr')
+    
+    IDP=ADP
     IDP[which(IDP==0)]=min(IDP[which(IDP>0)])/2
+     
     DD=sort(-log(IDP,10),decreasing=T)
     CC=rep('grey',length(DD))
     CC[which(DD> -log(0.05,10))]='red'
     pdf('PVALUE.pdf',width=20,height=20)
     par(mar=c(20,5,5,5))
-    barplot(DD,las=2,ylab='-log10(p-value)',col=CC)
+    barplot(DD,las=2,ylab='-log10(adjusted p-value)',col=CC)
     dev.off()
     
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/DPlot.png" width="300">
 
-    SIG_INDEX=which(DP<0.05)
+    #SIG_INDEX=which(DP<0.05)    
+    SIG_INDEX=which(ADP<0.05)
     SIG_PAIR=names(SIG_INDEX)
     TOP_NET=NET
     #TOP_NET=getNET(PAIR[1:500,], BINTAG,ORITAG )
@@ -160,7 +164,7 @@ Date: 20190501
         LT=unlist(strsplit(this_pair, "_to_"))[1]
         RT=unlist(strsplit(this_pair, "_to_"))[2]
         try({
-        LP=LPlot(LT, RT, TOP_NET, PMAT,LR, MAIN=as.character(SIG_INDEX[i]),SEED=12345,PCUT=0.05)    
+        LP=LPlot(LT, RT, TOP_NET, PMAT,LR, MAIN=paste0(as.character(SIG_INDEX[i]),' ',SIG_PAIR[i]),SEED=12345,PCUT=0.05)    
         colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
         write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
         })
