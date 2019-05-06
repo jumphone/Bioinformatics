@@ -41,7 +41,7 @@ Date: 20190501
     ONE=.data2one(pbmc.raw.data, used_gene, CPU=4, PCNUM=50, SEED=123,  PP=30)
     saveRDS(ONE,file='ONE.RDS')
     
-    NUM=150
+    NUM=100
     
     OUT=getBIN(ONE,NUM=NUM)
     BIN=OUT$BIN
