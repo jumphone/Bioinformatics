@@ -440,6 +440,7 @@ getCLUST <- function(ORDER, DIST, CCUT=0.7, SHOW=FALSE) {
 getMLR <- function(CLUST, LR, PMAT){
     
     MLR=c()
+    TAG=CLUST
     i=1
     while(i<=nrow(LR)){
     this_l=as.character(LR[i,1])
