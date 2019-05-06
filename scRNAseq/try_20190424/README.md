@@ -155,7 +155,9 @@ Date: 20190501
     TOP_NET=NET
     #TOP_NET=getNET(PAIR[1:500,], BINTAG,ORITAG )
     
-    pdf('6LPlot.pdf',width=20,height=20)
+    pdf('6LPlot.pdf',width=50,height=50)
+    OUT=c()
+    #OUT_TYPE=c()
     RCN=trunc(sqrt(length(SIG_PAIR))+1)
     par(mfrow=c(RCN,RCN))
     i=1
@@ -165,12 +167,58 @@ Date: 20190501
         RT=unlist(strsplit(this_pair, "_to_"))[2]
         try({
         LP=LPlot(LT, RT, TOP_NET, PMAT,LR, MAIN=paste0(as.character(SIG_INDEX[i]),' ',SIG_PAIR[i]),SEED=12345,PCUT=0.05)    
+        #########################
+        this_out_index=which(LP[,1]>-log(0.05,10) & LP[,2]>-log(0.05,10))
+        this_out=t(LP)[,c(this_out_index,this_out_index)]
+        
+        #OUT_TYPE=c(OUT_TYPE, rep(SIG_PAIR[i],length(this_out_index))) 
+        
+        if(length(this_out_index)>0){ 
+            colnames(this_out)=paste0(SIG_PAIR[i],'_|_',colnames(this_out))
+            OUT=cbind(OUT,this_out)}
+        #####
         colnames(LP)=paste0(c('Lexp','Rexp'),'_',c(LT,RT))
         write.table(LP,file=paste0(as.character(SIG_INDEX[i]),'.tsv'),row.names=T,col.names=T,sep='\t',quote=F)
         })
         print(i)
         i=i+1}
     dev.off()
+    
+    OUT=t(OUT)
+    OUT=unique(cbind(OUT,rownames(OUT)))
+    
+    get_LT<-function(X){
+        X=unlist(strsplit(X, "_|_"))[1]
+        X=unlist(strsplit(X, "_to_"))[1]
+        return(X)
+        }
+    get_RT<-function(X){
+        X=unlist(strsplit(X, "_|_"))[1]
+        X=unlist(strsplit(X, "_to_"))[2]
+        return(X)
+        }
+        
+    OUT_LT=apply(matrix(OUT[,3],ncol=1),1,get_LT)
+    OUT_RT=apply(matrix(OUT[,3],ncol=1),1,get_LT)
+    
+    COL=rep('rgb(230,230,230)',nrow(OUT))
+    COL[which(OUT_LT %in% c('Tumor Cells'))]='green'
+    COL[which(OUT_RT %in% c('Tumor Cells'))]='blue'
+    
+    library(plotly)
+    p <- plot_ly(type = 'scatter', mode = 'markers') %>%
+    add_trace(
+    x = OUT[,2], 
+    y = OUT[,1],
+    text = OUT[,3],
+    hoverinfo = 'text',
+    marker = list(color=COL),
+    showlegend = F
+    )
+    htmlwidgets::saveWidget(as_widget(p), "index.html")
+    
+    
+    
     
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/LPlot.png" width="300">
 
