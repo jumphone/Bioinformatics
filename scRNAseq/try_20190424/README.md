@@ -131,8 +131,8 @@ Date: 20190501
 
     SIG_INDEX=which(DP<0.05)
     SIG_PAIR=names(SIG_INDEX)
-    
-    TOP_NET=getNET(PAIR[1:500,], BINTAG,ORITAG )
+    TOP_NET=NET
+    #TOP_NET=getNET(PAIR[1:500,], BINTAG,ORITAG )
     
     pdf('6LPlot.pdf',width=20,height=20)
     RCN=trunc(sqrt(length(SIG_PAIR))+1)
