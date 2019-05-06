@@ -201,11 +201,13 @@ Date: 20190501
     OUT_LT=apply(matrix(OUT[,3],ncol=1),1,get_LT)
     OUT_RT=apply(matrix(OUT[,3],ncol=1),1,get_RT)
     
+    
+    
+    library(plotly)
+    
     COL=rep('rgb(230,230,230)',nrow(OUT))
     COL[which(OUT_LT %in% c('Tumor Cells'))]='green'
     COL[which(OUT_RT %in% c('Tumor Cells'))]='blue'
-    
-    library(plotly)
     p <- plot_ly(type = 'scatter', mode = 'markers') %>%
     add_trace(
     x = OUT[,2], 
@@ -215,7 +217,23 @@ Date: 20190501
     marker = list(color=COL),
     showlegend = F
     )
-    htmlwidgets::saveWidget(as_widget(p), "index.html")
+    htmlwidgets::saveWidget(as_widget(p), "TumorLR.html")
+    
+    library(plotly)
+    
+    COL=rep('rgb(230,230,230)',nrow(OUT))
+    COL[which(OUT_LT %in% c('Proliferating Cells'))]='green'
+    COL[which(OUT_RT %in% c('Proliferating Cells'))]='blue'
+    p <- plot_ly(type = 'scatter', mode = 'markers') %>%
+    add_trace(
+    x = OUT[,2], 
+    y = OUT[,1],
+    text = OUT[,3],
+    hoverinfo = 'text',
+    marker = list(color=COL),
+    showlegend = F
+    )
+    htmlwidgets::saveWidget(as_widget(p), "ProliferatingLR.html")
     
     
     
