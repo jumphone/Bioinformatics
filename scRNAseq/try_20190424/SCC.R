@@ -309,8 +309,9 @@ LPlot <- function(LT,RT,NET,PMAT,LR,MAIN='',SEED=123,PCUT=0.05){
     if(length(VP)>5){
         #this_l_exp=apply(PMAT[,as.numeric(VP[,1])],1,mean)
         #this_r_exp=apply(PMAT[,as.numeric(VP[,2])],1,mean)        
-        this_l_exp=apply(PMAT[,as.numeric(as.character(VP[,1]))],1,weighted.mean, VP[,5])
-        this_r_exp=apply(PMAT[,as.numeric(as.character(VP[,2]))],1,weighted.mean, VP[,5])
+        this_l_exp=apply(PMAT[,as.numeric(as.character(VP[,1]))],1,weighted.mean, as.numeric(VP[,5])/sum(as.numeric(VP[,5])) )
+        this_r_exp=apply(PMAT[,as.numeric(as.character(VP[,2]))],1,weighted.mean, as.numeric(VP[,5])/sum(as.numeric(VP[,5])) )
+        #this_r_exp2=apply(PMAT[,as.numeric(VP[,2])],1,mean)
     }else{
         this_l_exp=PMAT[,as.numeric(as.character(VP[1]))]
         this_r_exp=PMAT[,as.numeric(as.character(VP[2]))] 
