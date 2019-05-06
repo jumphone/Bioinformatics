@@ -133,7 +133,17 @@ Date: 20190501
     pdf('5DPlot.pdf',width=20,height=20)
     DP=DPlot(NET, CN, COL=3)
     dev.off()
-
+    
+    IDP=DP
+    IDP[which(IDP==0)]=min(IDP[which(IDP>0)])/2
+    DD=sort(-log(IDP,10),decreasing=T)
+    CC=rep('grey',length(DD))
+    CC[which(DD> -log(0.05,10))]='red'
+    pdf('PVALUE.pdf',width=20,height=20)
+    par(mar=c(20,5,5,5))
+    barplot(DD,las=2,ylab='-log10(p-value)',col=CC)
+    dev.off()
+    
 <img src="https://github.com/jumphone/Bioinformatics/raw/master/scRNAseq/try_20190424/src/DPlot.png" width="300">
 
     SIG_INDEX=which(DP<0.05)
