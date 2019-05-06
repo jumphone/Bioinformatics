@@ -188,18 +188,18 @@ Date: 20190501
     OUT=unique(cbind(OUT,rownames(OUT)))
     
     get_LT<-function(X){
-        X=unlist(strsplit(X, "_|_"))[1]
+        X=unlist(strsplit(X, "_\\|_"))[1]
         X=unlist(strsplit(X, "_to_"))[1]
         return(X)
         }
     get_RT<-function(X){
-        X=unlist(strsplit(X, "_|_"))[1]
+        X=unlist(strsplit(X, "_\\|_"))[1]
         X=unlist(strsplit(X, "_to_"))[2]
         return(X)
         }
         
     OUT_LT=apply(matrix(OUT[,3],ncol=1),1,get_LT)
-    OUT_RT=apply(matrix(OUT[,3],ncol=1),1,get_LT)
+    OUT_RT=apply(matrix(OUT[,3],ncol=1),1,get_RT)
     
     COL=rep('rgb(230,230,230)',nrow(OUT))
     COL[which(OUT_LT %in% c('Tumor Cells'))]='green'
