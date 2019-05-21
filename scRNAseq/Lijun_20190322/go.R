@@ -78,13 +78,39 @@ GENE=c("ASCL1","PPP1R14B", "PDGFRA",'CSPG4','ZNF488' ,'NKX2-2','CNP','MYRF')
 FeaturePlot(object = pbmc, features.plot = GENE, cols.use = c("grey", "blue"), reduction.use = "umap")
 dev.off()
 
-
-
-
-
 saveRDS(pbmc,file='pbmc.RDS')
 
+##############################################
 
 
+
+library(Seurat)
+pbmc.data <- read.table("GFAPGFP_normalized_matrix.txt.uniq.txt", sep='\t', header=T,row.names=1)
+used_cell=which(as.character(t(pbmc.data[1,])) %in% c('pri-OPC','OPC'))
+used_label=t(pbmc.data[1,])[used_cell]
+
+pbmc.data=pbmc.data[c(3:nrow(pbmc.data)),]
+exp_data=apply(pbmc.data,2,as.character)
+exp_data=apply(exp_data,2,as.numeric)
+rownames(exp_data)=rownames(pbmc.data)
+pbmc <- CreateSeuratObject(raw.data = exp_data, min.cells = 0, min.genes = 0,  project = "10X_PBMC")
+
+pbmc <- NormalizeData(object = pbmc, normalization.method = "LogNormalize",  scale.factor = 10000)
+pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR, 
+    x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5)
+
+length(x = pbmc@var.genes) # 5126
+
+pbmc <- ScaleData(object = pbmc, vars.to.regress = c("nUMI"))
+
+PCNUM=100
+pbmc <- RunPCA(object = pbmc, pcs.compute=PCNUM, pc.genes = pbmc@var.genes, do.print = TRUE, pcs.print = 1:5, genes.print = 5)
+
+PCElbowPlot(object = pbmc,num.pc=PCNUM)
+
+PCUSE=1:100
+pbmc <- RunUMAP(object = pbmc, dims.use = PCUSE, seed.use=1)
+
+DimPlot(pbmc,reduction.use='umap')
 
 
