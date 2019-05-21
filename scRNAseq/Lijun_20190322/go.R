@@ -80,6 +80,10 @@ dev.off()
 
 saveRDS(pbmc,file='pbmc.RDS')
 
+
+
+
+####################
 ##############################################
 
 
@@ -89,7 +93,7 @@ pbmc.data <- read.table("GFAPGFP_normalized_matrix.txt.uniq.txt", sep='\t', head
 used_cell=which(as.character(t(pbmc.data[1,])) %in% c('pri-OPC','OPC'))
 used_label=t(pbmc.data[1,])[used_cell]
 
-pbmc.data=pbmc.data[c(3:nrow(pbmc.data)),]
+pbmc.data=pbmc.data[c(3:nrow(pbmc.data)),used_cell]
 exp_data=apply(pbmc.data,2,as.character)
 exp_data=apply(exp_data,2,as.numeric)
 rownames(exp_data)=rownames(pbmc.data)
@@ -112,5 +116,42 @@ PCUSE=1:100
 pbmc <- RunUMAP(object = pbmc, dims.use = PCUSE, seed.use=1)
 
 DimPlot(pbmc,reduction.use='umap')
+
+pbmc@meta.data$type=used_label
+
+
+pdf('GFAPGFP_f1_UMAP.pdf',width=7,height=5)
+GENE=c("Ascl1","Ppp1r14b", "Pdgfra",'Cspg4','Zfp488' ,'Nkx2-2','Cnp','Myrf')
+FeaturePlot(object = pbmc, features.plot = GENE, cols.use = c("grey", "blue"), reduction.use = "umap")
+DimPlot(pbmc,reduction.use='umap',group.by='type',do.label=T)
+
+dev.off()
+
+
+UMAP2=-pbmc@dr$umap@cell.embeddings[,1]
+
+V=(UMAP2-min(UMAP2))
+V=V/max(V)
+V=round(V*100)
+V=V+1
+
+COLP=colorRampPalette(c('blue3','darkgreen','gold','red3'))(101)
+
+COL=COLP[V]
+
+pdf('f3_TRA.pdf',width=5,height=10)
+par(mfrow=c(5,1))
+PDGFRA=pbmc@data[which(rownames(pbmc@data) == "Pdgfra"),]
+plot(UMAP2, PDGFRA, pch=16,xlab='UMAP1',col=COL)
+CSPG4=pbmc@data[which(rownames(pbmc@data) == "Cspg4"),]
+plot(UMAP2, CSPG4, pch=16,xlab='UMAP1',col=COL)
+TOP2A=pbmc@data[which(rownames(pbmc@data) == "Zfp488"),]
+plot(UMAP2, TOP2A, pch=16,xlab='UMAP1',col=COL)
+MBP=pbmc@data[which(rownames(pbmc@data) == "Nkx2-2"),]
+plot(UMAP2, MBP, pch=16,xlab='UMAP1',col=COL)
+CNP=pbmc@data[which(rownames(pbmc@data) == "Cnp"),]
+plot(UMAP2,CNP, pch=16,xlab='UMAP1',col=COL)
+dev.off()
+
 
 
