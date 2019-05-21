@@ -77,3 +77,36 @@ FeaturePlot(object = pbmc, features.plot = c('Prrx2'), cols.use = c("grey", "blu
 FeaturePlot(object = pbmc, features.plot = c('Prrx2','Rgs5'), cols.use = c("grey", "blue"), reduction.use = "tsne")
 
 
+########
+#0521
+library(Seurat)
+pbmc=readRDS('cb_seurat.RDS')
+
+ref_tag=readRDS('37cluster.RDS')
+ref_map=read.table('SUB.txt',sep='\t',header=F)
+i=1
+while(i<=nrow(ref_map)){
+this_index=which(ref_tag[,2]==as.character(ref_map[i,1]))
+ref_tag[this_index,2]=as.character(ref_map[i,2])
+i=i+1}
+
+
+COL=c()
+i=1
+while(i <=length(pbmc@ident)){
+    this_col=which(colnames(pbmc@raw.data)==names(pbmc@ident)[i])
+    COL=c(COL,this_col)
+    i=i+1
+    }      
+exp_sc_mat=as.matrix(pbmc@raw.data)[,COL]
+
+LocalRef=.generate_ref(ref_exp, ref_tag, min_cell=10)  
+
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+LocalRef=.generate_ref(exp_sc_mat, ref_tag, min_cell=10)  
+
+
+saveRDS(LocalRef,file='37ref.RDS')
+
+
+
