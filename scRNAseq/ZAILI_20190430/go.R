@@ -108,5 +108,12 @@ LocalRef=.generate_ref(exp_sc_mat, ref_tag, min_cell=10)
 
 saveRDS(LocalRef,file='37ref.RDS')
 
+pbmc@meta.data$newtag=as.character(ref_tag[,2])
+
+pdf('PNG.pdf',width=18,height=12)
+DimPlot(pbmc,group.by='newtag',reduction.use='tsne',do.label=T)
+dev.off()
+
+
 
 
