@@ -37,6 +37,24 @@ PCUSE=1:150
 pbmc <- RunUMAP(pbmc, dims = PCUSE)
 
 
+
+library(sva)
+library(pamr)
+library(limma)
+pca=pbmc@reductions$pca@cell.embeddings
+batch=as.character(pbmc@meta.data$orig.ident)
+pheno = data.frame(batch=as.matrix(batch))
+edata = t(pca)
+batch = pheno$batch
+modcombat = model.matrix(~1, data=pheno)
+combat_edata = ComBat(dat=edata, batch=batch, mod=modcombat, par.prior=TRUE, prior.plots=FALSE)
+ttt=t(combat_edata)
+colnames(ttt)=colnames(pbmc@reductions$pca@cell.embeddings)
+rownames(ttt)=rownames(pbmc@reductions$pca@cell.embeddings)
+#pbmc@reductions$pca@cell.embeddings=ttt
+
+
+
 DimPlot(pbmc, reduction = "umap")
 
 saveRDS(pbmc,file='pbmc.RDS')
