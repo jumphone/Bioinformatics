@@ -60,9 +60,170 @@ dev.off()
 
 saveRDS(npbmc,file='pbmc.RDS')
 
-
+#############################
+VEC=npbmc@reductions$umap@cell.embeddings
+META=npbmc@meta.data
+saveRDS(VEC, file=paste0('./VEC.RDS'))
+saveRDS(META, file=paste0('./META.RDS'))
 
 #########################################
+##########################################
+
+
+
+
+##################
+
+VEC=readRDS('VEC.RDS')
+
+
+NUMBER=150
+
+x_step=(max(VEC[,1])-min(VEC[,1]))/NUMBER
+y_step=(max(VEC[,2])-min(VEC[,2]))/NUMBER
+
+X=VEC[,1]
+Y=VEC[,2]
+
+
+############################
+tiff('GRID1.tiff',width=9,height=9, res=400,units='in')
+plot(VEC,pch=16,cex=0.3,col='grey30')
+
+i=min(X)
+while(i<=max(X)){
+    abline(v=i,col='grey70')  
+    i=i+x_step}
+
+i=min(Y)
+while(i<=max(Y)){
+    abline(h=i,col='grey70')
+    i=i+y_step}
+dev.off()
+#######################
+
+
+CELL_X=rep(NA,nrow(VEC))
+CELL_Y=rep(NA,nrow(VEC))
+CELL_VEC=c()
+CELL_X_INDEX=c()
+CELL_Y_INDEX=c()
+
+i=0
+vec_x=min(X)+x_step*i
+
+while(vec_x<=max(X)){
+    j=0
+    vec_y=min(Y)+y_step*j
+
+    while(vec_y<=max(Y)){ 
+      
+        lbx=vec_x
+        lby=vec_y
+        rtx=vec_x+x_step
+        rty=vec_y+y_step
+        #rect(lbx,lby,rtx,rty)
+      
+        CELL_VEC=cbind(CELL_VEC, c((lbx+rtx)/2 , (lby+rty)/2))
+        CELL_X_INDEX=c(CELL_X_INDEX,i)
+        CELL_Y_INDEX=c(CELL_Y_INDEX,j)
+        
+        this_cell=which(X>=lbx & X<rtx & Y>=lby & Y<rty)
+        if(length(this_cell)>0){        
+            CELL_X[this_cell]=i
+            CELL_Y[this_cell]=j
+        }
+             
+        j=j+1
+        vec_y=min(Y)+y_step*j
+
+        }
+    print(i)
+    i=i+1
+    vec_x=min(X)+x_step*i
+}
+
+
+
+
+CELL_VEC=t(CELL_VEC)
+rownames(CELL_VEC)=paste0('X_',as.character(CELL_X_INDEX),'_Y_',as.character(CELL_Y_INDEX))
+colnames(CELL_VEC)=c('UMAP_1','UMAP_2')
+
+
+CELL_LABEL=paste0('X_',as.character(CELL_X),'_Y_',as.character(CELL_Y))
+V_CELL_VEC=CELL_VEC[which(rownames(CELL_VEC) %in% CELL_LABEL),]
+
+tiff('GRID2.tiff',width=9,height=9, res=400,units='in')
+plot(V_CELL_VEC,pch=15,col='grey50',cex=0.4)
+dev.off()
+
+
+
+NUM=c()
+i=1
+while(i<=nrow(V_CELL_VEC)){
+    #this_vec=V_CELL_VEC[i,]
+    this_name=rownames(V_CELL_VEC)[i]
+    this_num=length(which(CELL_LABEL ==this_name))
+    NUM=c(NUM,this_num)   
+    i=i+1
+    print(i)
+}
+
+USED_CUTOFF=1
+
+summary(NUM)
+tiff('GRID3.tiff',width=9,height=9, res=400,units='in')
+COLS=rep('grey80',length(NUM))#colorRampPalette(c("grey80","yellow",'red1',"red3"))(max(NUM))
+COLS[which(NUM>=USED_CUTOFF)]='yellow3'
+COLS[which(NUM>=USED_CUTOFF+1)]='red3'
+plot(V_CELL_VEC,pch=15,col=COLS,cex=0.4)
+dev.off()
+
+
+tiff('GRID4.tiff',width=9,height=9, res=400,units='in')
+plot(V_CELL_VEC[which(NUM>=USED_CUTOFF),],pch=15,col='grey50',cex=0.4)
+dev.off()
+
+USE_VEC=V_CELL_VEC[which(NUM>=USED_CUTOFF),]
+#plot(density(NUM))
+saveRDS(USE_VEC,file='USE_VEC.RDS')
+saveRDS(CELL_LABEL,file='CELL_LABEL.RDS')
+saveRDS(V_CELL_VEC, file='V_CELL_VEC.RDS')
+saveRDS(NUM,file='NUM.RDS')
+
+#########################################
+##########################################
+
+
+V_CELL_VEC=readRDS(file='V_CELL_VEC.RDS')
+CELL_LABEL=readRDS(file='CELL_LABEL.RDS')
+META=readRDS('META.RDS')
+
+BATCH=names(table(META$orig.ident))
+
+M=c()
+i=1
+while(i<=nrow(V_CELL_VEC)){
+    #this_vec=V_CELL_VEC[i,]
+    this_name=rownames(V_CELL_VEC)[i]
+    this_index=which(CELL_LABEL ==this_name)
+    this_m=table(META$orig.ident[this_index])
+    
+    M=cbind(M,this_m)   
+    i=i+1
+    print(i)
+}
+
+M=t(M)
+rownames(M)=rownames(V_CELL_VEC)
+
+saveRDS(M,file='M.RDS')
+############################################
+
+
+
 
 
 
