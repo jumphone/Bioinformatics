@@ -1,3 +1,5 @@
+#Seurat 3.0
+
 library(dplyr)
 library(Seurat)
 
@@ -27,3 +29,8 @@ pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor 
 pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
 all.genes <- rownames(pbmc)
 pbmc <- ScaleData(pbmc, features = all.genes, vars.to.regress = c("percent.mt","nCount_RNA","batch"))
+
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
+
+
+
