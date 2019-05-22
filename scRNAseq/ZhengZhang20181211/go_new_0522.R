@@ -53,7 +53,7 @@ plot(mybeer$cor, xlab='PCs', ylab="COR", pch=16)
 npbmc <- mybeer$seurat
 PCUSE <- which(mybeer$cor> quantile(mybeer$cor,0.2) & mybeer$fdr<0.05 )
 npbmc <- RunUMAP(object = npbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
-pdf('BEER.pdf',width=10,heigth=8)
+pdf('BEER.pdf',width=10,height=8)
 DimPlot(npbmc, reduction = "umap")
 DimPlot(npbmc, reduction = "umap",group.by='map')
 dev.off()
