@@ -58,176 +58,85 @@ DimPlot(npbmc, reduction = "umap")
 DimPlot(npbmc, reduction = "umap",group.by='map')
 dev.off()
 
+npbmc@meta.data$batch=npbmc@meta.data$orig.ident
 saveRDS(npbmc,file='pbmc.RDS')
 
-#############################
-VEC=npbmc@reductions$umap@cell.embeddings
-META=npbmc@meta.data
-saveRDS(VEC, file=paste0('./VEC.RDS'))
-saveRDS(META, file=paste0('./META.RDS'))
+##############################
+source('scdemix.R')
 
-#########################################
-##########################################
+get_file(npbmc,TMP='./')
+agg_local(USED_CUTOFF=1, NUMBER=150, TMP='./')
+agg_cloud(npbmc,TMP="./")
+com_local(USED_CUTOFF=1,TMP='./')
 
-
-
-
-##################
-
-VEC=readRDS('VEC.RDS')
+pbmc=readRDS('demix.RDS')
 
 
-NUMBER=150
-
-x_step=(max(VEC[,1])-min(VEC[,1]))/NUMBER
-y_step=(max(VEC[,2])-min(VEC[,2]))/NUMBER
-
-X=VEC[,1]
-Y=VEC[,2]
-
-
-############################
-tiff('GRID1.tiff',width=9,height=9, res=400,units='in')
-plot(VEC,pch=16,cex=0.3,col='grey30')
-
-i=min(X)
-while(i<=max(X)){
-    abline(v=i,col='grey70')  
-    i=i+x_step}
-
-i=min(Y)
-while(i<=max(Y)){
-    abline(h=i,col='grey70')
-    i=i+y_step}
+pdf("GROUP.pdf",width=8,height=3)
+FeaturePlot(pbmc, cols=c("lightgrey",'red'), features = c('CDC42HET','SmallIntestine'))
 dev.off()
-#######################
 
-
-CELL_X=rep(NA,nrow(VEC))
-CELL_Y=rep(NA,nrow(VEC))
-CELL_VEC=c()
-CELL_X_INDEX=c()
-CELL_Y_INDEX=c()
-
-i=0
-vec_x=min(X)+x_step*i
-
-while(vec_x<=max(X)){
-    j=0
-    vec_y=min(Y)+y_step*j
-
-    while(vec_y<=max(Y)){ 
-      
-        lbx=vec_x
-        lby=vec_y
-        rtx=vec_x+x_step
-        rty=vec_y+y_step
-        #rect(lbx,lby,rtx,rty)
-      
-        CELL_VEC=cbind(CELL_VEC, c((lbx+rtx)/2 , (lby+rty)/2))
-        CELL_X_INDEX=c(CELL_X_INDEX,i)
-        CELL_Y_INDEX=c(CELL_Y_INDEX,j)
-        
-        this_cell=which(X>=lbx & X<rtx & Y>=lby & Y<rty)
-        if(length(this_cell)>0){        
-            CELL_X[this_cell]=i
-            CELL_Y[this_cell]=j
-        }
-             
-        j=j+1
-        vec_y=min(Y)+y_step*j
-
-        }
-    print(i)
-    i=i+1
-    vec_x=min(X)+x_step*i
-}
+exp_ref1=read.table('MCA_INTEST.txt',header=T,row.names=1,sep='\t')
+exp_ref2=read.table('GSE92332_intestin_mouse_ref.txt',header=T,row.names=1,sep='\t')
 
 
 
+exp_sc=pbmc@assays$RNA@data
+source('scRef.R')
+OUT1=SCREF(exp_sc, exp_ref1, CPU=4, min_cell=10,print_step=10)
+#OUT1=OUT
+pbmc@meta.data$mca=OUT1$tag2[,2]
 
-CELL_VEC=t(CELL_VEC)
-rownames(CELL_VEC)=paste0('X_',as.character(CELL_X_INDEX),'_Y_',as.character(CELL_Y_INDEX))
-colnames(CELL_VEC)=c('UMAP_1','UMAP_2')
 
-
-CELL_LABEL=paste0('X_',as.character(CELL_X),'_Y_',as.character(CELL_Y))
-V_CELL_VEC=CELL_VEC[which(rownames(CELL_VEC) %in% CELL_LABEL),]
-
-tiff('GRID2.tiff',width=9,height=9, res=400,units='in')
-plot(V_CELL_VEC,pch=15,col='grey50',cex=0.4)
+pdf("MCA.pdf",width=10,height=5)
+DimPlot(pbmc, group.by='mca',label=T)
 dev.off()
 
 
+pbmc@meta.data$type=pbmc@meta.data$mca
+#pbmc@meta.data$type[which(pbmc@reductions$umap@cell.embeddings[,1] > -2.8)]='Epithelium'
+pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Columnar.epithelium_5',
+"Epithelial_4","Epithelial.cell_17","Epithelium_9","Epithelium.of.small.intestinal.villi_13" ,                                          
+"Epithelium.of.small.intestinal.villi_24","Epithelium.of.small.intestinal.villi_25",
+"Epithelium.of.small.intestinal.villi_3","S.cell_16","S.cell_8","Stromal.cell_11","Macrophage_19" ,"Mast.cell_26"                                             
+                               ))]='Epithelium'
 
-NUM=c()
-i=1
-while(i<=nrow(V_CELL_VEC)){
-    #this_vec=V_CELL_VEC[i,]
-    this_name=rownames(V_CELL_VEC)[i]
-    this_num=length(which(CELL_LABEL ==this_name))
-    NUM=c(NUM,this_num)   
-    i=i+1
-    print(i)
-}
 
-USED_CUTOFF=1
 
-summary(NUM)
-tiff('GRID3.tiff',width=9,height=9, res=400,units='in')
-COLS=rep('grey80',length(NUM))#colorRampPalette(c("grey80","yellow",'red1',"red3"))(max(NUM))
-COLS[which(NUM>=USED_CUTOFF)]='yellow3'
-COLS[which(NUM>=USED_CUTOFF+1)]='red3'
-plot(V_CELL_VEC,pch=15,col=COLS,cex=0.4)
+
+pdf("MCA_EPI.pdf",width=10,height=5)
+DimPlot(pbmc, group.by='type',label=T)
+dev.off()
+
+exp_sc=exp_sc[,which(pbmc@meta.data$type=='Epithelium')]
+OUT2=SCREF(exp_sc, exp_ref2, CPU=4, min_cell=10,print_step=10)
+
+pbmc@meta.data$all=pbmc@meta.data$type
+pbmc@meta.data$all[which(pbmc@meta.data$type=='Epithelium')]=OUT2$tag2[,2]
+
+
+pbmc@meta.data$all[which(pbmc@meta.data$all %in% c('Macrophage_19',
+              'Macrophage_23','Macrophage_6'))]='Macrophage'
+
+pbmc@meta.data$all[which(pbmc@meta.data$all %in% c('T.cell_10',
+              'T.cell_12','T.cell_27','T.cell_7'))]='T.cell'
+
+
+pbmc@meta.data$all[which(pbmc@meta.data$all %in% c('Dendrtic.cell_22'))]='Dendrtic.cell'
+
+pdf("ALL.pdf",width=10,height=5)
+DimPlot(pbmc, group.by='all',label=T)
 dev.off()
 
 
-tiff('GRID4.tiff',width=9,height=9, res=400,units='in')
-plot(V_CELL_VEC[which(NUM>=USED_CUTOFF),],pch=15,col='grey50',cex=0.4)
+CDC42HET=which(pbmc@meta.data$CDC42HET>0)
+SmallIntestine=which(pbmc@meta.data$SmallIntestine>0)
+
+
+write.table(sort(table(pbmc@meta.data$all[CDC42HET])),file='CDC42HET.txt',sep='\t',quote=F,col.names=F,row.names=F)
+write.table(sort(table(pbmc@meta.data$all[SmallIntestine])),file='SmallIntestine.txt',sep='\t',quote=F,col.names=F,row.names=F)
+
+pdf("PIE.pdf",width=10,height=5)
+pie(sort(table(pbmc@meta.data$all[CDC42HET])),main='DC42HET')
+pie(sort(table(pbmc@meta.data$all[SmallIntestine])),main='SmallIntestine')
 dev.off()
-
-USE_VEC=V_CELL_VEC[which(NUM>=USED_CUTOFF),]
-#plot(density(NUM))
-saveRDS(USE_VEC,file='USE_VEC.RDS')
-saveRDS(CELL_LABEL,file='CELL_LABEL.RDS')
-saveRDS(V_CELL_VEC, file='V_CELL_VEC.RDS')
-saveRDS(NUM,file='NUM.RDS')
-
-#########################################
-##########################################
-
-
-V_CELL_VEC=readRDS(file='V_CELL_VEC.RDS')
-CELL_LABEL=readRDS(file='CELL_LABEL.RDS')
-META=readRDS('META.RDS')
-
-BATCH=names(table(META$orig.ident))
-
-M=c()
-i=1
-while(i<=nrow(V_CELL_VEC)){
-    #this_vec=V_CELL_VEC[i,]
-    this_name=rownames(V_CELL_VEC)[i]
-    this_index=which(CELL_LABEL ==this_name)
-    this_m=table(META$orig.ident[this_index])
-    
-    M=cbind(M,this_m)   
-    i=i+1
-    print(i)
-}
-
-M=t(M)
-rownames(M)=rownames(V_CELL_VEC)
-
-saveRDS(M,file='M.RDS')
-############################################
-
-
-
-
-
-
-
-
-
-
