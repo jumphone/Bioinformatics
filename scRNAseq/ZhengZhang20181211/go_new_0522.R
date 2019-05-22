@@ -37,6 +37,10 @@ PCUSE=1:150
 pbmc <- RunUMAP(pbmc, dims = PCUSE)
 
 
+DimPlot(pbmc, reduction = "umap")
+
+saveRDS(pbmc,file='pbmc.RDS')
+
 
 
 
