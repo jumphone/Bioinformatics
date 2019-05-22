@@ -130,7 +130,12 @@ dev.off()
 
 
 CDC42HET=which(pbmc@meta.data$CDC42HET>0)
+CDC42HET=rep(CDC42HET,pbmc@meta.data$CDC42HET[CDC42HET])
+
+
 SmallIntestine=which(pbmc@meta.data$SmallIntestine>0)
+SmallIntestine=rep(SmallIntestine,pbmc@meta.data$SmallIntestine[SmallIntestine])
+
 
 
 write.table(sort(table(pbmc@meta.data$all[CDC42HET])),file='CDC42HET.txt',sep='\t',quote=F,col.names=F,row.names=F)
