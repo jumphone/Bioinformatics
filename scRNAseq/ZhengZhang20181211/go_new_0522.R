@@ -30,7 +30,15 @@ pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
 all.genes <- rownames(pbmc)
 pbmc <- ScaleData(pbmc, features = all.genes, vars.to.regress = c("percent.mt","nCount_RNA","batch"))
 
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
+PCNUM=310
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=PCNUM)
+
+PCUSE=1:150
+pbmc <- RunUMAP(pbmc, dims = PCUSE)
+
+
+
+
 
 
 
