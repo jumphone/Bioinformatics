@@ -125,11 +125,26 @@ TMP[which(TMP>0)]=1
 heatmap(TMP,scale='none',margins=c(15,10),Colv=F)
 
 
-
-
-
-
-
-
-
+table(pbmc@meta.data$type)
+#T_Tcell=34
+#N_Tcell=11
 MIN=apply(TMP[c(4,5),],2,min)
+
+POS=which(MIN>0)
+NEG=which(MIN==0)
+EXP=cbind(EXP[,NEG],EXP[,POS])
+colnames(EXP)[ncol(EXP)]=names(POS)
+
+
+#EXP[,which(colnames(EXP)==POS)]
+PT=rep('NEG',ncol(EXP))
+PT[which(colnames(EXP)==names(POS))]='POS'
+PT=t(as.matrix(PT))
+
+
+OUT=cbind(rownames(EXP),rep('NO',nrow(EXP)),EXP)
+colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
+write.table(OUT,'EXP.txt',sep='\t',quote=F,row.names=F,col.names=T)
+write.table(PT,'PT.cls',sep=' ',quote=F,row.names=F,col.names=F )
+
+
