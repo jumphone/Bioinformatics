@@ -85,7 +85,44 @@ pbmc <- ScaleData(pbmc, features = all.genes, vars.to.regress = c("batch",'nCoun
 pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
 pbmc <- RunUMAP(pbmc, dims = 1:10)
 
-DimPlot(pbmc, reduction = "umap")
+
+saveRDS(pbmc,file='pbmc.RDS')
+
+pdf('TYPE.pdf',width=10,height=7)
+DimPlot(pbmc, reduction = "umap",label=T)
+DimPlot(pbmc, reduction = "umap",group.by='batch',label=T)
+
+dev.off()
+
+pbmc@meta.data$type=paste0(pbmc@meta.data$batch,'_',as.character(pbmc@active.ident))
+FeaturePlot(pbmc, features = c("CD3G",'CD3D','CD3E','CD4','FOXP3'))
+
+#show_gene=c('CD3g', 'CD4','FOXP3','CDC42','WAS','GATA3',"CA1","IL4","IL17")
+
+#VlnPlot(pbmc, features = show_gene,slot='data',group.by='type',idents=c('T_Tcell','N_Tcell'))
+
+
+
+used=which(pbmc@meta.data$type %in% c('T_Tcell','N_Tcell'))
+EXP=as.matrix(pbmc@assays$RNA@data[,used])
+colnames(EXP)=paste0(BATCH[used],'_',colnames(EXP))
+
+
+
+CD3G=which(rownames(EXP) %in% c('CD3G'))
+CD3D=which(rownames(EXP) %in% c('CD3D'))
+CD3E=which(rownames(EXP) %in% c('CD3E'))
+
+
+CD4=which(rownames(EXP) %in% c('CD4'))
+FOXP3=which(rownames(EXP) %in% c('FOXP3'))
+
+TMP=EXP[cbind(CD3G,CD3D,CD3E,CD4,FOXP3),]
+TMP[which(TMP>0)]=1
+#which()
+
+#PAT=EXP[which(rownames(EXP) %in% show_gene),]
+heatmap(TMP,scale='none',margins=c(15,10),Colv=F)
 
 
 
@@ -93,3 +130,6 @@ DimPlot(pbmc, reduction = "umap")
 
 
 
+
+
+MIN=apply(TMP[c(4,5),],2,min)
