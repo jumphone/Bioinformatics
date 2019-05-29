@@ -22,7 +22,10 @@ pdf('QC1.pdf',width=15,height=5)
 VlnPlot(pbmc, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
 dev.off()
 
-pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 4000 & percent.mt < 50)
+#pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 4000 & percent.mt < 50)
+pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 4000)
+dim(pbmc)
+#[1] 17970  9179
 pbmc@meta.data$batch=pbmc@meta.data$orig.ident
 
 
@@ -34,7 +37,7 @@ pbmc <- ScaleData(pbmc, features = VariableFeatures(object = pbmc), vars.to.regr
 PCNUM=310
 pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=PCNUM)
 
-
+saveRDS(pbmc, 'RAW.RDS')
 #################
 source('BEER_Seurat3.R')
 
@@ -50,14 +53,15 @@ saveRDS(mybeer, file='mybeer.RDS')
 plot(mybeer$cor, xlab='PCs', ylab="COR", pch=16)
 
 npbmc <- mybeer$seurat
-PCUSE <- which(mybeer$cor> quantile(mybeer$cor,0.2) & mybeer$fdr<0.05 )
+#
+PCUSE <- which(mybeer$cor>quantile(mybeer$cor,0.3) )
 npbmc <- RunUMAP(object = npbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
 
 PCUSE <- c(1:200)
 allpbmc <- RunUMAP(object = npbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
 
 
-npbmc=readRDS('pbmc.RDS')
+#npbmc=readRDS('pbmc.RDS')
 
 #npbmc@meta.data$group=as.character(npbmc@active.ident)
 #npbmc@meta.data$group[which(npbmc@meta.data$group=='SmallIntestine')]='CDC42KO'
@@ -109,15 +113,23 @@ dev.off()
 pbmc=npbmc
 
 
-
 pbmc@meta.data$type=pbmc@meta.data$mca
 #pbmc@meta.data$type[which(pbmc@reductions$umap@cell.embeddings[,1] > -2.8)]='Epithelium'
 pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Columnar.epithelium_5',
 "Epithelial_4","Epithelial.cell_17","Epithelium_9","Epithelium.of.small.intestinal.villi_13" ,                                          
 "Epithelium.of.small.intestinal.villi_24","Epithelium.of.small.intestinal.villi_25",
-"Epithelium.of.small.intestinal.villi_3","S.cell_16","S.cell_8","Stromal.cell_11","Macrophage_19" ,"Mast.cell_26"                                             
+"Epithelium.of.small.intestinal.villi_3","S.cell_16","S.cell_8","Stromal.cell_11","Macrophage_19" ,"Mast.cell_26" ,"Macrophage_23","Paneth.cell_21"                                            
                                ))]='Epithelium'
 
+
+pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Macrophage_6'))]='Macrophage'
+
+pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('T.cell_10',
+              'T.cell_12','T.cell_27','T.cell_7'))]='T.cell'
+
+
+pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Dendrtic.cell_22'))]='Dendrtic.cell'
+pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('B.cell_2'))]='B.cell'
 
 
 
@@ -131,16 +143,6 @@ OUT2=SCREF(exp_sc, exp_ref2, CPU=4, min_cell=10,print_step=10)
 pbmc@meta.data$all=pbmc@meta.data$type
 pbmc@meta.data$all[which(pbmc@meta.data$type=='Epithelium')]=OUT2$tag2[,2]
 
-
-pbmc@meta.data$all[which(pbmc@meta.data$all %in% c('Macrophage_19',
-              'Macrophage_23','Macrophage_6'))]='Macrophage'
-
-pbmc@meta.data$all[which(pbmc@meta.data$all %in% c('T.cell_10',
-              'T.cell_12','T.cell_27','T.cell_7'))]='T.cell'
-
-
-pbmc@meta.data$all[which(pbmc@meta.data$all %in% c('Dendrtic.cell_22'))]='Dendrtic.cell'
-pbmc@meta.data$all[which(pbmc@meta.data$all %in% c('B.cell_2'))]='B.cell'
 
 pdf("ALL.pdf",width=10,height=5)
 DimPlot(pbmc, group.by='all',label=T)
@@ -164,3 +166,9 @@ pie(sort(table(pbmc@meta.data$all[CDC42HET])),main='DC42HET')
 pie(sort(table(pbmc@meta.data$all[CDC42KO])),main='CDC42KO')
 dev.off()
 saveRDS(pbmc, file='ALL.RDS')
+
+
+#######################
+
+
+
