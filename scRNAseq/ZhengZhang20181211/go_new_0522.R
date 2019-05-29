@@ -170,5 +170,12 @@ saveRDS(pbmc, file='ALL.RDS')
 
 #######################
 
-
+#For the Stem cell, please check "Lgr5, Ascl2, Slc12a2, Axin2, Olfm4, Axin2". 
+#For the TA (progenitor) cells, please check "Mki67, Cdk4, Mcm5, Mcm6, Pcna". 
+#For quiescent stem cell, please check "Bmi1, Hoxp, Lrig1, mTert". 
+pdf("EXP.pdf",width=10,height=10)
+FeaturePlot(pbmc, features = c("Lgr5", "Ascl2", "Slc12a2", "Axin2", "Olfm4", "Axin2"),cols = c("lightgrey", "red"))
+FeaturePlot(pbmc, features = c("Mki67", "Cdk4", "Mcm5", "Mcm6", "Pcna"),cols = c("lightgrey", "red"))
+FeaturePlot(pbmc, features = c("Bmi1", "Hopx", "Lrig1", "Tert"),cols = c("lightgrey", "red"))
+dev.off()
 
