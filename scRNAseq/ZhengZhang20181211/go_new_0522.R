@@ -157,7 +157,7 @@ CDC42KO=which(pbmc@active.ident=='CDC42KO')
 
 
 write.table(sort(table(pbmc@meta.data$all[CDC42HET])),file='CDC42HET.txt',sep='\t',quote=F,col.names=F,row.names=F)
-write.table(sort(table(pbmc@meta.data$all[CDC42KO])),file='SmallIntestine.txt',sep='\t',quote=F,col.names=F,row.names=F)
+write.table(sort(table(pbmc@meta.data$all[CDC42KO])),file='CDC42KO.txt',sep='\t',quote=F,col.names=F,row.names=F)
 
 pdf("PIE.pdf",width=10,height=5)
 pie(sort(table(pbmc@meta.data$all[CDC42HET])),main='DC42HET')
