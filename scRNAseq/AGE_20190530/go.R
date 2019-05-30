@@ -54,7 +54,7 @@ plot(mybeer$cor, xlab='PCs', ylab="COR", pch=16)
 
 npbmc <- mybeer$seurat
 #
-PCUSE <- which(mybeer$cor>quantile(mybeer$cor,0.3) )
+PCUSE <- which(mybeer$cor>0.7)#which(mybeer$cor>quantile(mybeer$cor,0.3) )
 npbmc <- RunUMAP(object = npbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
 
 PCUSE <- c(1:200)
@@ -66,12 +66,14 @@ allpbmc <- RunUMAP(object = npbmc, reduction.use='pca',dims = PCUSE, check_dupli
 #npbmc@meta.data$group=as.character(npbmc@active.ident)
 #npbmc@meta.data$group[which(npbmc@meta.data$group=='SmallIntestine')]='CDC42KO'
 
-pdf('BEER.pdf',width=7,height=6)
+pdf('BATCH.pdf',width=7,height=6)
 DimPlot(allpbmc, reduction = "umap")
-DimPlot(npbmc, reduction = "umap")
-DimPlot(npbmc, reduction = "umap",group.by='map')
+#DimPlot(npbmc, reduction = "umap")
+#DimPlot(npbmc, reduction = "umap",group.by='map')
 dev.off()
 
+
+npbmc=allpbmc
 npbmc@meta.data$batch=npbmc@meta.data$orig.ident
 saveRDS(npbmc,file='pbmc.RDS')
 
@@ -95,7 +97,7 @@ exp_ref2=read.table('GSE92332_intestin_mouse_ref.txt',header=T,row.names=1,sep='
 
 
 
-exp_sc=as.matrix(npbmc@assays$RNA@data)
+exp_sc=as.matrix(npbmc@assays$RNA@counts)
 source('scRef.R')
 OUT1=SCREF(exp_sc, exp_ref1, CPU=4, min_cell=10,print_step=10)
 #OUT1=OUT
@@ -118,15 +120,18 @@ pbmc@meta.data$type=pbmc@meta.data$mca
 pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Columnar.epithelium_5',
 "Epithelial_4","Epithelial.cell_17","Epithelium_9","Epithelium.of.small.intestinal.villi_13" ,                                          
 "Epithelium.of.small.intestinal.villi_24","Epithelium.of.small.intestinal.villi_25",
-"Epithelium.of.small.intestinal.villi_3","S.cell_16","S.cell_8","Stromal.cell_11","Macrophage_19" ,"Mast.cell_26" ,"Macrophage_23","Paneth.cell_21"                                            
-                               ))]='Epithelium'
+"Epithelium.of.small.intestinal.villi_3","Stromal.cell_11","Paneth.cell_21" ,'Mast.cell_26' ,"Macrophage_19" ,                                      
+                       'Paneth.cell_21','S.cell_8'  ,'S.cell_16'     ))]='Epithelium'
 
 
 pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Macrophage_6'))]='Macrophage'
 
-pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('T.cell_10',
+pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('T.cell_10','T.cell_6',
               'T.cell_12','T.cell_27','T.cell_7'))]='T.cell'
 
+#pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('S.cell_16'))]='S.cell'
+
+#pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Paneth.cell_21','S.cell_8'))]='Paneth.cell'
 
 pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('Dendrtic.cell_22'))]='Dendrtic.cell'
 pbmc@meta.data$type[which(pbmc@meta.data$mca %in% c('B.cell_2'))]='B.cell'
@@ -137,6 +142,7 @@ pdf("MCA_EPI.pdf",width=10,height=5)
 DimPlot(pbmc, group.by='type',label=T)
 dev.off()
 
+exp_sc=as.matrix(npbmc@assays$RNA@counts)
 exp_sc=exp_sc[,which(pbmc@meta.data$type=='Epithelium')]
 OUT2=SCREF(exp_sc, exp_ref2, CPU=4, min_cell=10,print_step=10)
 
@@ -144,28 +150,26 @@ pbmc@meta.data$all=pbmc@meta.data$type
 pbmc@meta.data$all[which(pbmc@meta.data$type=='Epithelium')]=OUT2$tag2[,2]
 
 
-pdf("ALL.pdf",width=10,height=5)
+pdf("ALL.pdf",width=10,height=7)
 DimPlot(pbmc, group.by='all',label=T)
 dev.off()
 
 
-CDC42HET=which(pbmc@active.ident=='CDC42HET')
+#Aged=which(pbmc@active.ident=='CDC42HET')
 #CDC42HET=rep(CDC42HET,pbmc@meta.data$CDC42HET[CDC42HET])
-
-
-CDC42KO=which(pbmc@active.ident=='CDC42KO')
+#CDC42KO=which(pbmc@active.ident=='CDC42KO')
 #CDC42KO=rep(CDC42KO,pbmc@meta.data$CDC42KO[CDC42KO])
+#write.table(sort(table(pbmc@meta.data$all[CDC42HET])),file='CDC42HET.txt',sep='\t',quote=F,col.names=F,row.names=F)
+#write.table(sort(table(pbmc@meta.data$all[CDC42KO])),file='CDC42KO.txt',sep='\t',quote=F,col.names=F,row.names=F)
+
+TAB=table(pbmc@meta.data$all,pbmc@meta.data$batch)
+write.table(TAB,file='STAT.txt',sep='\t',quote=F,col.names=T,row.names=T)
 
 
-
-write.table(sort(table(pbmc@meta.data$all[CDC42HET])),file='CDC42HET.txt',sep='\t',quote=F,col.names=F,row.names=F)
-write.table(sort(table(pbmc@meta.data$all[CDC42KO])),file='CDC42KO.txt',sep='\t',quote=F,col.names=F,row.names=F)
-
-pdf("PIE.pdf",width=10,height=5)
-pie(sort(table(pbmc@meta.data$all[CDC42HET])),main='DC42HET')
-pie(sort(table(pbmc@meta.data$all[CDC42KO])),main='CDC42KO')
-dev.off()
 saveRDS(pbmc, file='ALL.RDS')
+
+
+pbmc@meta.data$batchall=paste0(pbmc@meta.data$batch,'_',pbmc@meta.data$all)
 
 
 #######################
@@ -173,8 +177,30 @@ saveRDS(pbmc, file='ALL.RDS')
 #For the Stem cell, please check "Lgr5, Ascl2, Slc12a2, Axin2, Olfm4, Axin2". 
 #For the TA (progenitor) cells, please check "Mki67, Cdk4, Mcm5, Mcm6, Pcna". 
 #For quiescent stem cell, please check "Bmi1, Hoxp, Lrig1, mTert". 
-pdf("EXP.pdf",width=10,height=10)
-FeaturePlot(pbmc, features = c("Lgr5", "Ascl2", "Slc12a2", "Axin2", "Olfm4", "Axin2"),cols = c("lightgrey", "red"))
-FeaturePlot(pbmc, features = c("Mki67", "Cdk4", "Mcm5", "Mcm6", "Pcna"),cols = c("lightgrey", "red"))
-FeaturePlot(pbmc, features = c("Bmi1", "Hopx", "Lrig1", "Tert"),cols = c("lightgrey", "red"))
+pdf("EXP1.pdf",width=12,height=40)
+VlnPlot(pbmc,  ncol=1,
+        features = c('Wnt1','Wnt2','Wnt3','Wnt3a','Wnt8a','Wnt8b','Wnt10a','Wnt10b'), 
+        group.by='batchall',slot = "counts", log =F) #TRUE)
+
+dev.off()
+pdf("EXP2.pdf",width=12,height=40)
+VlnPlot(pbmc,  ncol=1,
+        features = c('Ascl2','Axin2','Olfm4','Ctnnb1'), 
+        group.by='batchall',slot = "counts", log =F) #TRUE)
+
+dev.off()
+
+pdf("EXP3.pdf",width=12,height=40)
+VlnPlot(pbmc,  ncol=1,
+        features = c('Wnt4','Wnt5a','Wnt5b','Wnt6','Wnt7a','Wnt7b','Wnt11'), 
+        group.by='batchall',slot = "counts", log =F) #TRUE)
+
+dev.off()
+
+
+pdf("EXP4.pdf",width=12,height=40)
+VlnPlot(pbmc,  ncol=1,
+        features = c('Ephb2', 'Myc', 'Cd44'), 
+        group.by='batchall',slot = "counts", log =F) #TRUE)
+
 dev.off()
