@@ -5,16 +5,16 @@ library(Seurat)
 
 
 
-pbmc.data.1 <- Read10X(data.dir = "./CDC42_HET/")
-pbmc.data.2 <- Read10X(data.dir = "./Small_Intestine/")
+pbmc.data.1 <- Read10X(data.dir = "./age/filtered_feature_bc_matrix")
+pbmc.data.2 <- Read10X(data.dir = "./young/filtered_feature_bc_matrix")
 
-colnames(pbmc.data.1)=paste0('CDC42HET_',colnames(pbmc.data.1))
-colnames(pbmc.data.2)=paste0('CDC42KO_',colnames(pbmc.data.2))
+colnames(pbmc.data.1)=paste0('Aged_',colnames(pbmc.data.1))
+colnames(pbmc.data.2)=paste0('Young_',colnames(pbmc.data.2))
 
 source('scRef.R')
 DATA=.simple_combine(pbmc.data.1,pbmc.data.2)$combine
 
-pbmc <- CreateSeuratObject(counts = DATA, project = "Intestine", min.cells = 3, min.features = 200)
+pbmc <- CreateSeuratObject(counts = DATA, project = "AGE", min.cells = 3, min.features = 200)
 
 pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^mt-")
 
@@ -22,8 +22,8 @@ pdf('QC1.pdf',width=15,height=5)
 VlnPlot(pbmc, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
 dev.off()
 
-#pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 4000 & percent.mt < 50)
-pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 4000)
+
+pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 3000)
 dim(pbmc)
 #[1] 17970  9179
 pbmc@meta.data$batch=pbmc@meta.data$orig.ident
@@ -32,18 +32,18 @@ pbmc@meta.data$batch=pbmc@meta.data$orig.ident
 
 pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
-all.genes <- rownames(pbmc)
-pbmc <- ScaleData(pbmc, features = VariableFeatures(object = pbmc), vars.to.regress = c("percent.mt","nCount_RNA","batch"))
-PCNUM=310
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=PCNUM)
+#all.genes <- rownames(pbmc)
+#pbmc <- ScaleData(pbmc, features = VariableFeatures(object = pbmc), vars.to.regress = c("percent.mt","nCount_RNA","batch"))
+#PCNUM=310
+#pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=PCNUM)
 
 saveRDS(pbmc, 'RAW.RDS')
 #################
 source('BEER_Seurat3.R')
 
 EXP=as.matrix(pbmc@assays$RNA@counts)
-D1=EXP[,which(colnames(EXP) %in%  rownames(pbmc@meta.data[which(pbmc@meta.data$batch=='CDC42HET'),]) ) ]
-D2=EXP[,which(colnames(EXP) %in%  rownames(pbmc@meta.data[which(pbmc@meta.data$batch=='CDC42KO'),]) ) ]
+D1=EXP[,which(colnames(EXP) %in%  rownames(pbmc@meta.data[which(pbmc@meta.data$batch=='Aged'),]) ) ]
+D2=EXP[,which(colnames(EXP) %in%  rownames(pbmc@meta.data[which(pbmc@meta.data$batch=='Young'),]) ) ]
 
 
 mybeer=BEER(D1, D2, CNUM=20, PCNUM=200, GN=5000, CPU=4, MTTAG="^mt-", REGBATCH=FALSE)
