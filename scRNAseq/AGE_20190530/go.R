@@ -204,3 +204,7 @@ VlnPlot(pbmc,  ncol=1,
         group.by='batchall',slot = "counts", log =F) #TRUE)
 
 dev.off()
+
+###########
+library(Seurat)
+GS1=Wnt1, Wnt2, Wnt3, Wnt3a, Wnt8a, Wnt8b, Wnt10a, Wnt10b, Ascl2, Axin2, Olfm4, Ctnnb1, Ephb2, CD44, Myc
