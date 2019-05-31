@@ -79,6 +79,7 @@ rownames(tmp)=rownames(out)
 library('gplots')
 pdf('HEAT.pdf',height=10,width=10)
 heatmap.2(tmp,scale=c("none"),dendrogram='both',trace='none',col=colorRampPalette(c('blue','red')),margins=c(5,5))
+#heatmap.2(out,scale=c("none"),dendrogram='both',trace='none',col=colorRampPalette(c('blue','red')),margins=c(5,5))                                                                                                             
 #heatmap.2(out,scale=c("column"),dendrogram='both',trace='none',col=colorRampPalette(c('blue','red')),margins=c(5,5))
 dev.off()
 
