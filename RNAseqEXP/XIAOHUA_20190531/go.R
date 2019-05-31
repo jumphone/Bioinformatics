@@ -66,16 +66,21 @@ SUM=apply(combat_edata,2,sum)
 plot(SUM)
 
 
-
-
+LocalRef=.generate_ref(combat_edata, cbind(as.character(batch),as.character(batch)), min_cell=1,M='mean')  
+colnames(LocalRef)=c('DIPG','EPN','HGG','LGG','MBL')
 
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 
-out=.get_cor(NEW, combat_edata, method='spearman',CPU=1, print_step=10)
-
+out=.get_cor(NEW, LocalRef, method='spearman',CPU=1, print_step=10)
+tmp=apply(out,2,scale)
+#tmp[which(tmp>2)]=2
+#tmp[which(tmp< -2)]=-2
+rownames(tmp)=rownames(out)
 library('gplots')
-heatmap.2(out,scale=c("none"),dendrogram='both',trace='none',col=colorRampPalette(c('blue','white','red')),margins=c(5,5))
-
+pdf('HEAT.pdf',height=10,width=10)
+heatmap.2(tmp,scale=c("none"),dendrogram='both',trace='none',col=colorRampPalette(c('blue','red')),margins=c(5,5))
+#heatmap.2(out,scale=c("column"),dendrogram='both',trace='none',col=colorRampPalette(c('blue','red')),margins=c(5,5))
+dev.off()
 
 tag=.get_tag_max(out)
 write.table(tag,file='LABEL.txt',quote=F,row.names=F,col.names=T,sep='\t')
