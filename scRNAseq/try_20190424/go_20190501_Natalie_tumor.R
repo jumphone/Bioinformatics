@@ -60,8 +60,10 @@ SCORE=OUT$SCORE
 RANK=OUT$RANK
 
 VEC=pbmc@dr$tsne@cell.embeddings
-CPlot(VEC,PAIR[1:100,],BINTAG)
 
+pdf('TUMOR.pdf',width=20,height=15)
+CPlot(VEC,PAIR[1:133,],BINTAG)
+dev.off()
 
 
 
