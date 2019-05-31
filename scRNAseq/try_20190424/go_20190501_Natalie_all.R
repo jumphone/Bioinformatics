@@ -35,7 +35,7 @@ dev.off()
 
 
 
-EXP=pbmc.data
+EXP=pbmc@data
 LR=read.table('RL_mouse.txt',header=T,sep='\t')
 
 MEAN=readRDS('MEAN.RDS')
@@ -53,8 +53,9 @@ SCORE=OUT$SCORE
 RANK=OUT$RANK
 
 VEC=pbmc@dr$tsne@cell.embeddings
-CPlot(VEC,PAIR[1:200,],BINTAG)
-
+pdf('ALL.pdf',width=20,height=15)
+CPlot(VEC,PAIR[1:191,],BINTAG)
+dev.off()
 
 
 
