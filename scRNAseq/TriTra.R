@@ -1,4 +1,4 @@
-source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/scRNAseq/TriTra.R')
+#source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/scRNAseq/TriTra.R')
 
 #expmat=as.matrix(pbmc@assays$RNA@scale.data)
 #UG=c('SOX11','SET')
