@@ -1,4 +1,11 @@
-source()
+source('https://raw.githubusercontent.com/jumphone/Bioinformatics/master/scRNAseq/TriTra.R')
+
+#expmat=as.matrix(pbmc@assays$RNA@scale.data)
+#UG=c('SOX11','SET')
+#LG=c('VIM','SLC38A5')
+#RG=c('NRL','TUBA1A')
+
+
 TriTra <- function(expmat, UG,LG,RG,CUT=3){
 
     CUT=CUT
