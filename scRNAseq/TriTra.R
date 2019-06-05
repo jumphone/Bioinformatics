@@ -5,7 +5,6 @@
 #LG=c('VIM','SLC38A5')
 #RG=c('NRL','TUBA1A')
 
-
 TriTra <- function(expmat, UG,LG,RG,CUT=3){
 
     CUT=CUT
