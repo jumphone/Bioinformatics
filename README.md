@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+SOM: #https://clarkdatalabs.github.io/soms/SOM_NBA
+
 Splicing: rMATs
 
 Cell-Cell: https://www.bioconductor.org/packages/devel/bioc/vignettes/scTensor/inst/doc/scTensor.html
