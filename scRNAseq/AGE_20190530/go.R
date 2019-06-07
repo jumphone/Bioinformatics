@@ -229,6 +229,7 @@ DimPlot(pbmc,group.by='batchall')
 this_gene='Lgr5'
 this_index=which(rownames(pbmc)==this_gene)
 this_count=pbmc@assays$RNA@counts[this_index,]
+
 this_pos=rep(0,length(this_count))
 this_pos[which(this_count>0)]=1
 table(this_pos,pbmc@meta.data$batch)
@@ -277,5 +278,10 @@ venn.diagram(x=list(LGR5=LGR5_AGED, OLFM4=OLFM4_AGED, ASCL2= ASCL2_AGED), paste0
              fill=c(colors()[616], colors()[38], colors()[200]), alpha=c(0.6, 0.6, 0.6),lwd=0.5, cex=0.5,cat.cex=0.5)
 
 
+pdf('Lgr5Olfm4Ascl2.pdf',width=7,height=7)
+FeaturePlot(pbmc, features = c("Lgr5","Olfm4","Ascl2"))
+dev.off()
+FeaturePlot(pbmc, features = c("Lgr5","Olfm4","Ascl2"),cells=colnames(pbmc)[which(BATCH=='Young')])
+FeaturePlot(pbmc, features = c("Lgr5","Olfm4","Ascl2"),cells=colnames(pbmc)[which(BATCH=='Aged')])
 
 
