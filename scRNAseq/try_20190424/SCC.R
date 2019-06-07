@@ -108,21 +108,35 @@ getPMAT <- function(EXP, LR, BIN, MEAN ){
 
 
 getCMAT <- function(EXP, LR, PMAT, BI=TRUE){
-    
+    library(hash)
     GENE=rownames(PMAT)
+    
+    LR=LR[which(LR[,1] %in% GENE & LR[,2] %in% GENE),]
+    
     CMAT=matrix(data=0,nrow=ncol(PMAT),ncol=ncol(PMAT)) #PMAT[c(1:ncol(PMAT)),]*0
     colnames(CMAT)=colnames(PMAT)
     rownames(CMAT)=colnames(CMAT)
     rownames(CMAT)=paste0('L_',rownames(CMAT))
     colnames(CMAT)=paste0('R_',colnames(CMAT))
-
+    
+    KEYS=paste0( rep(1:ncol(PMAT), ncol(PMAT)),'_',rep(1:ncol(PMAT),  each=ncol(PMAT)) )
+    CMAT_DIC=hash( KEYS, 1:(ncol(PMAT)*ncol(PMAT)) )
+    i=1
+    while(i<=nrow(CMAT)){
+        j=1
+        while(j<=nrow(CMAT)){
+        CMAT_DIC[[paste0(i,'_',j)]]=0
+        j=j+1}
+        i=i+1
+        }
+      
     i=1
     while(i<=nrow(LR)){
 
         this_l=as.character(LR[i,1])
         this_r=as.character(LR[i,2])
         
-        if(this_l %in% GENE & this_r %in% GENE){
+        if(1==1){
             this_l_index=which(rownames(PMAT)==this_l)
             this_r_index=which(rownames(PMAT)==this_r)
             this_l_bin_index=1
@@ -134,6 +148,7 @@ getCMAT <- function(EXP, LR, PMAT, BI=TRUE){
                     l_bin_base = PMAT[this_l_index,this_l_bin_index] - PMAT[this_r_index,this_l_bin_index]
                     r_bin_base = PMAT[this_r_index,this_r_bin_index] - PMAT[this_l_index,this_r_bin_index]
                         
+                    
                     ######################  
                     if(BI==FALSE){
                         this_add= l_bin_base + r_bin_base 
@@ -144,11 +159,13 @@ getCMAT <- function(EXP, LR, PMAT, BI=TRUE){
                             this_add= min(l_bin_base,r_bin_base)
                             }
                          }
-                    ######################  
+                    ######################   
                         
                     }
-                    CMAT[this_l_bin_index,this_r_bin_index]=CMAT[this_l_bin_index,this_r_bin_index]+ this_add
+                    
+                    CMAT_DIC[[paste0(this_l_bin_index,'_',this_r_bin_index)]]=CMAT_DIC[[paste0(this_l_bin_index,'_',this_r_bin_index)]]+this_add
                     this_r_bin_index=this_r_bin_index+1
+                    
                     }      
                 this_l_bin_index=this_l_bin_index+1
                 } 
@@ -156,9 +173,23 @@ getCMAT <- function(EXP, LR, PMAT, BI=TRUE){
         if(i%%10==1){print(i)}
         i=i+1}
 
+    i=1
+    while(i<=nrow(CMAT)){
+        j=1
+        while(j<=nrow(CMAT)){
+        CMAT[i,j]=CMAT_DIC[[paste0(i,'_',j)]]
+        j=j+1}
+        i=i+1
+        if(i%%10==1){print(i)}
+        }
+    
     CMAT=as.matrix(CMAT)
     return(CMAT)
     }
+
+
+
+
 
 
 getPAIR <- function(CMAT){
