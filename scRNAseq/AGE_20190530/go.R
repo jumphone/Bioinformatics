@@ -208,3 +208,64 @@ dev.off()
 ###########
 library(Seurat)
 GS1=Wnt1, Wnt2, Wnt3, Wnt3a, Wnt8a, Wnt8b, Wnt10a, Wnt10b, Ascl2, Axin2, Olfm4, Ctnnb1, Ephb2, CD44, Myc
+
+
+
+####################################################################
+####################################################################
+####################################################################
+####################################################################
+####################################################################
+####################################################################
+
+
+library(Seurat)
+pbmc=readRDS('ALL.RDS')
+#pbmc@meta.data$batchall
+pbmc@meta.data$batchall=paste0(pbmc@meta.data$batch,'_',pbmc@meta.data$all)
+DimPlot(pbmc,group.by='batchall')
+
+
+this_gene='Lgr5'
+this_index=which(rownames(pbmc)==this_gene)
+this_count=pbmc@assays$RNA@counts[this_index,]
+this_pos=rep(0,length(this_count))
+this_pos[which(this_count>0)]=1
+table(this_pos,pbmc@meta.data$batch)
+
+LGR5=this_pos
+
+this_gene='Olfm4'
+this_index=which(rownames(pbmc)==this_gene)
+this_count=pbmc@assays$RNA@counts[this_index,]
+this_pos=rep(0,length(this_count))
+this_pos[which(this_count>0)]=1
+table(this_pos,pbmc@meta.data$batch)
+OLFM4=this_pos
+
+
+this_gene='Ascl2'
+this_index=which(rownames(pbmc)==this_gene)
+this_count=pbmc@assays$RNA@counts[this_index,]
+this_pos=rep(0,length(this_count))
+this_pos[which(this_count>0)]=1
+table(this_pos,pbmc@meta.data$batch)
+ASCL2=this_pos
+
+BATCH=pbmc@meta.data$batch
+table(BATCH)
+#Aged Young 
+#8184  7918 
+
+LGR5_YOUNG=colnames(pbmc)[which(LGR5==1 & BATCH=='Young')]
+LGR5_AGED=colnames(pbmc)[which(LGR5==1 & BATCH=='Aged')]
+
+OLFM4_YOUNG=colnames(pbmc)[which(OLFM4==1 & BATCH=='Young')]
+OLFM4_AGED=colnames(pbmc)[which(OLFM4==1 & BATCH=='Aged')]
+
+ASCL2_YOUNG=colnames(pbmc)[which(ASCL2==1 & BATCH=='Young')]
+ASCL2_AGED=colnames(pbmc)[which(ASCL2==1 & BATCH=='Aged')]
+
+
+
+
