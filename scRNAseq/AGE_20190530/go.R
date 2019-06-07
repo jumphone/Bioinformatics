@@ -266,6 +266,16 @@ OLFM4_AGED=colnames(pbmc)[which(OLFM4==1 & BATCH=='Aged')]
 ASCL2_YOUNG=colnames(pbmc)[which(ASCL2==1 & BATCH=='Young')]
 ASCL2_AGED=colnames(pbmc)[which(ASCL2==1 & BATCH=='Aged')]
 
+library(VennDiagram)
+venn.diagram(x=list(LGR5=LGR5_YOUNG, OLFM4=OLFM4_YOUNG, ASCL2= ASCL2_YOUNG), paste0("./YOUNG_VENN.png"), 
+             height = 450, width = 450, resolution =300, imagetype="png", col="white", 
+             fill=c(colors()[616], colors()[38], colors()[200]), alpha=c(0.6, 0.6, 0.6),lwd=0.5, cex=0.5,cat.cex=0.5)
+
+
+venn.diagram(x=list(LGR5=LGR5_AGED, OLFM4=OLFM4_AGED, ASCL2= ASCL2_AGED), paste0("./AGED_VENN.png"), 
+             height = 450, width = 450, resolution =300, imagetype="png", col="white", 
+             fill=c(colors()[616], colors()[38], colors()[200]), alpha=c(0.6, 0.6, 0.6),lwd=0.5, cex=0.5,cat.cex=0.5)
+
 
 
 
