@@ -68,6 +68,17 @@ COM=as.matrix(COM)
 CELLTYPE=c(AT1,AT2)
 
 
+
+REF=.generate_ref(COM,cbind(CELLTYPE,CELLTYPE),M='MEAN')
+VAR=apply(REF,1,var)
+REF=REF[which(VAR> quantile(VAR,0.9)),]
+
+write.table(REF,file='cibersort_sig.txt',sep='\t',row.names=T,col.names=T,quote=F)
+
+
+
+
+
 sampleID=1:ncol(COM)
 SubjectName=colnames(COM)
 cellTypeID=CELLTYPE
