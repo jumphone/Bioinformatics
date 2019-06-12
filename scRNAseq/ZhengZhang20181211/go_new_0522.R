@@ -39,6 +39,8 @@ pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=PCNUM)
 
 saveRDS(pbmc, 'RAW.RDS')
 #################
+
+pbmc=readRDS('RAW.RDS')
 source('BEER_Seurat3.R')
 
 EXP=as.matrix(pbmc@assays$RNA@counts)
