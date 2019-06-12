@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+MethyCNV: http://bioconductor.org/packages/release/bioc/vignettes/conumee/inst/doc/conumee.html
+
 SOM: #https://clarkdatalabs.github.io/soms/SOM_NBA
 
 Splicing: rMATs
