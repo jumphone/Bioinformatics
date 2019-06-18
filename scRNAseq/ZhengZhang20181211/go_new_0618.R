@@ -97,3 +97,4 @@ pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE, min.pct = 0.5, logfc.thres
 top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
 DoHeatmap(pbmc, features = top10$gene) + NoLegend()
 
+save.image('TRY1.RData')
