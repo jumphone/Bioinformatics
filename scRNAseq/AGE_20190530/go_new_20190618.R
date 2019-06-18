@@ -34,3 +34,26 @@ dev.off()
 
 OUT=t(table(pbmc@meta.data$batch,pbmc@meta.data$newall))
 write.table(OUT,file='BSTAT.txt',sep='\t',row.names=T,col.names=T,quote=F)
+
+
+
+
+
+STEM=which(pbmc@meta.data$all %in% c('TA.Early','TA.G1','TA.G2'))
+
+EXP=as.matrix(pbmc@assays$RNA@data[,STEM])
+VAR=apply(EXP,1,var)
+EXP=EXP[which(VAR>0),]
+
+PT=t(as.character(pbmc@meta.data$batch[STEM]))
+
+OUT=cbind(toupper(rownames(EXP)),rep('NO',nrow(EXP)),EXP)
+colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
+write.table(OUT,'EXP.txt',sep='\t',quote=F,row.names=F,col.names=T)
+write.table(PT,'PT.cls',sep=' ',quote=F,row.names=F,col.names=F )
+
+
+
+
+
+
