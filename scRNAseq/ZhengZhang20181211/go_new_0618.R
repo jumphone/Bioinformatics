@@ -46,22 +46,33 @@ FeaturePlot(pbmc, features=TA)
 VlnPlot(pbmc,group.by='clust',features=c('Cdk2'))
 VlnPlot(pbmc,group.by='clust',features=c('Cdk4'))
 VlnPlot(pbmc,group.by='clust',features=c('Top2a'))
+
+VlnPlot(pbmc,group.by='clust',features=c('Mcm5'))
+VlnPlot(pbmc,group.by='clust',features=c('Mcm6'))
 VlnPlot(pbmc,group.by='clust',features=c('Mki67'))
+VlnPlot(pbmc,group.by='clust',features=c('Bmi1'))
 dev.off()
 
 
 pbmc@meta.data$newall=pbmc@meta.data$clust
 pbmc@meta.data$newall[which(pbmc@meta.data$clust=='7')]='Stem'
-pbmc@meta.data$newall[which(pbmc@meta.data$clust %in% c('14','16'))]='TA'
-pbmc@meta.data$newall[which(pbmc@meta.data$clust %in% c('6','15','8'))]='ImmuneCell'
+pbmc@meta.data$newall[which(pbmc@meta.data$clust %in% c('16','22'))]='TA'
+pbmc@meta.data$newall[which(pbmc@meta.data$clust %in% c('6','15','8','24'))]='ImmuneCell'
 pbmc@meta.data$newall[which(!pbmc@meta.data$newall %in% c('Stem','TA','ImmuneCell'))]='Enterocyte'
+
+DimPlot(pbmc, group.by='newall',label=T)
+VlnPlot(pbmc,group.by='newall',features=c('Olfm4'))
+VlnPlot(pbmc,group.by='newall',features=c('Mki67'))
+
+
+
 
 DimPlot(pbmc, group.by='newall',label=T)
 #source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 source('scRef.R')
 
 USED=which(pbmc@meta.data$newall %in% c('Enterocyte'))
-exp_sc=as.matrix(npbmc@assays$RNA@data)
+exp_sc=as.matrix(pbmc@assays$RNA@data)
 exp_sc=exp_sc[,USED]
 exp_ref=read.table('GSE92332_intestin_mouse_ref.txt',header=T,row.names=1,sep='\t')
 exp_ref=exp_ref[,which(colnames(exp_ref) %in% c('Enterocyte.Immature.Distal','Enterocyte.Immature.Proximal',
@@ -83,18 +94,69 @@ pbmc@meta.data$newall[which(pbmc@meta.data$newall =='Enterocyte.Mature.Distal')]
 
 pdf('NEWTYPE.pdf',width=12,height=8)
 DimPlot(pbmc, group.by='newall',label=T)
-VlnPlot(pbmc,group.by='newall',features=c('Cdk2'))
-VlnPlot(pbmc,group.by='newall',features=c('Cdk4'))
-VlnPlot(pbmc,group.by='newall',features=c('Top2a'))
-VlnPlot(pbmc,group.by='newall',features=c('Mki67'))
+VlnPlot(pbmc,group.by='newall',features=c('Olfm4'))
 VlnPlot(pbmc,group.by='newall',features=c('Mki67'))
 dev.off()
 
 
 
-Idents(pbmc)=pbmc@meta.data$newall
-pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE, min.pct = 0.5, logfc.threshold = 0.5)
-top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
-DoHeatmap(pbmc, features = top10$gene) + NoLegend()
 
-save.image('TRY1.RData')
+OUT=t(table(pbmc@meta.data$batch,pbmc@meta.data$newall))
+write.table(OUT,file='BSTAT.txt',sep='\t',row.names=T,col.names=T,quote=F)
+
+
+
+
+
+STEM=which(pbmc@meta.data$newall %in% c('Stem','TA'))
+EXP=as.matrix(pbmc@assays$RNA@data[,STEM])
+VAR=apply(EXP,1,var)
+EXP=EXP[which(VAR>0),]
+PT=t(as.character(pbmc@meta.data$batch[STEM]))
+OUT=cbind(toupper(rownames(EXP)),rep('NO',nrow(EXP)),EXP)
+colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
+write.table(OUT,'EXP.txt',sep='\t',quote=F,row.names=F,col.names=T)
+write.table(PT,'PT.cls',sep=' ',quote=F,row.names=F,col.names=F )
+
+
+STEM=which(pbmc@meta.data$newall %in% c('Stem'))
+EXP=as.matrix(pbmc@assays$RNA@data[,STEM])
+VAR=apply(EXP,1,var)
+EXP=EXP[which(VAR>0),]
+PT=t(as.character(pbmc@meta.data$batch[STEM]))
+OUT=cbind(toupper(rownames(EXP)),rep('NO',nrow(EXP)),EXP)
+colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
+write.table(OUT,'STEMEXP.txt',sep='\t',quote=F,row.names=F,col.names=T)
+write.table(PT,'STEMPT.cls',sep=' ',quote=F,row.names=F,col.names=F )
+
+
+
+
+
+
+
+USED_GENE1=c('CDC20','GADD45B','SLIT2','TSPAN3','BIRC5','PHGDH','EMP2','FLNA','GLS','SH2D4A','MARCKS','GGH','SHCBP1',
+             'STMN1','DUT','TK1','ETV5','TOP2A','CENPF','HMMR')
+
+
+
+EXP=as.matrix(pbmc@assays$RNA@data[,STEM])
+VAR=apply(EXP,1,var)
+EXP=EXP[which(VAR>0),]
+META=pbmc@meta.data[STEM,]
+COL=rep('blue',ncol(EXP))
+COL[which(META$batch=='CDC42KO')]='red'
+
+#EXP=log(EXP+1,10)
+SEXP=EXP
+#SEXP=t(apply(EXP,1,scale))
+SEXP=apply(SEXP,2,pnorm)
+colnames(SEXP)=colnames(EXP)
+rownames(SEXP)=rownames(SEXP)
+
+library('gplots')
+heatmap.2(EXP[which(toupper(rownames(EXP)) %in% USED_GENE1),],
+          ColSideColors=COL,labCol='',scale=c("none"),dendrogram='none',
+          Rowv=T,Colv=F,trace='none',col=colorRampPalette(c('blue','yellow','red1','red3')),margins=c(5,5))
+
+
