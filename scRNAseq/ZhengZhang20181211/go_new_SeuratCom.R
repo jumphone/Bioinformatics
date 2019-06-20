@@ -11,24 +11,31 @@ D2=as.matrix(D2)
 colnames(D1)=paste0('HET_', colnames(D1))
 colnames(D2)=paste0('KO_', colnames(D2))
 
+
 DATA=.simple_combine(D1,D2)$combine
-BATCH=rep('KO',ncol(DATA))
-BATCH[c(1:ncol(D1))]='HET'
 
 
+pbmc=readRDS('RAW.RDS')
+DATA=as.matrix(pbmc@assays$RNA@counts)
+BATCH=pbmc@meta.data$batch
+mybeer=BEER(DATA, BATCH,PCNUM=20, MTTAG='^mt-')
 
 
-mybeer=BEER(DATA,BATCH,MTTAG='^mt-')
+PCUSE=mybeer$select
 
-PCUSE=mybeer$select#.getUSE(mybeer, 0.75,0.75)#mybeer$select
+PCUSE=.selectUSE(mybeer,  CUTR=0.7, CUTL=0.7, RR=0.5, RL=0.5, CC=0.05)
+
 COL=rep('black',length(mybeer$cor))
 COL[PCUSE]='red'
 plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
+#plot(mybeer$cor)
+
 
 pbmc=mybeer$seurat
 pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
 
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1)    
+DimPlot(pbmc, reduction.use='umap', group.by='map', pt.size=0.1)    
 
 
 
