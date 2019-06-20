@@ -4,12 +4,21 @@ library(cowplot)
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
-pbmc=readRDS('RAW.RDS')
-DATA=pbmc@assays$RNA@counts
-BATCH=pbmc@meta.data$batch
+D1 <- Read10X(data.dir = "./CDC42_HET/")
+D2 <- Read10X(data.dir = "./Small_Intestine/")
+D1=as.matrix(D1)
+D2=as.matrix(D2)
+colnames(D1)=paste0('HET_', colnames(D1))
+colnames(D2)=paste0('KO_', colnames(D2))
+
+DATA=.simple_combine(D1,D2)$combine
+BATCH=rep('KO',ncol(DATA))
+BATCH[c(1:ncol(D1))]='HET'
 
 
-mybeer=BEER(DATA,BATCH,MTTAG='^mt-',REGBATCH=TRUE)
+
+
+mybeer=BEER(DATA,BATCH,MTTAG='^mt-')
 
 PCUSE=mybeer$select#.getUSE(mybeer, 0.75,0.75)#mybeer$select
 COL=rep('black',length(mybeer$cor))
