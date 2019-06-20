@@ -18,7 +18,7 @@ DATA=.simple_combine(D1,D2)$combine
 pbmc=readRDS('RAW.RDS')
 DATA=as.matrix(pbmc@assays$RNA@counts)
 BATCH=pbmc@meta.data$batch
-mybeer=BEER(DATA, BATCH,PCNUM=20, MTTAG='^mt-')
+mybeer=BEER(DATA, BATCH,CNUM=100,PCNUM=50, MTTAG='^mt-')
 
 
 PCUSE=mybeer$select
