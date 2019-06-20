@@ -1,8 +1,35 @@
 library(Seurat)
 library(cowplot)
 
-ctrl.data<- Read10X(data.dir = "./CDC42_HET/")
-stim.data <- Read10X(data.dir = "./Small_Intestine/")
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+
+pbmc=readRDS('RAW.RDS')
+DATA=pbmc@assays$RNA@counts
+BATCH=pbmc@meta.data$batch
+
+
+mybeer=BEER(DATA,BATCH,MTTAG='^mt-',REGBATCH=TRUE)
+
+PCUSE=mybeer$select#.getUSE(mybeer, 0.75,0.75)#mybeer$select
+COL=rep('black',length(mybeer$cor))
+COL[PCUSE]='red'
+plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
+
+pbmc=mybeer$seurat
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
+
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1)    
+
+
+
+
+
+
+
+
+
+
 
 ctrl <- CreateSeuratObject(counts = ctrl.data, project = "IMMUNE_CTRL", min.cells = 5)
 ctrl$stim <- "CTRL"
