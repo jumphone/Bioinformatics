@@ -14,6 +14,45 @@ pbmc@meta.data$newall[STEM]='Stem'
 FeaturePlot(pbmc,features='Olfm4')
 
 
+
+
+
+
+#DimPlot(pbmc, group.by='all',label=T)
+pbmc@meta.data$young=pbmc@meta.data$newall
+pbmc@meta.data$aged=pbmc@meta.data$newall
+pbmc@meta.data$stem=rep(NA,length(pbmc@meta.data$newall))
+pbmc@meta.data$stem[STEM]='Stem'
+
+pbmc@meta.data$young[which(pbmc@meta.data$batch=='Aged')]=NA
+pbmc@meta.data$aged[which(pbmc@meta.data$batch=='Young')]=NA
+
+AC=which(pbmc@meta.data$batch=='Aged')
+YC=which(pbmc@meta.data$batch=='Young')
+
+
+pdf("YA_STEM.pdf",width=10,height=7)
+DimPlot(pbmc, cells=colnames(pbmc), group.by='newall',label=T)
+DimPlot(pbmc, cells=colnames(pbmc)[AC], group.by='newall',label=T)
+DimPlot(pbmc, cells=colnames(pbmc)[YC], group.by='newall',label=T)
+DimPlot(pbmc, cells=colnames(pbmc)[AC], group.by='stem',label=F,pt.size=1)
+DimPlot(pbmc, cells=colnames(pbmc)[YC], group.by='stem',label=F,pt.size=1)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #DimPlot(pbmc, group.by='all',label=T)
 pbmc@meta.data$young=pbmc@meta.data$newall
 pbmc@meta.data$aged=pbmc@meta.data$newall
