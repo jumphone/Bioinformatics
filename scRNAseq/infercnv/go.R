@@ -1,20 +1,13 @@
 library(Seurat)
 library(infercnv)
 
+###############################################
 this_study='BT309'
 pbmc=readRDS('BT309_pbmc_tutorial.rds')
 TYPE=as.character(Idents(pbmc))
 REF_TYPE=c('Microglia','Pericyte','Photoreceptor cells')
 
-
-
-
-
-
-
-
-
-
+##############################################
 names(TYPE)=colnames(pbmc)
 AL=TYPE
 
