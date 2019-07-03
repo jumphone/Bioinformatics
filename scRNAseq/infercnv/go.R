@@ -2,10 +2,15 @@ library(Seurat)
 library(infercnv)
 
 ###############################################
-this_study='BT309'
-pbmc=readRDS('BT309_pbmc_tutorial.rds')
+this_study='hMPNST2023'
+load('hMPNST2023-label.RData')
+pbmc=MPNST
+
+#pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+#pbmc=readRDS('BT309_pbmc_tutorial.rds')
 TYPE=as.character(Idents(pbmc))
-REF_TYPE=c('Microglia','Pericyte','Photoreceptor cells')
+#REF_TYPE=c('Microglia','Pericyte','Photoreceptor cells')
+REF_TYPE=c('Endothelial','Fibroblasts','Macrophages','T cells','VSMCs/pericytes')
 
 ##############################################
 names(TYPE)=colnames(pbmc)
