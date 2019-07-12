@@ -30,7 +30,63 @@ i=i+1
 
 
 
-source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+source('Delia.R')
 COM=.simple_combine(D1,D2)$combine
 COM=as.matrix(COM)
 CELLTYPE=c(AT1,AT2)
+
+REF=.generate_ref(COM, CELLTYPE)
+REF=log(REF+1,10)
+
+
+EXP=read.table('gene_rep_matix_anno_diff.txt.pure',sep='\t',row.names=1,header=T)
+EXP=as.matrix(EXP)
+EXP=log(EXP+1,10)
+
+
+
+
+mydelia <- Delia(EXP, REF, COMBAT=TRUE, METHOD='rlm')  
+
+
+
+
+show_ratio_coef <- mydelia$coef
+#show_ratio_coef = t(apply(show_ratio_coef,1,scale))
+rownames(show_ratio_coef )=rownames(mydelia$coef)
+colnames(show_ratio_coef )=colnames(mydelia$coef)
+
+library('gplots')
+ 
+
+
+as.numeric(show_ratio_coef)
+
+DATA=mydelia$coef
+OUT=matrix(scale(as.numeric(DATA)), ncol=ncol(DATA),nrow=nrow(DATA))
+#OUT=pnorm(OUT)
+rownames(OUT)=rownames(DATA)
+colnames(OUT)=colnames(DATA)
+
+
+
+show_ratio_coef=OUT
+heatmap.2(t(show_ratio_coef),scale=c("none"), dendrogram='column',
+    Rowv=F,Colv=T,cellnote=round(t(show_ratio_coef),2), notecol='black',
+    trace='none',col=colorRampPalette(c('royalblue','grey80','indianred')),
+    margins=c(10,10))
+
+
+
+
+show_ratio_coef <- mydelia$out
+
+library('gplots')
+ 
+heatmap.2(t(show_ratio_coef),scale=c("none"), dendrogram='none',
+    Rowv=F,Colv=F,cellnote=round(t(show_ratio_coef),2), notecol='black',
+    trace='none',col=colorRampPalette(c('royalblue','grey80','indianred')),
+    margins=c(10,10))
+
+
+
