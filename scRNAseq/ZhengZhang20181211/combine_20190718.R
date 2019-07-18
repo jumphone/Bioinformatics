@@ -97,8 +97,115 @@ saveRDS(LABEL.USED,'LABEL.USED.RDS')
 
 
 mybeer=BEER(DATA.USED, BATCH.USED, GNUM=30, PCNUM=50, ROUND=1, CPU=2, GN=3000, SEED=1, MTTAG='^mt-',REGBATCH=TRUE)   
-saveRDS(mybeer'mybeer.RDS')
+saveRDS(mybeer,'mybeer.RDS')
+
+####################################################
+
+# Check selected PCs
+PCUSE=mybeer$select
+COL=rep('black',length(mybeer$cor))
+COL[PCUSE]='red'
+plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
+    xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
+
+
+pbmc <- mybeer$seurat
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1)    
+
+
+pbmc <- mybeer$seurat
+PCUSE <- mybeer$select
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
+
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1)   
+
+
+pbmc <- mybeer$seurat
+PCUSE=mybeer$select
+pbmc=BEER.combat(pbmc) 
+umap=BEER.bbknn(pbmc, PCUSE, NB=4, NT=10)
+pbmc@reductions$umap@cell.embeddings=umap
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
 
 
 
+
+####################################################
+
+
+
+pbmc@meta.data$celltype=LABEL.USED
+pbmc@meta.data$celltype[LABEL.USED=='NA']=NA
+
+DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=F)
+
+DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=T)
+
+####################################################
+
+
+
+
+
+#######
+# Transfer
+VEC=pbmc@reductions$umap@cell.embeddings
+set.seed(123)
+N=500
+K=kmeans(VEC,centers=N)
+pbmc@meta.data$kclust=K$cluster   
+#DimPlot(pbmc, reduction.use='umap', group.by='kclust', pt.size=0.1,label=T)
+
+pbmc@meta.data$transfer=rep(NA, length(pbmc@meta.data$celltype))
+TMP=cbind(pbmc@meta.data$celltype, pbmc@meta.data$kclust)
+
+KC=unique(pbmc@meta.data$kclust)
+i=1
+while(i<=length(KC)){
+    this_kc=KC[i]
+    this_index=which(pbmc@meta.data$kclust==this_kc)
+    this_tb=table(pbmc@meta.data$celltype[this_index])
+    if(length(this_tb)!=0){
+        this_ct=names(this_tb)[which(this_tb==max(this_tb))[1]]
+        pbmc@meta.data$transfer[this_index]=this_ct}
+    i=i+1}
+    
+pbmc@meta.data$tf.ct=pbmc@meta.data$celltype
+NA.index=which(is.na(pbmc@meta.data$celltype))
+pbmc@meta.data$tf.ct[NA.index]=pbmc@meta.data$transfer[NA.index]
+
+
+
+RNA.cells=colnames(pbmc)[which(pbmc@meta.data$batch=='NATURE')]
+ATAC.cells=colnames(pbmc)[which(pbmc@meta.data$batch!='NATURE')]
+
+
+
+
+library(ggplot2)
+
+plot.all <- DimPlot(pbmc, reduction.use='umap', group.by='batch', 
+    pt.size=0.1,label=F) + labs(title = "Batches")
+
+plot.ct <- DimPlot(pbmc,reduction.use='umap', group.by='tf.ct', 
+    pt.size=0.1,label=T) + labs(title = "CellType")
+
+plot.rna <- DimPlot(pbmc, cells=RNA.cells,reduction.use='umap', 
+    group.by='tf.ct', pt.size=0.1,label=T) + labs(title = "Nature")
+
+plot.atac <- DimPlot(pbmc, cells=ATAC.cells,reduction.use='umap', 
+    group.by='tf.ct', pt.size=0.1,label=T) + labs(title = "OurData")
+
+CombinePlots(list(all=plot.all, ct=plot.ct, rna=plot.rna, atac=plot.atac))
+
+
+saveRDS(pbmc,'pbmc_final.RDS')
+
+TAB=table(pbmc@meta.data$tf.ct, pbmc@meta.data$batch)
+.writeTable(DATA=TAB,PATH='TABLE.txt')
+
+SUM=apply(TAB,2,sum)
+
+TAB.100=round(TAB/SUM*100)
+.writeTable(DATA=TAB.100,PATH='TABLE100.txt')
 
