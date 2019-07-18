@@ -209,3 +209,5 @@ SUM=apply(TAB,2,sum)
 TAB.100=round(TAB/SUM*100)
 .writeTable(DATA=TAB.100,PATH='TABLE100.txt')
 
+
+FeaturePlot(pbmc, features = c('Kit','Cd4'))
