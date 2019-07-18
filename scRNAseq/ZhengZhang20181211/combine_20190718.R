@@ -66,6 +66,14 @@ saveRDS(BATCH,'LABEL.RDS')
 
 ###################################################################
 
+getNon0=function(x){
+   return(length(which(x>0)))
+   }
+
+NON0=apply(DATA,2,getNon0)
+
+NON0.G=apply(DATA,1,getNon0)
+
 
 
 
