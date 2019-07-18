@@ -72,8 +72,31 @@ getNon0=function(x){
 
 NON0=apply(DATA,2,getNon0)
 
-NON0.G=apply(DATA,1,getNon0)
+USED.CELL=which(NON0>800 & NON0<6000)
 
+
+DATA.USED=DATA[,USED.CELL]
+BATCH.USED=BATCH[USED.CELL]
+LABEL.USED=LABEL[USED.CELL]
+rm(DATA)
+gc()
+
+
+NON0.G=apply(DATA.USED,1,getNon0)
+USED.G=which(NON0.G>50)
+DATA.USED=DATA.USED[USED.G,]
+dim(DATA.USED)
+#[1] 13913 28866
+
+
+saveRDS(DATA.USED,'DATA.USED.RDS')
+saveRDS(BATCH.USED,'BATCH.USED.RDS')
+saveRDS(LABEL.USED,'LABEL.USED.RDS')
+
+###################################################################
+
+
+mybeer=BEER(DATA.USED, BATCH.USED, GNUM=30, PCNUM=50, ROUND=1, CPU=2, GN=3000, SEED=1, MTTAG='^mt-',REGBATCH=TRUE)   
 
 
 
