@@ -6,6 +6,10 @@ SOM: #https://clarkdatalabs.github.io/soms/SOM_NBA
 
 Splicing: rMATs
 
+scATAC-seq: https://www.bioconductor.org/packages/devel/bioc/vignettes/cicero/inst/doc/website.html#references
+
+
+
 Cell-Cell: https://www.bioconductor.org/packages/devel/bioc/vignettes/scTensor/inst/doc/scTensor.html
 
 deepTools: https://deeptools.readthedocs.io/en/latest/content/tools/plotHeatmap.html
