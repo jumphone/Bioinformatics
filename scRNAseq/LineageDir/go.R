@@ -82,5 +82,111 @@ saveRDS(pbmc,'pbmc_tiny_G3G4.RDS')
 ######
 
 
+##################################################################
+##################################################################
+##################################################################
+#Local
+library('Seurat')
+pbmc=readRDS('pbmc_tiny_G3G4.RDS')
+
+DimPlot(pbmc)
+
+
+
+G1=as.character(read.table('./MARKER/G3MYC',header=FALSE)[,1])
+G2=as.character(read.table('./MARKER/G3NRL',header=FALSE)[,1])
+G3=as.character(read.table('./MARKER/G4UD',header=FALSE)[,1])
+G4=as.character(read.table('./MARKER/G4',header=FALSE)[,1])
+
+
+#MKDATA=DATA[which(rownames(DATA) %in% c(G1,G2,G3,G4)),]
+pbmc <- CreateSeuratObject(counts = MKDATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+
+#source('BEER.R')
+#EXP=as.matrix(pbmc@assays$RNA@data)
+#BATCH=as.character(pbmc@meta.data$orig.ident)
+#NEWEXP=.combat(EXP,BATCH)
+#pbmc@assays$RNA@data=NEWEXP
+
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+
+
+EXP1=pbmc@assays$RNA@scale.data[which(rownames(pbmc@assays$RNA@scale.data) %in% G1),]
+EXP2=pbmc@assays$RNA@scale.data[which(rownames(pbmc@assays$RNA@scale.data) %in% G2),]
+EXP3=pbmc@assays$RNA@scale.data[which(rownames(pbmc@assays$RNA@scale.data) %in% G3),]
+EXP4=pbmc@assays$RNA@scale.data[which(rownames(pbmc@assays$RNA@scale.data) %in% G4),]
+
+#NEXP1=t(apply(EXP1,1,pnorm))
+#NEXP2=t(apply(EXP2,1,pnorm))
+#NEXP3=t(apply(EXP3,1,pnorm))
+#NEXP4=t(apply(EXP4,1,pnorm))
+
+
+
+S1=apply(EXP1,2,mean)
+S2=apply(EXP2,2,mean)
+S3=apply(EXP3,2,mean)
+S4=apply(EXP4,2,mean)
+
+S1=scale(S1)
+S2=scale(S2)
+S3=scale(S3)
+S4=scale(S4)
+
+S1=S1-min(S1)
+S2=S2-min(S2)
+S3=S3-min(S3)
+S4=S4-min(S4)
+
+S1=S1/max(S1)
+S2=S2/max(S2)
+S3=S3/max(S3)
+S4=S4/max(S4)
+
+#S1=pnorm(S1)
+#S2=pnorm(S2)
+#S3=pnorm(S3)
+#S4=pnorm(S4)
+
+
+BIND=cbind(S1,S2,S3,S4)
+VAR=apply(BIND,1,var)
+
+SS1=S1
+SS2=S2
+SS3=S3
+SS4=S4
+
+
+SS1=S1*log(VAR+1,10)
+SS2=S2*log(VAR+1,10)
+SS3=S3*log(VAR+1,10)
+SS4=S4*log(VAR+1,10)
+
+
+P1=c(-1,1)
+P2=c(1,1)
+P3=c(-1,-1)
+P4=c(1,-1)
+
+
+X=(SS1*P1[1]+SS2*P2[1]+SS3*P3[1]+SS4*P4[1])
+Y=(SS1*P1[2]+SS2*P2[2]+SS3*P3[2]+SS4*P4[2])
+X=scale(X)
+Y=scale(Y)
+
+
+
+pbmc@reductions$umap@cell.embeddings[,1]=X
+pbmc@reductions$umap@cell.embeddings[,2]=Y
+
+DimPlot(pbmc)
+
+DimPlot(pbmc,group.by='type')
+FeaturePlot(pbmc,features=c('MYC','NRL','SOX11','ERF'))
+
+
 
 
