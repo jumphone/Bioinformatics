@@ -21,5 +21,15 @@ pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
 all.genes <- rownames(pbmc)
 pbmc <- ScaleData(pbmc, features = all.genes)
 
+#############
+saveRDS(pbmc,'pbmc_G3G4.RDS')
+#############
+
+G1=read.table('./MARKER/G3MYC',header=FALSE)[,1]
+G2=read.table('./MARKER/G3NRL',header=FALSE)[,1]
+G3=read.table('./MARKER/G4UD',header=FALSE)[,1]
+G4=read.table('./MARKER/G4',header=FALSE)[,1]
+
+
 
 
