@@ -11,10 +11,20 @@ DATA <- .readTable(PATH='data.txt', SEP='\t')
     y=x/sum(x)
     return(y)
     }
+rownames(DATA)
+NDATA=DATA
+
+NDATA[c(8:12),]=apply(DATA[c(8:12),],2,.norm_sum)
+NDATA[c(13:17),]=apply(DATA[c(13:17),],2,.norm_sum)
+NDATA[c(18:22),]=apply(DATA[c(18:22),],2,.norm_sum)
+NDATA[c(24:28),]=apply(DATA[c(24:28),],2,.norm_sum)
+NDATA[c(29:33),]=apply(DATA[c(29:33),],2,.norm_sum)
+
+
+
 
 NDATA=apply(DATA ,2,.norm_sum)
 
-NDATA=t(apply(NDATA ,1,.norm_sum))
 
 library(dplyr)
 library(Seurat)
@@ -36,13 +46,32 @@ VariableFeatures(object = pbmc)=all.genes
 
 #pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 8)
 VariableFeatures(pbmc)=all.genes
-pbmc <- RunPCA(pbmc, npcs = 15,features =  VariableFeatures(pbmc))
+pbmc <- RunPCA(pbmc, npcs =16 ,features =  VariableFeatures(pbmc))
 
-#ElbowPlot(pbmc)
-#pbmc <- RunUMAP(pbmc, dims = 1:5)
-#DimPlot(pbmc, reduction = "umap")
+ElbowPlot(pbmc)
+pbmc <- RunUMAP(pbmc, dims = 1:10)
+DimPlot(pbmc, reduction = "umap")
 
-DimPlot(pbmc, reduction = "pca")
+UMAP1=pbmc@reductions$umap@cell.embeddings[,1]
+boxplot(UMAP1~Idents(pbmc))
+t.test(UMAP1[which(Idents(pbmc)=='CKO')], UMAP1[which(Idents(pbmc) %in% c('WT','HET'))])
+
+
+
+PC1=pbmc@reductions$pca@cell.embeddings[,1]
+boxplot(PC1~Idents(pbmc))
+
+t.test(PC1[which(Idents(pbmc)=='CKO')], PC1[which(Idents(pbmc) %in% c('WT','HET'))])
+wilcox.test(PC1[which(Idents(pbmc)=='CKO')], PC1[which(Idents(pbmc) %in% c('WT','HET'))])
+
+
+
+
+
+
+#DimPlot(pbmc, reduction = "pca")
+
+
 
 PC1=pbmc@reductions$pca@cell.embeddings[,1]
 boxplot(PC1~Idents(pbmc))
