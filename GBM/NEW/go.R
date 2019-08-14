@@ -101,6 +101,8 @@ surv_pvalue(fit)
 plot(PC1[used],SURTAG[used,2],pch=16,col=COL_U, xlab='PC1',ylab='OS (days)', cex=1.5)
 abline(v=quantile(score,0.5),col='red',lwd=1.5)
 
+plot(sort(PC1), ylab='PC1',xlab='Rank', cex=1,pch=16)
+abline(h=quantile(score,0.5),col='red',lwd=1.5)
 
 
 
