@@ -77,6 +77,7 @@ while(i<=nrow(tag)){
 
 names(THIS.PC1)=colnames(exp_sc_mat)
 
+D1.PC1=THIS.PC1
 #######################
 
 
@@ -100,13 +101,52 @@ while(i<=nrow(tag)){
 
 names(THIS.PC1)=colnames(exp_sc_mat)
 
+D2.PC1=THIS.PC1
+
 #######################
 
 
 
 
+SURTAG=read.table('SURTAG.txt',sep='\t',header=F)
+used=which(!is.na(SURTAG[,1]))
+
+library(survival)
+library(survminer)
+a=read.table('SUR.txt',header=T,sep='\t')
+used=used
+score=PC1[used]
+SUR=SURTAG[used,2]
+SURE=SURTAG[used,1]
+
+TYPE=rep('MED',length(used))
+TYPE[which(score> quantile(score,0.5) )]='High'
+TYPE[which(score<= quantile(score,0.5) )]='Low'
+surtime=SUR[which(TYPE!='MED')]
+surevent=SURE[(which(TYPE!='MED'))]
+surtype=TYPE[which(TYPE!='MED')]
+surtype=as.data.frame(surtype)
+surv_object <- Surv(time = surtime, event = surevent)
+fit <- survfit(surv_object ~ surtype, data=surtype)
+######
+pdf('./FIG/1SUR.pdf',width=7,height=7)
+ggsurvplot(fit, pval = TRUE)
+dev.off()
+######
+surv_pvalue(fit)
 
 
 
+pdf('./FIG/2PC1.pdf',width=7,height=7)
+plot(sort(PC1), ylab='PC1',xlab='Rank', cex=1,pch=16)
+abline(h=quantile(score,0.5),col='red',lwd=1.5)
+dev.off()
+######
+
+pdf('./FIG/3MAP.pdf',width=12,height=7)
+par(mar=c(15,5,5,5))
+barplot(sort(c(D1.PC1,D2.PC1)),las=2,ylab='Mapped PC1')
+dev.off()
+#barplot(sort(D2.PC1),las=2,ylab='Mapped PC1')
 
 
