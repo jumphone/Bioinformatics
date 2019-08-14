@@ -23,7 +23,7 @@ NDATA[c(29:33),]=apply(DATA[c(29:33),],2,.norm_sum)
 
 
 
-NDATA=apply(DATA ,2,.norm_sum)
+NDATA=t(apply(NDATA ,1,.norm_sum))
 
 
 library(dplyr)
@@ -48,8 +48,15 @@ VariableFeatures(object = pbmc)=all.genes
 VariableFeatures(pbmc)=all.genes
 pbmc <- RunPCA(pbmc, npcs =16 ,features =  VariableFeatures(pbmc))
 
+
+DimPlot(pbmc, reduction = "pca")
+
+
 ElbowPlot(pbmc)
 pbmc <- RunUMAP(pbmc, dims = 1:10)
+
+
+
 DimPlot(pbmc, reduction = "umap")
 
 UMAP1=pbmc@reductions$umap@cell.embeddings[,1]
