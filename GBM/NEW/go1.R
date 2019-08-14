@@ -145,7 +145,7 @@ dev.off()
 
 pdf('./FIG/3MAP.pdf',width=12,height=7)
 par(mar=c(15,5,5,5))
-barplot(sort(c(D1.PC1,D2.PC1)),las=2,ylab='Mapped PC1')
+barplot(sort(c(D1.PC1,D2.PC1)),las=2,ylab="Mapped point's PC1")
 dev.off()
 #barplot(sort(D2.PC1),las=2,ylab='Mapped PC1')
 
