@@ -68,7 +68,61 @@ saveRDS(BATCH1,'BATCH2.RDS')
 ####################
 
 
+#######################
 
+setwd('/Volumes/Feng/Zhenglab/Combine')
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+.set_python('/Users/zha8dh/anaconda3/bin/python')
+
+DATA=readRDS('DATA1.RDS') # Zheng Zhang
+BATCH=readRDS('BATCH1.RDS')
+
+
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=50, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE)
+
+#PCUSE=mybeer$select
+PCUSE=.selectUSE(mybeer, CUTR=0.8, CUTL=0.8, RR=0.5, RL=0.5)
+
+COL=rep('black',length(mybeer$cor))
+COL[PCUSE]='red'
+plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
+    xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
+
+pbmc <- mybeer$seurat  
+#PCUSE=mybeer$select
+PCUSE=.selectUSE(mybeer, CUTR=0.8, CUTL=0.8, RR=0.5, RL=0.5)
+
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
+
+
+pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
+umap=BEER.bbknn(pbmc, PCUSE, NB=5, NT=10)
+pbmc@reductions$umap@cell.embeddings=umap
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################
+mybeer2=BEER(DATA2, BATCH2, GNUM=30, PCNUM=50, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE)
 
 
 
