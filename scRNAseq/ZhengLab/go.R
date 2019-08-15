@@ -122,7 +122,7 @@ DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
 
 saveRDS(pbmc,file='pbmc1.RDS')
 
-FeaturePlot(pbmc,features=c('Lgr5',''))
+FeaturePlot(pbmc,features=c('Ptprc'))
 
 
 
