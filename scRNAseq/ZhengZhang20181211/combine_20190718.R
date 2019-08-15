@@ -1,4 +1,6 @@
 setwd('F:/Zhenglab/Combine')
+
+setwd('/Volumes/Feng/Zhenglab/Combine')
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
 
