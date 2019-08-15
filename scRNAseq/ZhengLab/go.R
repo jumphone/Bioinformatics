@@ -22,6 +22,25 @@ LABEL=BATCH
 
 
 
+############################
+REF=readRDS('REF.RDS')
+getbatch <- function(x){
+    y=unlist(strsplit(x, "_"))
+    y=y[length(y)]
+    return(y)
+}
+
+#saveRDS(REF,file='REF.RDS')
+CN=colnames(REF)
+BATCH=apply(matrix(CN,ncol=1),1,getbatch)
+table(BATCH)
+LABEL=BATCH
+saveRDS(LABEL,file='LABEL.RDS')
+
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+LocalRef=.generate_ref(REF, cbind(LABEL,LABEL),M='MEAN', min_cell=1)  
+
+saveRDS(LocalRef,file='LocalRef.RDS')
 
 ############################
 
@@ -78,10 +97,14 @@ DATA=readRDS('DATA1.RDS') # Zheng Zhang
 BATCH=readRDS('BATCH1.RDS')
 
 
-mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=50, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE)
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=50, ROUND=3, GN=5000, SEED=1, COMBAT=TRUE)
+saveRDS(mybeer,file='mybeer1.RDS')
 
-#PCUSE=mybeer$select
-PCUSE=.selectUSE(mybeer, CUTR=0.8, CUTL=0.8, RR=0.5, RL=0.5)
+
+
+
+PCUSE=mybeer$select
+#PCUSE=.selectUSE(mybeer, CUTR=0.8, CUTL=0.8, RR=0.5, RL=0.5)
 
 COL=rep('black',length(mybeer$cor))
 COL[PCUSE]='red'
@@ -89,18 +112,29 @@ plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
     xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
 
 pbmc <- mybeer$seurat  
-#PCUSE=mybeer$select
-PCUSE=.selectUSE(mybeer, CUTR=0.8, CUTL=0.8, RR=0.5, RL=0.5)
+PCUSE=mybeer$select
+#PCUSE=.selectUSE(mybeer, CUTR=0.8, CUTL=0.8, RR=0.5, RL=0.5)
 
-pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
-DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
-
-
-pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
+#pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
 umap=BEER.bbknn(pbmc, PCUSE, NB=5, NT=10)
 pbmc@reductions$umap@cell.embeddings=umap
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
 
+saveRDS(pbmc,file='pbmc1.RDS')
+
+FeaturePlot(pbmc,features=c('Lgr5',''))
+
+
+
+
+
+########
+
+LABEL=readRDS(file='LABEL.RDS')
+pbmc@meta.data$celltype=rep(NA,ncol(pbmc))
+pbmc@meta.data$celltype[which(pbmc@meta.data$batch=='NATURE')]=LABEL
+#DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=F)
+DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=T)
 
 
 
@@ -112,6 +146,63 @@ DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
 
 
 
+
+
+
+
+
+
+
+
+
+#######
+# Transfer
+VEC=pbmc@reductions$umap@cell.embeddings
+set.seed(123)
+N=100
+K=kmeans(VEC,centers=N)
+
+
+pbmc@meta.data$kclust=K$cluster   
+
+FeaturePlot(pbmc,features=c('Ptprc'))
+
+
+DimPlot(pbmc, reduction.use='umap', group.by='kclust', pt.size=0.1,label=T) + NoLegend()
+
+
+#pbmc@meta.data$kclust[which(pbmc@meta.data$kclust %in% c(55,152,53,33,84,30,93,36,157,118,120,47,126,57))]='Imm'
+pbmc@meta.data$kclust[which(pbmc@meta.data$kclust %in% c(89,79,66,18,76,4,54,45,99,32,25))]='Imm'
+
+DimPlot(pbmc, reduction.use='umap', group.by='kclust', pt.size=0.1,label=T) + NoLegend()
+
+source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+LocalCLUST=.generate_ref(as.matrix(pbmc@assays$RNA@data), cbind(pbmc@meta.data$kclust,pbmc@meta.data$kclust),M='MEAN', min_cell=1)  
+
+LocalCLUST=LocalCLUST[,which(colnames(LocalCLUST)!='Imm')]
+
+
+OUT=SCREF(LocalCLUST, LocalRef, CPU=4, print_step=10,min_cell=1)
+TAG=OUT$tag2
+
+
+
+pbmc@meta.data$scref=pbmc@meta.data$kclust
+i=1
+while(i<=nrow(TAG)){
+    this_index=which(as.character(pbmc@meta.data$kclust)==TAG[i,1])
+    pbmc@meta.data$scref[this_index]=TAG[i,2]
+    i=i+1}
+
+
+
+
+
+DimPlot(pbmc, reduction.use='umap', group.by='scref', pt.size=0.1,label=T)
+
+
+
+saveRDS(pbmc,file='pbmc1.RDS')
 
 
 
