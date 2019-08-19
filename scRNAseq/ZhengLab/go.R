@@ -191,7 +191,7 @@ pbmc_zhengzhang@reductions$umap@cell.embeddings=pbmc@reductions$umap@cell.embedd
 
 
 
-pdf('')
+pdf('/Users/zha8dh/Desktop/CCHMC_Project/ZhengLab/FIG/ZhengZhangCells.pdf')
 this_pbmc=pbmc_zhengzhang
 FeaturePlot(this_pbmc,  features=c('Lgr5', 'Ascl2', 'Gkn3', 'Slc12a2', 'Axin2', 'Olfm4')) #Stem cell
 FeaturePlot(this_pbmc,  features=c('Mki67', 'Cdk4', 'Mcm5', 'Slc12a2', 'Mcm6', 'Pcna')) #TA (cycling) cells
