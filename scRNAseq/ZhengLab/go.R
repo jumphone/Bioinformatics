@@ -140,14 +140,41 @@ DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=T)
 
 
 
+#######
 
 
 
 
+setwd('/Volumes/Feng/Zhenglab/Combine')
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+.set_python('/Users/zha8dh/anaconda3/bin/python')
+
+DATA=readRDS('DATA1.RDS') # Zheng Zhang
+BATCH=readRDS('BATCH1.RDS')
+
+
+pbmc=readRDS('./pbmc1.RDS')
+
+
+LABEL=readRDS(file='LABEL.RDS')
+pbmc@meta.data$celltype=rep(NA,ncol(pbmc))
+pbmc@meta.data$celltype[which(pbmc@meta.data$batch=='NATURE')]=LABEL
+#DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=F)
+DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=T)
 
 
 
 
+#Stem cell: "Lgr5, Ascl2, Gkn3, Slc12a2, Axin2, Olfm4". 
+#For the TA (cycling) cells, please check "Mki67, Cdk4, Mcm5, Mcm6, Pcna", 
+#Enterrocyte markers are "Alpi, Apoa1, Apoa4, Fabp1", 
+#Goblet cell markers are "Muc2, Clca3, Tff3, Agr2". 
+#Paneth cell markers are" Lyz1, Defa17, Defa22, Defa24, Ang4". 
+#Endocrine cell markers are "Chga, Chgb, Tac1, Tph1, Neurog3"
+
+
+
+FeaturePlot(pbmc, features=c('Lgr5', 'Ascl2', 'Gkn3', 'Slc12a2', 'Axin2', 'Olfm4'))
 
 
 
