@@ -54,12 +54,12 @@ TriTra <- function(expmat, UG,LG,RG,delta=0.2){
     RGES=apply(RGE,2,mean)
   
     set.seed(123)
-    RUGES=rank(UGES,ties.method = 'random')
-    RLGES=rank(LGES,ties.method = 'random')
-    RRGES=rank(RGES,ties.method = 'random')
-    #RUGES[which(UGES==0)]=0
-    #RLGES[which(LGES==0)]=0
-    #RRGES[which(RGES==0)]=0
+    RUGES=rank(UGES,ties.method = 'min')
+    RLGES=rank(LGES,ties.method = 'min')
+    RRGES=rank(RGES,ties.method = 'min')
+    RUGES[which(UGES==0)]=0
+    RLGES[which(LGES==0)]=0
+    RRGES[which(RGES==0)]=0
     RUGES=RUGES/max(RUGES)
     RLGES=RLGES/max(RLGES)
     RRGES=RRGES/max(RRGES)
