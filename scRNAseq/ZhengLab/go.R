@@ -140,7 +140,11 @@ DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=T)
 
 
 
-#######
+############################
+############################
+############################
+
+
 
 
 
@@ -172,10 +176,39 @@ DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.1,label=T)
 #Paneth cell markers are" Lyz1, Defa17, Defa22, Defa24, Ang4". 
 #Endocrine cell markers are "Chga, Chgb, Tac1, Tph1, Neurog3"
 
+USED_CELL=which(pbmc@meta.data$batch %in% c('CDC42KO','CDC42HET'))
+
+pbmc_zhengzhang <- CreateSeuratObject(counts = pbmc@assays$RNA@counts[,USED_CELL], project = "ZhengZhang", min.cells = 0, min.features = 0)
+pbmc_zhengzhang@meta.data=pbmc@meta.data[USED_CELL,]
+pbmc_zhengzhang <- NormalizeData(pbmc_zhengzhang, normalization.method = "LogNormalize", scale.factor = 10000)
+all.genes <- rownames(pbmc_zhengzhang)
+pbmc_zhengzhang <- ScaleData(pbmc_zhengzhang, features = all.genes)
+VariableFeatures(pbmc_zhengzhang)=VariableFeatures(pbmc)
+pbmc_zhengzhang <- RunPCA(pbmc_zhengzhang, npcs=10,features = VariableFeatures(object = pbmc_zhengzhang))
+pbmc_zhengzhang <- RunUMAP(pbmc_zhengzhang, dims = 1:10)
+
+pbmc_zhengzhang@reductions$umap@cell.embeddings=pbmc@reductions$umap@cell.embeddings[USED_CELL,]
 
 
-FeaturePlot(pbmc, features=c('Lgr5', 'Ascl2', 'Gkn3', 'Slc12a2', 'Axin2', 'Olfm4'))
 
+pdf('')
+this_pbmc=pbmc_zhengzhang
+FeaturePlot(this_pbmc,  features=c('Lgr5', 'Ascl2', 'Gkn3', 'Slc12a2', 'Axin2', 'Olfm4')) #Stem cell
+FeaturePlot(this_pbmc,  features=c('Mki67', 'Cdk4', 'Mcm5', 'Slc12a2', 'Mcm6', 'Pcna')) #TA (cycling) cells
+FeaturePlot(this_pbmc,  features=c('Alpi', 'Apoa1', 'Apoa4', 'Fabp1')) #Enterrocyte
+FeaturePlot(this_pbmc,  features=c('Muc2', 'Clca3', 'Tff3', 'Agr2')) # Goblet
+FeaturePlot(this_pbmc,  features=c('Lyz1', 'Defa17', 'Defa22', 'Defa24','Ang4'))#Paneth
+FeaturePlot(this_pbmc,  features=c('Chga', 'Chgb', 'Tac1', 'Tph1', 'Neurog3'))#Endocrine
+
+
+
+DimPlot(pbmc, cells=USED_CELL)
+
+
+
+############################
+############################
+############################
 
 
 
