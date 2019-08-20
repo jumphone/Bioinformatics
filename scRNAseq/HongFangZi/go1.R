@@ -109,6 +109,8 @@ Idents(pbmc)=pbmc@meta.data$clust
 pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
 
 
+saveRDS(pbmc.markers,file='pbmc.markers.RDS')
+
 print('ok')
 
 
