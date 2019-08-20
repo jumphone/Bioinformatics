@@ -41,14 +41,14 @@ pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
 umap=BEER.bbknn(pbmc, PCUSE, NB=20, NT=10)
 pbmc@reductions$umap@cell.embeddings=umap
 
-pdf('~/Downloads/HFZ3.10.pdf',width=10,height=10)
+pdf('~/Downloads/HFZ3.20.pdf',width=10,height=10)
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.5,label=F)
 dev.off()
 
 
 saveRDS(pbmc,file='pbmc.RDS')
 
-
+print('ok')
 
 
 
