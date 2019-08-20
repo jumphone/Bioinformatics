@@ -106,6 +106,12 @@ saveRDS(pbmc_zhengzhang@meta.data,'pbmc_zhengzhang_meta.RDS')
 
 
 
+TAB=table(pbmc_zhengzhang@meta.data$level1,pbmc_zhengzhang@meta.data$batch)
+.norm_sum <-function(x){
+    y=x/sum(x)
+    return(y)
+    }
+NTAB=apply(TAB,2,.norm_sum)
 
 
 
