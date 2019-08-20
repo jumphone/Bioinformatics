@@ -1,6 +1,6 @@
 
 setwd('/users/zha8dh/tianlab/HFZ')
-souurce('./BEER.R')
+source('./BEER.R')
 
 D1=read.table(gzfile("./ALL_EXON_DGE/decidua0117_exon_tagged.dge.txt.gz"),header=T,row.names=1)   
 D2=read.table(gzfile("./ALL_EXON_DGE/decidua0417-2_exon_tagged.dge.txt.gz"),header=T,row.names=1)   
@@ -59,7 +59,7 @@ DDDD2=.simple_combine(DDD3,DDD4)$combine
 
 DATA=.simple_combine(DDDD1,DDDD2)$combine
 
-saveRDS(DATA, file'./DATA.RDS')
+saveRDS(DATA, file='./DATA.RDS')
 
 
 .get_batch<-function(x){
