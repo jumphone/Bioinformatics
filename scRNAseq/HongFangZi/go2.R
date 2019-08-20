@@ -56,6 +56,7 @@ saveRDS(VEC_CLUST, file='~/Downloads/VEC_CLUST.RDS')
 ##########################
 pbmc.markers=readRDS(file='pbmc.markers.RDS')
 .writeTable(pbmc.markers,PATH='~/Downloads/Markers.txt')
+saveRDS(pbmc.markers,'~/Downloads/pbmc.markers.RDS')
 
 library(dplyr)
 top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
@@ -73,14 +74,22 @@ Idents(pbmc)=pbmc@meta.data$clust
 pdf('~/Downloads/HFZ6.HEAT.pdf',width=30,height=30)
 DoHeatmap(pbmc, features = top10$gene) + NoLegend()
 dev.off()
+
+
+
 #####################
 
 
+##Local
+setwd('F:/Hongfangzi')
 
+library(Seurat)
+library(dplyr)
 
+DATA=readRDS('./EXP_CLUST.RDS')
+pbmc.markers=readRDS(file='pbmc.markers.RDS')
 
-
-
+top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
 
 
 
