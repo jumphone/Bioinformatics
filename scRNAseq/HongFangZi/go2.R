@@ -61,4 +61,14 @@ top10=as.matrix(top10)
 rownames(top10)=c(1:nrow(top10))
 .writeTable(top10,PATH='~/Downloads/top10.txt')
 
+
+pbmc=readRDS('./pbmc.RDS')
+top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
+
+pbmc@meta.data=readRDS(file='META.RDS')
+Idents(pbmc)=pbmc@meta.data$clust
+
+pdf('~/Downloads/HFZ6.HEAT.pdf',width=30,height=30)
+DoHeatmap(pbmc, features = top10$gene) + NoLegend()
+dev.off()
 #####################
