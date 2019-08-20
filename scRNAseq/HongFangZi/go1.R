@@ -63,23 +63,31 @@ saveRDS(mybeer.qc,file='mybeer.qc.RDS')
 
 
 pbmc <- mybeer.qc$seurat
-
+PCUSE=mybeer.qc$select
 
 pdf('~/Downloads/HFZ2.pdf',width=10,height=10)
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.5,label=F)
 dev.off()
 
 
-#pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
-umap=BEER.bbknn(pbmc, PCUSE, NB=5, NT=10)
-pbmc@reductions$umap@cell.embeddings=umap
+pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
+pbmc <- RunUMAP(pbmc, dims = PCUSE)
 
-pdf('~/Downloads/HFZ3.5.pdf',width=10,height=10)
+saveRDS(pbmc,file='pbmc.RDS')
+
+
+##umap=BEER.bbknn(pbmc, PCUSE, NB=5, NT=10)
+#pbmc@reductions$umap@cell.embeddings=umap
+
+pdf('~/Downloads/HFZ3.combat.pdf',width=10,height=10)
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.5,label=F)
 dev.off()
 
 
-saveRDS(pbmc,file='pbmc.RDS')
+pdf('~/Downloads/HFZ4.EXP.pdf',width=10,height=10)
+FeaturePlot(pbmc, features=c('PTPRC','YAP1') )
+dev.off()
+
 
 print('ok')
 
