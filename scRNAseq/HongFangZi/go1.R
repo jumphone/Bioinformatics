@@ -51,6 +51,7 @@ rm(pbmc)
 gc()
 
 mybeer.qc=BEER(DATA.QC, BATCH.QC, GNUM=30, PCNUM=50, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL)   
+saveRDS(mybeer.qc,file='mybeer.qc.RDS')
 
 
 
