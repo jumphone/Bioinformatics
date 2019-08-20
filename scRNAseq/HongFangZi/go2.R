@@ -7,8 +7,6 @@ source('./BEER.R')
 
 pbmc=readRDS('./pbmc.RDS')
 
-
-
 VEC=pbmc@reductions$umap@cell.embeddings
 
 # Here, we use K-means to do the clustering
