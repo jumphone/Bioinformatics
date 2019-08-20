@@ -11,8 +11,6 @@ saveRDS(mybeer,file='mybeer.RDS')
 
 ##################################
 
-
-
 setwd('/users/zha8dh/tianlab/HFZ')
 source('./BEER.R')
 .set_python('~/anaconda3/bin/python3')
@@ -30,7 +28,46 @@ dev.off()
 
 #############
 pbmc <- mybeer$seurat
-################
+dim(mybeer$seurat)
+#13828 64000
+################################################
+
+pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
+
+pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 2500 & percent.mt < 25)
+
+dim(pbmc)
+#[1] 13828 36797
+saveRDS(as.matrix(pbmc@assays$RNA@counts),file='DATA.QC.RDS')
+saveRDS(pbmc@meta.data$batch,file='BATCH.QC.RDS')
+
+################################################################
+
+DATA.QC=as.matrix(pbmc@assays$RNA@counts)
+BATCH.QC=as.matrix(pbmc@meta.data$batch)
+
+rm(mybeer)
+rm(pbmc)
+gc()
+
+mybeer.qc=BEER(DATA.QC, BATCH.QC, GNUM=30, PCNUM=50, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL)   
+
+
+
+
+
+
+
+
+
+
+
+
+
+pdf('~/Downloads/HFZ_QC.pdf',width=12,height=7)
+VlnPlot(pbmc, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+dev.off()
+
 
 pdf('~/Downloads/HFZ2.pdf',width=10,height=10)
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.5,label=F)
