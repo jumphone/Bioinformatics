@@ -1,5 +1,6 @@
 
 setwd('/users/zha8dh/tianlab/HFZ')
+souurce('./BEER.R')
 
 D1=read.table(gzfile("./ALL_EXON_DGE/decidua0117_exon_tagged.dge.txt.gz"),header=T,row.names=1)   
 D2=read.table(gzfile("./ALL_EXON_DGE/decidua0417-2_exon_tagged.dge.txt.gz"),header=T,row.names=1)   
@@ -35,6 +36,43 @@ colnames(D13)=paste0('placenta514.2','_',colnames(D13))
 colnames(D14)=paste0('placenta2018c','_',colnames(D14))
 colnames(D15)=paste0('placenta2019c','_',colnames(D15))
 colnames(D16)=paste0('placenta20190402','_',colnames(D16))
+
+
+DD1=.simple_combine(D1,D2)$combine
+DD2=.simple_combine(D3,D4)$combine
+DD3=.simple_combine(D5,D6)$combine
+DD4=.simple_combine(D7,D8)$combine
+DD5=.simple_combine(D9,D10)$combine
+DD6=.simple_combine(D11,D12)$combine
+DD7=.simple_combine(D13,D14)$combine
+DD8=.simple_combine(D15,D16)$combine
+
+
+DDD1=.simple_combine(DD1,DD2)$combine
+DDD2=.simple_combine(DD3,DD4)$combine
+DDD3=.simple_combine(DD5,DD6)$combine
+DDD4=.simple_combine(DD7,DD8)$combine
+
+
+DDDD1=.simple_combine(DDD1,DDD2)$combine
+DDDD2=.simple_combine(DDD3,DDD4)$combine
+
+DATA=.simple_combine(DDDD1,DDDD2)$combine
+
+saveRDS(DATA, file'./DATA.RDS')
+
+
+.get_batch<-function(x){
+        y=unlist(strsplit(x,'_'))[1]
+        return(y)
+        } 
+
+BATCH=apply(as.matrix(colnames(DATA)),1,.get_batch)
+
+saveRDS(BATCH, file='./BATCH.RDS')
+
+
+
 
 
 
