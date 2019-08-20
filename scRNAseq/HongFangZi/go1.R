@@ -89,6 +89,26 @@ FeaturePlot(pbmc, features=c('PTPRC','YAP1') )
 dev.off()
 
 
+VEC=pbmc@reductions$umap@cell.embeddings
+
+# Here, we use K-means to do the clustering
+N=50
+set.seed(1)
+K=kmeans(VEC,centers=N)
+
+CLUST=K$cluster
+pbmc@meta.data$clust=as.character(CLUST)
+
+pdf('~/Downloads/HFZ5.CLUST.pdf',width=10,height=10)
+DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE)
+dev.off()
+
+
+
+Idents(pbmc)=pbmc@meta.data$clust
+pbmc.markers <- FindAllMarkers(pbmc, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+
+
 print('ok')
 
 
