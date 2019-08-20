@@ -94,3 +94,8 @@ TriTra <- function(expmat, UG,LG,RG,delta=0.2){
     OUT$y=D2$y
     return(OUT)
     }
+
+
+
+
+
