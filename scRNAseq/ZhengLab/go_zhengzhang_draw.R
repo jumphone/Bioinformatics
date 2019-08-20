@@ -11,3 +11,5 @@ pbmc_zhengzhang@meta.data=readRDS('pbmc_zhengzhang_meta.RDS')
 
 
 
+
+DimPlot(pbmc_zhengzhang, reduction.use='umap', group.by='batch', pt.size=0.1,label=T)
