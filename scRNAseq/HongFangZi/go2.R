@@ -111,7 +111,7 @@ o1 = get_order(seriate(dist(mat), method = METHOD))
 o2 = get_order(seriate(dist(t(mat)), method = METHOD))
 
 o.mat=mat[o1,o2]
-col_fun =colorRamp2(c(-2,1,,2 ), c('royalblue3','yellow','red'))
+col_fun =colorRamp2(c(0,1,2 ), c('royalblue3','yellow','red'))
 
 
 pdf('HEAT.pdf',width=20,height=50)
@@ -121,3 +121,39 @@ Heatmap(o.mat,row_title='',name="%",cluster_rows=FALSE,cluster_columns=FALSE,
 	col=col_fun, border = FALSE
 	)
 dev.off()
+
+
+
+
+
+
+library('ComplexHeatmap')
+library('circlize')
+library('seriation')
+
+
+COR=cor(DATA)
+
+
+mat=COR
+#METHOD='GW'
+METHOD='ARSA'
+o1 = get_order(seriate(dist(mat), method = METHOD))
+#o2 = order(apply(log(mat+1,10),2,sum))#get_order(seriate(dist(t(mat)), method = METHOD))
+#o1= c(3,4,)
+o2 = get_order(seriate(dist(t(mat)), method = METHOD))
+
+o.mat=mat[o1,o2]
+col_fun =colorRamp2(c(0.5,0.8,1 ), c('royalblue3','yellow','red'))
+
+
+pdf('HEAT_COR.pdf',width=15,height=15)
+Heatmap(o.mat,row_title='',name="%",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=TRUE, show_row_names=TRUE,
+	col=col_fun, border = FALSE
+	)
+dev.off()
+
+
+
