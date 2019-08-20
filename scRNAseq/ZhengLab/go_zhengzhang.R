@@ -33,6 +33,7 @@ DimPlot(pbmc_zhengzhang, reduction.use='umap', group.by='batch', pt.size=0.1,lab
 
 
 
+pbmc_zhengzhang=readRDS('pbmc_zhengzhang.RDS')
 
 
 
@@ -88,13 +89,20 @@ pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(105,25))]='Tuft'
 pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(103,32,54,128,66,4,99,45,117,115,150,120,18,76,79,191,112,89,121,101))]='Immune'
 pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(22,64))]='Paneth'
 
-
+saveRDS(pbmc@meta.data,'pbmc1_meta.RDS')
 
 
 #pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.Early','TA.G1','TA.G2'))]='TA'
 
 
 DimPlot(pbmc, reduction.use='umap', group.by='level1', pt.size=0.1,label=T)
+
+
+
+USED_CELL=which(pbmc@meta.data$batch %in% c('CDC42KO','CDC42HET'))
+pbmc_zhengzhang@meta.data=pbmc@meta.data[USED_CELL,]
+saveRDS(pbmc_zhengzhang@meta.data,'pbmc_zhengzhang_meta.RDS')
+
 
 
 
