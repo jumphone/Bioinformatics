@@ -91,9 +91,33 @@ pbmc.markers=readRDS(file='pbmc.markers.RDS')
 
 top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
 
+DATA=DATA[which(rownames(DATA) %in% top10$gene),]
+SDATA=t(apply(DATA,1,scale))
+rownames(SDATA)=rownames(DATA)
+colnames(SDATA)=colnames(DATA)
 
 
+library('ComplexHeatmap')
+library('circlize')
+library('seriation')
 
 
+mat=SDATA
+#METHOD='GW'
+METHOD='ARSA'
+o1 = get_order(seriate(dist(mat), method = METHOD))
+#o2 = order(apply(log(mat+1,10),2,sum))#get_order(seriate(dist(t(mat)), method = METHOD))
+#o1= c(3,4,)
+o2 = get_order(seriate(dist(t(mat)), method = METHOD))
+
+o.mat=mat[o1,o2]
+col_fun =colorRamp2(c(-2,1,,2 ), c('royalblue3','yellow','red'))
 
 
+pdf('HEAT.pdf',width=20,height=50)
+Heatmap(o.mat,row_title='',name="%",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=TRUE, show_row_names=TRUE,
+	col=col_fun, border = FALSE
+	)
+dev.off()
