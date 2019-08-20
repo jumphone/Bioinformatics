@@ -34,6 +34,12 @@ dim(mybeer$seurat)
 
 pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
 
+
+
+pdf('~/Downloads/HFZ_QC.pdf',width=12,height=7)
+VlnPlot(pbmc, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+dev.off()
+
 pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 2500 & percent.mt < 25)
 
 dim(pbmc)
@@ -56,18 +62,7 @@ saveRDS(mybeer.qc,file='mybeer.qc.RDS')
 
 
 
-
-
-
-
-
-
-
-
-
-pdf('~/Downloads/HFZ_QC.pdf',width=12,height=7)
-VlnPlot(pbmc, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
-dev.off()
+pbmc <- mybeer.qc$seurat
 
 
 pdf('~/Downloads/HFZ2.pdf',width=10,height=10)
@@ -76,10 +71,10 @@ dev.off()
 
 
 #pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
-umap=BEER.bbknn(pbmc, PCUSE, NB=20, NT=10)
+umap=BEER.bbknn(pbmc, PCUSE, NB=5, NT=10)
 pbmc@reductions$umap@cell.embeddings=umap
 
-pdf('~/Downloads/HFZ3.20.pdf',width=10,height=10)
+pdf('~/Downloads/HFZ3.5.pdf',width=10,height=10)
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.5,label=F)
 dev.off()
 
