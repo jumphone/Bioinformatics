@@ -15,7 +15,7 @@ saveRDS(mybeer,file='mybeer.RDS')
 
 setwd('/users/zha8dh/tianlab/HFZ')
 source('./BEER.R')
-.set_python('')
+.set_python('~/anaconda3/bin/python3')
 mybeer=readRDS('./mybeer.RDS')
 
 PCUSE=mybeer$select
