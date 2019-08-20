@@ -38,7 +38,7 @@ dev.off()
 
 
 #pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
-umap=BEER.bbknn(pbmc, PCUSE, NB=5, NT=10)
+umap=BEER.bbknn(pbmc, PCUSE, NB=10, NT=10)
 pbmc@reductions$umap@cell.embeddings=umap
 
 pdf('~/Downloads/HFZ3.pdf',width=10,height=10)
