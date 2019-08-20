@@ -44,7 +44,7 @@ pbmc_zhengzhang=readRDS('pbmc_zhengzhang.RDS')
 #######
 VEC=pbmc@reductions$umap@cell.embeddings
 set.seed(123)
-N=150
+N=100
 K=kmeans(VEC,centers=N)
 pbmc@meta.data$kclust=K$cluster   
 
@@ -76,27 +76,51 @@ DimPlot(pbmc, reduction.use='umap', group.by='transfer', pt.size=0.1,label=T)
 
 
 
+#plot(sort(GENE))
+
+CLUST_EXP=.generate_mean(pbmc@assays$RNA@data,pbmc@meta.data$kclust )
+
+GENE.TA=CLUST_EXP[which(rownames(CLUST_EXP)=='Pcna'),]
+
+plot(sort(GENE.TA))
+
+GENE.STEM=apply(CLUST_EXP[which(rownames(CLUST_EXP) %in% c('Lgr5','Ascl2')),],2,mean)
+plot(sort(GENE.STEM))
+
+
+
+STEM=names(which(GENE.STEM>0.4))
+TA=names(which(GENE.TA>0.4))
 
 pbmc@meta.data$level1=rep('Enterocyte',ncol(pbmc))
+pbmc@meta.data$level1[which(as.character(pbmc@meta.data$kclust) %in% TA)]='TA'
+#pbmc@meta.data$level1[which(as.character(pbmc@meta.data$kclust) %in% STEM)]='Stem'
 
 pbmc@meta.data$level1[which(pbmc@meta.data$transfer =='Stem')]='Stem'
-pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.Early','TA.G1','TA.G2'))]='TA'
 
-pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(145))]='Stem'
-pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(36,75,119))]='Endocrine'
-pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(141,123,47,138,116))]='Goblet'
-pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(105,25))]='Tuft'
-pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(103,32,54,128,66,4,99,45,117,115,150,120,18,76,79,191,112,89,121,101))]='Immune'
+
+#pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.G1','TA.G2'))]='TA.CC'
+#pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.Early'))]='TA.early'
+#pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('Enterocyte.Progenitor.Early'))]='Progenitor.Early'
+#pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('Enterocyte.Progenitor'))]='Progenitor'
+#pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('Enterocyte.Progenitor.Late'))]='Progenitor.Late'
+#pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(145))]='Stem'
+pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(36,75))]='Endocrine'
+pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(44,48,47))]='Goblet'
+pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(25))]='Tuft'
+pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(54,45,4,99,66,76,32,79,89,18))]='Immune'
 pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(22,64))]='Paneth'
+
+
+DimPlot(pbmc, reduction.use='umap', group.by='level1', pt.size=0.1,label=T)
+
+FeaturePlot(pbmc, features=c('Cdk4','Pcna'), pt.size=0.1)
+
 
 saveRDS(pbmc@meta.data,'pbmc1_meta.RDS')
 
 
 #pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.Early','TA.G1','TA.G2'))]='TA'
-
-
-DimPlot(pbmc, reduction.use='umap', group.by='level1', pt.size=0.1,label=T)
-
 
 
 USED_CELL=which(pbmc@meta.data$batch %in% c('CDC42KO','CDC42HET'))
