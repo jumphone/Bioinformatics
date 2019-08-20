@@ -29,18 +29,18 @@ pbmc.markers=readRDS(file='pbmc.markers.RDS')
 
 #EXP_CLUST=.generate_mean(pbmc@assays$RNA@data,pbmc@meta.data$clust)
 #######################################
-N=300
+N=50
 set.seed(1)
 K=kmeans(VEC,centers=N)
 
 CLUST=K$cluster
 pbmc@meta.data$clust=as.character(CLUST)
 
-saveRDS(pbmc@meta.data, file='META_300.RDS')
+#saveRDS(pbmc@meta.data, file='META_300.RDS')
 
-pdf('~/Downloads/HFZ5.CLUST.300.pdf',width=20,height=20)
-DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE) + NoLegend()
-dev.off()
+#pdf('~/Downloads/HFZ5.CLUST.300.pdf',width=20,height=20)
+#DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE) + NoLegend()
+#dev.off()
 
 EXP_CLUST=.generate_mean(pbmc@assays$RNA@data,pbmc@meta.data$clust)
 VEC_CLUST=.generate_mean(t(pbmc@reductions$umap@cell.embeddings), pbmc@meta.data$clust)
@@ -52,6 +52,8 @@ saveRDS(VEC_CLUST, file='./VEC_CLUST.RDS')
 saveRDS(EXP_CLUST, file='~/Downloads/EXP_CLUST.RDS')
 saveRDS(VEC_CLUST, file='~/Downloads/VEC_CLUST.RDS')
 
+
+##########################
 pbmc.markers=readRDS(file='pbmc.markers.RDS')
 .writeTable(pbmc.markers,PATH='~/Downloads/Markers.txt')
 
@@ -72,3 +74,17 @@ pdf('~/Downloads/HFZ6.HEAT.pdf',width=30,height=30)
 DoHeatmap(pbmc, features = top10$gene) + NoLegend()
 dev.off()
 #####################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
