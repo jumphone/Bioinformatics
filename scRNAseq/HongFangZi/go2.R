@@ -30,14 +30,17 @@ pbmc@meta.data=readRDS('META.RDS')
 pbmc@meta.data$level1=rep('Placenta',ncol(pbmc))
 pbmc@meta.data$level1[which(pbmc@meta.data$batch %in% names(table(pbmc@meta.data$batch))[1:9])]='Decidua'
 
-pdf('~/Downloads/HFZ3.two.pdf',width=7,height=7)
+pdf('~/Downloads/HFZ3.two.pdf',width=10,height=10)
 DimPlot(pbmc, group.by='level1')
 dev.off()
 
+pdf('~/Downloads/HFZ3.two.small.pdf',width=7,height=7)
+DimPlot(pbmc, group.by='level1',pt.size=0.1,label=T)+NoLegend()
+dev.off()
 
-
-pdf('~/Downloads/HFZ3.EXP.pdf',width=7,height=7)
-DimPlot(pbmc, features=c('PTPRC','EGFR'))
+pdf('~/Downloads/HFZ3.EXP.pdf',width=10,height=5)
+FeaturePlot(pbmc, features=c('PTPRC','CLDN5'))
+FeaturePlot(pbmc, features=c('FN1','CDH1'))
 dev.off()
 
 pbmc.markers=readRDS(file='pbmc.markers.RDS')
