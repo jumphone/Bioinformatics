@@ -10,20 +10,35 @@ pbmc=readRDS('./pbmc.RDS')
 VEC=pbmc@reductions$umap@cell.embeddings
 
 # Here, we use K-means to do the clustering
-N=50
-set.seed(1)
-K=kmeans(VEC,centers=N)
+#N=50
+#set.seed(1)
+#K=kmeans(VEC,centers=N)
 
-CLUST=K$cluster
-pbmc@meta.data$clust=as.character(CLUST)
+#CLUST=K$cluster
+#pbmc@meta.data$clust=as.character(CLUST)
 
-saveRDS(pbmc@meta.data, file='META.RDS')
+#saveRDS(pbmc@meta.data, file='META.RDS')
+#pdf('~/Downloads/HFZ5.CLUST.CHECK.pdf',width=10,height=10)
+#DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE)
+#dev.off()
 
 
-pdf('~/Downloads/HFZ5.CLUST.CHECK.pdf',width=10,height=10)
-DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE)
+
+
+pbmc@meta.data=readRDS('META.RDS')
+
+pbmc@meta.data$level1=rep('Placenta',ncol(pbmc))
+pbmc@meta.data$level1[which(pbmc@meta.data$batch %in% names(table(pbmc@meta.data$batch))[1:9])]='Decidua'
+
+pdf('~/Downloads/HFZ3.two.pdf',width=7,height=7)
+DimPlot(pbmc, group.by='level1')
 dev.off()
 
+
+
+pdf('~/Downloads/HFZ3.EXP.pdf',width=7,height=7)
+DimPlot(pbmc, features=c('PTPRC','EGFR'))
+dev.off()
 
 pbmc.markers=readRDS(file='pbmc.markers.RDS')
 
@@ -113,6 +128,12 @@ pbmc@reductions$umap@cell.embeddings[,1]=VEC[1,]
 pbmc@reductions$umap@cell.embeddings[,2]=VEC[2,]
 
 DimPlot(pbmc,pt.size=3)
+
+FeaturePlot(pbmc,features=c('PTPRC',''),pt.size=3)
+
+
+
+
 
 
 pbmc.markers=readRDS(file='pbmc.markers.RDS')
