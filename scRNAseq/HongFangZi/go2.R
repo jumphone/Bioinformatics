@@ -95,6 +95,26 @@ library(Seurat)
 library(dplyr)
 
 DATA=readRDS('./EXP_CLUST.RDS')
+VEC=readRDS('./VEC_CLUST.RDS')
+
+pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+
+
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+
+pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc)，npcs=10)
+pbmc <- RunUMAP(pbmc, dims = 1:10)
+
+pbmc@reductions$umap@cell.embeddings[,1]=VEC[1,]
+pbmc@reductions$umap@cell.embeddings[,2]=VEC[2,]
+
+DimPlot(pbmc,pt.size=3)
+
+
 pbmc.markers=readRDS(file='pbmc.markers.RDS')
 
 top10 <- pbmc.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_logFC)
