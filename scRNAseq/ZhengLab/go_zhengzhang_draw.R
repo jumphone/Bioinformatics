@@ -16,6 +16,8 @@ DimPlot(pbmc_zhengzhang, reduction.use='umap', group.by='batch', pt.size=0.1,lab
 DimPlot(pbmc_zhengzhang, reduction.use='umap', group.by='level1', pt.size=0.1,label=T)
 
 
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+
 pbmc=pbmc_zhengzhang
 ############################
 USE.CELL=which(pbmc@meta.data$level1=='Stem')
@@ -24,6 +26,11 @@ EXP=as.matrix(pbmc@assays$RNA@data[,USE.CELL])
 VAR=apply(EXP,1,var)
 EXP=EXP[which(VAR>0),]
 PT=t(as.character(TAG[USE.CELL]))
+
+EXP.combat=.combat(EXP,PT[1,])
+EXP=EXP.combat
+EXP[which(EXP<0)]=0
+
 OUT=cbind(toupper(rownames(EXP)),rep('NO',nrow(EXP)),EXP)
 colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
 write.table(OUT,'./GSEA_zhengzhang/STEM_EXP.txt',sep='\t',quote=F,row.names=F,col.names=T)
@@ -37,6 +44,12 @@ EXP=as.matrix(pbmc@assays$RNA@data[,USE.CELL])
 VAR=apply(EXP,1,var)
 EXP=EXP[which(VAR>0),]
 PT=t(as.character(TAG[USE.CELL]))
+
+
+EXP.combat=.combat(EXP,PT[1,])
+EXP=EXP.combat
+EXP[which(EXP<0)]=0
+
 OUT=cbind(toupper(rownames(EXP)),rep('NO',nrow(EXP)),EXP)
 colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
 write.table(OUT,'./GSEA_zhengzhang/TA_EXP.txt',sep='\t',quote=F,row.names=F,col.names=T)
