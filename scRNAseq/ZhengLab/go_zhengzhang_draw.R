@@ -27,9 +27,9 @@ VAR=apply(EXP,1,var)
 EXP=EXP[which(VAR>0),]
 PT=t(as.character(TAG[USE.CELL]))
 
-EXP.combat=.combat(EXP,PT[1,])
-EXP=EXP.combat
-EXP[which(EXP<0)]=0
+#EXP.combat=.combat(EXP,PT[1,])
+#EXP=EXP.combat
+#EXP[which(EXP<0)]=0
 
 OUT=cbind(toupper(rownames(EXP)),rep('NO',nrow(EXP)),EXP)
 colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
@@ -46,9 +46,9 @@ EXP=EXP[which(VAR>0),]
 PT=t(as.character(TAG[USE.CELL]))
 
 
-EXP.combat=.combat(EXP,PT[1,])
-EXP=EXP.combat
-EXP[which(EXP<0)]=0
+#EXP.combat=.combat(EXP,PT[1,])
+#EXP=EXP.combat
+#EXP[which(EXP<0)]=0
 
 OUT=cbind(toupper(rownames(EXP)),rep('NO',nrow(EXP)),EXP)
 colnames(OUT)[c(1,2)]=c('GENE','DESCRIPTION')
