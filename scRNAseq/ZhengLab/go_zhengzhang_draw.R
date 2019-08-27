@@ -11,9 +11,15 @@ pbmc_zhengzhang@meta.data=readRDS('pbmc_zhengzhang_meta.RDS')
 
 
 
-
+pdf('UMAP_zhengzhang.pdf',width=5,height=4)
 DimPlot(pbmc_zhengzhang, reduction.use='umap', group.by='batch', pt.size=0.1,label=T)
 DimPlot(pbmc_zhengzhang, reduction.use='umap', group.by='level1', pt.size=0.1,label=T)
+dev.off()
+
+
+TAB=table(pbmc_zhengzhang@meta.data$level1, pbmc_zhengzhang@meta.data$batch)
+.writeTable(TAB, PATH='TAB_zhengzhang.txt')
+
 
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
