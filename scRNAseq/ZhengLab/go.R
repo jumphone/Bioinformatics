@@ -82,8 +82,8 @@ gc()
 saveRDS(DATA1,'DATA1.RDS') # Zheng Zhang
 saveRDS(BATCH1,'BATCH1.RDS')
 
-saveRDS(DATA1,'DATA2.RDS') # Age Young
-saveRDS(BATCH1,'BATCH2.RDS')
+saveRDS(DATA2,'DATA2.RDS') # Age Young
+saveRDS(BATCH2,'BATCH2.RDS')
 ####################
 
 
