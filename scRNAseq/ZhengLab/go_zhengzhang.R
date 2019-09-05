@@ -74,14 +74,26 @@ DimPlot(pbmc, reduction.use='umap', group.by='transfer', pt.size=0.1,label=T)
 
 ################################################################################
 
+FeaturePlot(pbmc,features=c('Pcna','Cdk4','Top2a','Mcm5','Mcm6','Mki67'))
+
+Idents(pbmc)=pbmc@meta.data$kclust
+cluster1.markers <- FindMarkers(pbmc, ident.1 = 96, min.pct = 0.5,only.pos = TRUE)
+head(cluster1.markers, n = 5)
 
 
 #plot(sort(GENE))
 
 CLUST_EXP=.generate_mean(pbmc@assays$RNA@data,pbmc@meta.data$kclust )
 
-GENE.TA=CLUST_EXP[which(rownames(CLUST_EXP)=='Pcna'),]
 
+
+
+
+GENE.TA=apply(CLUST_EXP[which(rownames(CLUST_EXP)%in% c('Pcna','Ccnb2')),],2,mean)
+
+#GENE.TA=CLUST_EXP[which(rownames(CLUST_EXP)%in% c('Pcna')),]
+
+#FeaturePlot(pbmc,features=c('Pcna','Cdk4','Top2a','Mcm5','Mcm6','Mki67'))
 plot(sort(GENE.TA))
 
 GENE.STEM=apply(CLUST_EXP[which(rownames(CLUST_EXP) %in% c('Lgr5','Ascl2')),],2,mean)
@@ -90,14 +102,13 @@ plot(sort(GENE.STEM))
 
 
 STEM=names(which(GENE.STEM>0.4))
-TA=names(which(GENE.TA>0.4))
+TA=names(which(GENE.TA>0.7))
 
 pbmc@meta.data$level1=rep('Enterocyte',ncol(pbmc))
 pbmc@meta.data$level1[which(as.character(pbmc@meta.data$kclust) %in% TA)]='TA'
 #pbmc@meta.data$level1[which(as.character(pbmc@meta.data$kclust) %in% STEM)]='Stem'
 
 pbmc@meta.data$level1[which(pbmc@meta.data$transfer =='Stem')]='Stem'
-
 
 #pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.G1','TA.G2'))]='TA.CC'
 #pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.Early'))]='TA.early'
@@ -110,17 +121,40 @@ pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(44,48,47))]='Goblet'
 pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(25))]='Tuft'
 pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(54,45,4,99,66,76,32,79,89,18))]='Immune'
 pbmc@meta.data$level1[which(pbmc@meta.data$kclust %in% c(22,64))]='Paneth'
-
-
 DimPlot(pbmc, reduction.use='umap', group.by='level1', pt.size=0.1,label=T)
 
+
+TAB=table(pbmc@meta.data$level1, pbmc@meta.data$batch)
+
+.norm_sum=function(x){
+    return(x/sum(x))
+    }
+NTAB=apply(TAB,2,.norm_sum)
+NTAB
+apply(table(pbmc@meta.data$level1, pbmc@meta.data$batch),2,sum)
+
 FeaturePlot(pbmc, features=c('Cdk4','Pcna'), pt.size=0.1)
+
+
+
+
 
 
 saveRDS(pbmc@meta.data,'pbmc1_meta.RDS')
 
 
 #pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.Early','TA.G1','TA.G2'))]='TA'
+
+
+
+pbmc@meta.data=readRDS('pbmc1_meta.RDS')
+
+
+
+
+
+
+
 
 
 USED_CELL=which(pbmc@meta.data$batch %in% c('CDC42KO','CDC42HET'))
