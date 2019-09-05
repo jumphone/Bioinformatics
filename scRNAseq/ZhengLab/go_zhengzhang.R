@@ -143,6 +143,9 @@ FeaturePlot(pbmc, features=c('Cdk4','Pcna'), pt.size=0.1)
 saveRDS(pbmc@meta.data,'pbmc1_meta.RDS')
 
 
+saveRDS(pbmc@meta.data,'pbmc1_meta_new.RDS')
+
+
 #pbmc@meta.data$level1[which(pbmc@meta.data$transfer %in% c('TA.Early','TA.G1','TA.G2'))]='TA'
 
 
