@@ -26,8 +26,13 @@ pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=10)
 Idents(pbmc)=colnames(pbmc)
 
 DimPlot(pbmc, dims = c(1, 2), reduction = "pca",pt.size=5, label=T)
-DimPlot(pbmc, dims = c(2, 3), reduction = "pca",pt.size=5, label=T)
 DimPlot(pbmc, dims = c(3, 4), reduction = "pca",pt.size=5, label=T)
+DimPlot(pbmc, dims = c(5, 6), reduction = "pca",pt.size=5, label=T)
+DimPlot(pbmc, dims = c(7, 8), reduction = "pca",pt.size=5, label=T)
+DimPlot(pbmc, dims = c(9, 10), reduction = "pca",pt.size=5, label=T)
+
+
+
 
 write.table(pbmc@assays$RNA@data,file='NormalizedMatrixATAC.txt',sep='\t',row.names=T,quote=F,col.names=T)
 
