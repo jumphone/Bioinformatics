@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+RNA velocity (kallisto): https://bustools.github.io/BUS_notebooks_R/velocity.html
+
 Gene-Drug: http://www.dgidb.org/search_interactions
 
 Visualize Network: https://www.omicsnet.ca/
