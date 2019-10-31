@@ -152,15 +152,16 @@ saveRDS(DATA.LIST, 'DATA.LIST.RDS')
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
-DATA=DATA.LIST[[1]]
-i=2
+#DATA=DATA.LIST[[1]]
+i=1
 while(i<=length(DATA.LIST)){
     this_data=DATA.LIST[[i]]
-    DATA=.simple_combine(DATA, this_data)$combine
+    saveRDS(this_data,file=paste0('./DATAs/',i,'.RDS'))
     print(i)
     i=i+1}
 
-
+rm(DATA.LIST)
+gc()
 
 
 
