@@ -365,7 +365,7 @@ DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE)+ N
 
 
 
-
+saveRDS(pbmc,file='pbmc.final.RDS')
 
 
 
