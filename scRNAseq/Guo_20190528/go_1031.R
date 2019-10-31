@@ -157,7 +157,7 @@ i=2
 while(i<=length(DATA.LIST)){
     this_data=DATA.LIST[[i]]
     DATA=.simple_combine(DATA, this_data)$combine
-
+    print(i)
     i=i+1}
 
 
