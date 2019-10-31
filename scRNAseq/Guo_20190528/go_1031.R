@@ -136,9 +136,17 @@ TAGs=c(
      
      )
 
+DATA.LIST=list()
 
-
-
+i=1
+while(i<=length(PATHs)){
+    this_path=PATHs[i]
+    this_tag=TAGs[i]
+    this_data=.readData(this_path,this_tag)
+    DATA.LIST=c(DATA.LIST, list(this_data))
+    print(i)
+    i=i+1
+}
 
 
 
