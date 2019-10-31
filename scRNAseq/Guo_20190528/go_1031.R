@@ -148,8 +148,17 @@ while(i<=length(PATHs)){
     i=i+1
 }
 
+saveRDS(DATA.LIST, 'DATA.LIST.RDS')
 
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
+DATA=DATA.LIST[[1]]
+i=2
+while(i<=length(DATA.LIST)){
+    this_data=DATA.LIST[[i]]
+    DATA=.simple_combine(DATA, this_data)$combine
+
+    i=i+1}
 
 
 
