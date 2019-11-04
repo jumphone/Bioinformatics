@@ -42,17 +42,17 @@ FeaturePlot(pbmc, features=c('CCL5','CD3D','B2M','CXCR4'),ncol=2,pt.size=0.01)
 dev.off()
 
 
-tiff("./Marker/CTB.tiff", width = 8, height= 9, units = 'in',res = 400)
-FeaturePlot(pbmc, features=c('KRT7','CGB3','GCM1','GCM1'),ncol=2,pt.size=0.01)
+tiff("./Marker/CTB.cytotrophoblast.tiff", width = 8, height= 9, units = 'in',res = 400)
+FeaturePlot(pbmc, features=c('KRT7','VGLL1','VGLL1'),ncol=2,pt.size=0.01)
 dev.off()
 
 
-tiff("./Marker/STB.tiff", width = 8, height= 9, units = 'in',res = 400)
+tiff("./Marker/STB.syncytiotrophoblast.tiff", width = 8, height= 9, units = 'in',res = 400)
 FeaturePlot(pbmc, features=c('CGA','CYP19A1','GH2'),ncol=2,pt.size=0.01)
 dev.off()
 
 
-tiff("./Marker/EVT.tiff", width = 8, height= 9, units = 'in',res = 400)
+tiff("./Marker/EVT.ExtravillousTrophoblast.tiff", width = 8, height= 9, units = 'in',res = 400)
 FeaturePlot(pbmc, features=c('HLA-G','DIO2','LAIR2'),ncol=2,pt.size=0.01)
 dev.off()
 
