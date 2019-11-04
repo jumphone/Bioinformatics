@@ -43,7 +43,7 @@ dev.off()
 
 
 tiff("./Marker/CTB.tiff", width = 8, height= 9, units = 'in',res = 400)
-FeaturePlot(pbmc, features=c('KRT17','FGF10','KRT17'),ncol=2,pt.size=0.01)
+FeaturePlot(pbmc, features=c('KRT7','CGB3','GCM1','GCM1'),ncol=2,pt.size=0.01)
 dev.off()
 
 
