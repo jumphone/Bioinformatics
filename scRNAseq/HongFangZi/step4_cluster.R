@@ -76,8 +76,10 @@ pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in%
 pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% 
                               c(105,129,65,22,14))]=NA
 
-DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)
 
+tiff("Cluster.tiff", width = 8, height= 8, units = 'in',res = 400)
+DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)
+dev.off()
 
 saveRDS(object = pbmc@meta.data,file='F:/HFZ/META.RDS')
 
