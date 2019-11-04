@@ -96,7 +96,7 @@ TAB=table(pbmc@meta.data$celltype, pbmc@meta.data$tag)
 
 TAB=table(pbmc@meta.data$celltype, pbmc@meta.data$batch)
 
-.writeTable(TAB,PATH = 'F:/HFZ/TABLE.txt')
+.writeTable(t(TAB),PATH = 'F:/HFZ/TABLE.txt')
 
 
 
