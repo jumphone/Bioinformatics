@@ -22,7 +22,21 @@ D2=.simple_combine(CDC42Rescue, YapHet)$combine
 
 DATA=.simple_combine(D1, D2)$combine
 
-mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=50, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE )
+############
+#QC
+#pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+#Idents(pbmc)=BATCH
+#pbmc@meta.data$batch=BATCH
+#pbmc@meta.data$tag=TAG
+#VlnPlot(pbmc, features = c("nFeature_RNA", "nCount_RNA"), ncol = 2)
+#pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 4000)
+#BATCH=pbmc@meta.data$batch
+#TAG=pbmc@meta.data$tag
+#DATA=as.matrix(pbmc@assays$RNA@counts[,which(colnames(pbmc@assays$RNA@counts) %in% colnames(pbmc@assays$RNA@data))])
+
+#############################
+
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=50, ROUND=1, GN=5000, SEED=1, COMBAT=TRUE )
 
 # Check selected PCs
 PCUSE=mybeer$select
@@ -62,29 +76,40 @@ pbmc@meta.data$clust=as.character(CLUST)
 DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE)+ NoLegend()
 
 
-pbmc@meta.data$celltype=rep('NA',ncol(pbmc))
+pbmc@meta.data$celltype=rep('Enterocyte',ncol(pbmc))
 ######################
 
 FeaturePlot(pbmc, ncol=3, features=c('Lyz1','Defa17','Ang4','Defa22','Defa24'))
-pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('116','123','48'))]='Paneth.Cell'
+
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('16','48'))]='Paneth.Cell'
 DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)+ NoLegend()
 
 ##############################
 
 FeaturePlot(pbmc, ncol=3, features=c('Lgr5','Ascl2','Slc12a2','Axin2','Olfm4','Gkn3'))
 
-pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('183'))]='Stem.Cell'
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('142','56','116','62'))]='Stem.Cell'
 DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)+ NoLegend()
 
 table(pbmc@meta.data$celltype, pbmc@meta.data$batch)
 
+TB=table(pbmc@meta.data$celltype, pbmc@meta.data$batch)
+.norm_sum=function(x){
+    return(round(x/sum(x)*100,2))
+    }
+
+apply(TB,2,.norm_sum)
 
 
 ##############################
 
 FeaturePlot(pbmc, ncol=3, features=c('Mki67','Cdk4','Mcm5','Mcm6','Pcna'))
 
-pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('169','27','191','56','62'))]='TA.Cell'
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c(179,19,27,132,19,20,68,182,24,39,37,51,60,
+                                                         67,146,149,
+                                                         191,23,148,
+                                                         174,104,151,192,178,
+                                                         65,172))]='TA.Cell'
 DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)+ NoLegend()
 
 TB=table(pbmc@meta.data$celltype, pbmc@meta.data$batch)
@@ -98,7 +123,7 @@ apply(TB,2,.norm_sum)
 
 FeaturePlot(pbmc, ncol=3, features=c('Muc2','Clca3','Tff3','Agr2'))
 
-pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('32','150','126','73','81','189','17','121','69'))]='Goblet.Cell'
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c(32,150,126,73,81))]='Goblet.Cell'
 DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)+ NoLegend()
 
 
@@ -109,7 +134,7 @@ DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)
 FeaturePlot(pbmc, ncol=3, features=c('Chga','Chgb','Tac1','Tph1','Neurog3'))
 
 
-pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('28'))]='Endocrine.Cell'
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('183'))]='Endocrine.Cell'
 DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)+ NoLegend()
 
 
@@ -119,7 +144,7 @@ FeaturePlot(pbmc, ncol=3, features=c('Dclk1','Trpm5','Gfi1b','Il25'))
 
 
 
-pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('84'))]='Tuft.Cell'
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('123'))]='Tuft.Cell'
 DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)+ NoLegend()
 
 
@@ -128,15 +153,12 @@ DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)
 
 ##############################
 FeaturePlot(pbmc, ncol=3, features=c('Ptprc','Cd3g'))
-pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c('180','34','196','141','49','167',
-                                                         '139','129','36','186','5','58','92',
-                                                          '26','80','145','102','72','107','170',
-                                                          '103','120','15','94','136','64','165',
-                                                          '66','91','171','22','143','114'
-                                                         
-                                                         
-                                                         
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c(49,197,31,167,110,180,34,166,157,
+                                                          92,58,36,139,196,141,129,5,103,72,186,145,165,
+                                                          15,102,26,80,136,170,107,120,66,94,171,64,91,114,143,22
                                                          ))]='Immune.Cell'
+
+
 DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)+ NoLegend()
 
 
@@ -145,8 +167,8 @@ DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=TRUE)
 
 ##############################
 FeaturePlot(pbmc, ncol=3, features=c('Alpi','Apoa1','Apoa4','Fabp1'))
-
-
+pbmc@meta.data$celltype[which(pbmc@meta.data$clust %in% c(166,157,31,110
+                                                         ))]='Enterocyte'
 
 
 
@@ -164,6 +186,24 @@ apply(TB,2,.norm_sum)
 
 
 FeaturePlot(pbmc, ncol=3, features=c('Slc16a1'))
+
+
+
+
+
+
+saveRDS(mybeer,file='mybeer.RDS')
+saveRDS(pbmc,file='pbmc.RDS')
+saveRDS(pbmc,file='pbmc.final.RDS')
+
+
+
+
+
+
+
+
+
 
 
 
@@ -247,8 +287,6 @@ setwd('F:/Zhenglab/NewZhengZhang')
 library(Seurat)
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
-
-
 DATA=readRDS(file='DATA.RDS')
 BATCH=readRDS(file='BATCH.RDS')
 TAG=readRDS(file='TAG.RDS')
@@ -278,6 +316,25 @@ mybeer <- ReBEER(mybeer, GNUM=30, PCNUM=150, ROUND=1, SEED=1, RMG=NULL)
 
 saveRDS(mybeer,file='mybeer150.RDS')
 ###################################
+
+
+
+
+################################################
+
+setwd('F:/Zhenglab/NewZhengZhang')
+library(Seurat)
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+
+
+
+DATA=readRDS(file='DATA.RDS')
+BATCH=readRDS(file='BATCH.RDS')
+TAG=readRDS(file='TAG.RDS')
+
+
+
+
 
 
 
