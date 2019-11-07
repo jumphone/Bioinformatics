@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+RSEM (TPM): https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323
+
 RNA velocity (kallisto): https://bustools.github.io/BUS_notebooks_R/velocity.html
 
 Gene-Drug: http://www.dgidb.org/search_interactions
