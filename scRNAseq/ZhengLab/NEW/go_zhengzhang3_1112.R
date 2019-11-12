@@ -199,3 +199,7 @@ saveRDS(pbmc,file='pbmc.final.RDS')
 
 
 
+DimPlot(pbmc, reduction.use='umap', group.by='celltype', pt.size=0.5,label=F)
+
+
+
