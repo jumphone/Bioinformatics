@@ -50,7 +50,6 @@ DimPlot(pbmc, reduction = "umap", split.by = "batch",ncol=2)
 
 ########################
 
-
 VEC=pbmc@reductions$umap@cell.embeddings
 
 # Here, we use K-means to do the clustering
