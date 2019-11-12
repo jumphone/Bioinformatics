@@ -73,3 +73,13 @@ pbmc@meta.data$celltype=rep('Enterocyte',ncol(pbmc))
 
 
 
+
+
+
+
+
+
+
+
+
+
