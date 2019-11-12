@@ -25,7 +25,7 @@ DATA=.simple_combine(D1, CDC42Rescue)$combine
 
 #############################
 
-mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=50, ROUND=1, GN=5000, SEED=1, COMBAT=TRUE )
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=5000, SEED=1, COMBAT=TRUE )
 
 # Check selected PCs
 PCUSE=mybeer$select
@@ -41,16 +41,14 @@ umap=BEER.bbknn(pbmc, PCUSE, NB=5, NT=10)
 pbmc@reductions$umap@cell.embeddings=umap
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
 
-
 saveRDS(mybeer,file='mybeer.RDS')
 saveRDS(pbmc,file='pbmc.RDS')
+
 
 ##############
 DimPlot(pbmc, reduction = "umap", split.by = "batch",ncol=2)
 
 ########################
-
-
 
 
 VEC=pbmc@reductions$umap@cell.embeddings
@@ -64,5 +62,15 @@ CLUST=K$cluster
 pbmc@meta.data$clust=as.character(CLUST)
 DimPlot(pbmc, reduction.use='umap', group.by='clust', pt.size=0.5,label=TRUE)+ NoLegend()
 
-
 pbmc@meta.data$celltype=rep('Enterocyte',ncol(pbmc))
+
+##################################################
+
+
+
+
+
+
+
+
+
