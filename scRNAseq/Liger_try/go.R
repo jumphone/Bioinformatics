@@ -46,3 +46,79 @@ print(p_a[[1]])
 
 
 
+
+
+
+
+setwd('C:/Users/cchmc/Desktop/BEER')
+library(liger)
+library(cowplot)
+
+
+SEED=135
+T.NUM=5
+C.NUM=500
+G.NUM=2000
+P.MEAN=0
+R.SIZE=0.1
+A.MEAN=50
+#DR=0.1 # Drop-out
+
+
+set.seed(SEED)
+DATA=matrix(0,ncol=T.NUM*C.NUM,nrow=G.NUM)
+rownames(DATA)=paste0('G',1:nrow(DATA))
+TMP1=rep(paste0('T',1:T.NUM),time=1,each=C.NUM)
+TMP2=rep(1:C.NUM,time=T.NUM)
+colnames(DATA)=paste0(TMP1,'_',TMP2)
+
+
+
+j=0
+while(j<T.NUM){
+    this_start=rpois(G.NUM, P.MEAN)
+    this_a=rnorm(G.NUM)
+    #this_b=rnorm(G.NUM)
+  
+    i=1
+    while(i<= C.NUM){
+        this_col=C.NUM*j+i
+        this_r=rnorm(G.NUM)*R.SIZE
+        this_add=rpois(G.NUM,A.MEAN)
+        
+        this_data=this_start+(this_a+this_r)*i+this_add
+        
+        this_data[which(this_data<0)]=0
+        this_data=round(this_data)
+        #this_data[sample(1:G.NUM,round(DR*G.NUM))]=0      
+        DATA[,this_col]=this_data
+        i=i+1}
+
+    j=j+1}
+
+
+saveRDS(DATA,'RDATA.RDS')
+
+ligerex = createLiger(list(D1=DATA)) #Can also pass in more than 2 datasets
+ligerex = normalize(ligerex)
+ligerex = selectGenes(ligerex, var.thresh = 0.1)
+ligerex = scaleNotCenter(ligerex)
+ligerex = optimizeALS(ligerex, k = 20) 
+ligerex = quantileAlignSNF(ligerex)
+ligerex = runUMAP(ligerex)
+plotByDatasetAndCluster(ligerex)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
