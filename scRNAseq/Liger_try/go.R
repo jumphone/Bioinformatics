@@ -47,7 +47,7 @@ print(p_a[[1]])
 
 
 
-
+###############################################################################3
 
 
 setwd('C:/Users/cchmc/Desktop/BEER')
@@ -105,18 +105,49 @@ ligerex = selectGenes(ligerex, var.thresh = 0.1)
 ligerex = scaleNotCenter(ligerex)
 ligerex = optimizeALS(ligerex, k = 20) 
 ligerex = quantileAlignSNF(ligerex)
-ligerex = runUMAP(ligerex)
-plotByDatasetAndCluster(ligerex)
+ligerex = runUMAP(ligerex,k=3)
+#plotByDatasetAndCluster(ligerex)
+
+umap=ligerex@tsne.coords
+require(scales)
+my_color_palette <- hue_pal()(T.NUM)
+COL=rep(my_color_palette,time=1,each=C.NUM)
+library("rgl")
+library("car")
+scatter3d(umap[,1], umap[,2], umap[,3], point.col = COL, surface=FALSE)
+
+saveRDS(ligerex,'LIGER.RDS')
+
+####################################################
 
 
 
 
 
 
+library(Seurat)
+
+pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+VariableFeatures(object = pbmc)=all.genes
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
+ElbowPlot(pbmc)
+pbmc <- RunUMAP(pbmc, dims = 1:10)
+#DimPlot(pbmc, reduction = "umap")
 
 
+pbmc <- RunUMAP(pbmc, dims = 1:10,n.components = 3)
+umap=pbmc@reductions$umap@cell.embeddings
 
+require(scales)
 
+my_color_palette <- hue_pal()(T.NUM)
+COL=rep(my_color_palette,time=1,each=C.NUM)
+library("rgl")
+library("car")
+scatter3d(umap[,1], umap[,2], umap[,3], point.col = COL, surface=FALSE)
 
 
 
