@@ -23,8 +23,8 @@ a.pbmc <- selectGenes(a.pbmc, var.thresh = c(0.3, 0.875), do.plot = F)
 #s.var.genes <- #readRDS('~/Downloads/pbmc_alignment/var_genes.RDS')
 #a.pbmc@var.genes <- s.var.genes
 a.pbmc <- scaleNotCenter(a.pbmc)
-k.suggest <- suggestK(a.pbmc, num.cores = 5, gen.new = T, return.data = T, plot.log2 = F,
-                      nrep = 5)
+#k.suggest <- suggestK(a.pbmc, num.cores = 5, gen.new = T, return.data = T, plot.log2 = F,
+#                     nrep = 5)
 a.pbmc <- optimizeALS(a.pbmc, k=22, thresh = 5e-5, nrep = 3)
 
 a.pbmc <- runTSNE(a.pbmc, use.raw = T)
