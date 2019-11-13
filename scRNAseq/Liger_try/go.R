@@ -56,8 +56,8 @@ library(cowplot)
 
 
 SEED=135
-T.NUM=5
-C.NUM=500
+T.NUM=2
+C.NUM=300
 G.NUM=2000
 P.MEAN=0
 R.SIZE=0.1
@@ -73,10 +73,10 @@ TMP2=rep(1:C.NUM,time=T.NUM)
 colnames(DATA)=paste0(TMP1,'_',TMP2)
 
 
-
+this_start=rpois(G.NUM, P.MEAN)
 j=0
 while(j<T.NUM){
-    this_start=rpois(G.NUM, P.MEAN)
+    
     this_a=rnorm(G.NUM)
     #this_b=rnorm(G.NUM)
   
@@ -98,16 +98,79 @@ while(j<T.NUM){
 
 
 saveRDS(DATA,'RDATA.RDS')
+########################################
+
+
+library(Seurat)
+
+pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+VariableFeatures(object = pbmc)=all.genes
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
+ElbowPlot(pbmc)
+#pbmc <- RunUMAP(pbmc, dims = 1:10)
+#DimPlot(pbmc, reduction = "umap")
+pbmc <- RunUMAP(pbmc, dims = 1:10,n.components = 2)
+umap=pbmc@reductions$umap@cell.embeddings
+
+require(scales)
+my_color_palette <- hue_pal()(T.NUM)
+COL=rep(my_color_palette,time=1,each=C.NUM)
+plot(umap[,1],umap[,2],col=COL,pch=16,)
+
+
+
+
 
 ligerex = createLiger(list(D1=DATA)) #Can also pass in more than 2 datasets
 ligerex = normalize(ligerex)
 ligerex = selectGenes(ligerex, var.thresh = 0.1)
 ligerex = scaleNotCenter(ligerex)
-ligerex = optimizeALS(ligerex, k = 20) 
+ligerex = optimizeALS(ligerex, k = 10) 
 ligerex = quantileAlignSNF(ligerex)
-ligerex = runUMAP(ligerex,k=3)
+ligerex = runUMAP(ligerex,k=2)
 #plotByDatasetAndCluster(ligerex)
 
+umap=ligerex@tsne.coords
+require(scales)
+my_color_palette <- hue_pal()(T.NUM)
+COL=rep(my_color_palette,time=1,each=C.NUM)
+plot(umap[,1],umap[,2],col=COL,pch=16,)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#############
+#3D
+ligerex = runUMAP(ligerex,k=3)
+library("rgl")
+library("car")
+scatter3d(umap[,1], umap[,2], umap[,3], point.col = COL, surface=FALSE)
 umap=ligerex@tsne.coords
 require(scales)
 my_color_palette <- hue_pal()(T.NUM)
@@ -122,20 +185,6 @@ saveRDS(ligerex,'LIGER.RDS')
 
 
 
-
-
-
-library(Seurat)
-
-pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
-pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
-all.genes <- rownames(pbmc)
-pbmc <- ScaleData(pbmc, features = all.genes)
-VariableFeatures(object = pbmc)=all.genes
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
-ElbowPlot(pbmc)
-pbmc <- RunUMAP(pbmc, dims = 1:10)
-#DimPlot(pbmc, reduction = "umap")
 
 
 pbmc <- RunUMAP(pbmc, dims = 1:10,n.components = 3)
