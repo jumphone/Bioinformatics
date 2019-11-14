@@ -199,6 +199,148 @@ library("car")
 scatter3d(umap[,1], umap[,2], umap[,3], point.col = COL, surface=FALSE)
 
 
+#########################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+setwd('C:/Users/cchmc/Desktop/BEER')
+library(liger)
+library(cowplot)
+
+
+SEED=135
+T.NUM=2
+C.NUM=300
+G.NUM=2000
+P.MEAN=0
+R.SIZE=0.1
+A.MEAN=50
+#DR=0.1 # Drop-out
+
+
+set.seed(SEED)
+DATA=matrix(0,ncol=T.NUM*C.NUM,nrow=G.NUM)
+rownames(DATA)=paste0('G',1:nrow(DATA))
+TMP1=rep(paste0('T',1:T.NUM),time=1,each=C.NUM)
+TMP2=rep(1:C.NUM,time=T.NUM)
+colnames(DATA)=paste0(TMP1,'_',TMP2)
+
+
+this_start=rpois(G.NUM, P.MEAN)
+j=0
+while(j<T.NUM){
+    
+    this_a=rnorm(G.NUM)
+    #this_b=rnorm(G.NUM)
+  
+    i=1
+    while(i<= C.NUM){
+        this_col=C.NUM*j+i
+        this_r=rnorm(G.NUM)*R.SIZE
+        this_add=rpois(G.NUM,A.MEAN)
+        
+        this_data=this_start+(this_a+this_r)*i+this_add
+        
+        this_data[which(this_data<0)]=0
+        this_data=round(this_data)
+        #this_data[sample(1:G.NUM,round(DR*G.NUM))]=0      
+        DATA[,this_col]=this_data
+        i=i+1}
+
+    j=j+1}
+
+
+
+library(Seurat)
+
+pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+VariableFeatures(object = pbmc)=all.genes
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
+ElbowPlot(pbmc)
+#pbmc <- RunUMAP(pbmc, dims = 1:10)
+#DimPlot(pbmc, reduction = "umap")
+pbmc <- RunUMAP(pbmc, dims = 1:10,n.components = 3)
+
+
+source('https://raw.githubusercontent.com/jumphone/VISA/master/VISA.R')
+
+VEC=pbmc@reductions$umap@cell.embeddings
+
+
+COL=visa.col(pbmc@meta.data$orig.ident)
+visa.plot3d(VEC,COL)
+
+N=50
+K=kmeans(VEC,centers=N)
+KC=K$cluster
+
+COL=visa.col(KC)
+visa.plot3d(VEC,COL)
+
+############################
+
+MIN_LIMIT=5
+library(princurve)
+P.VEC=VEC
+i=1
+while(i<=N){
+    this_index=which(KC==i)
+    if(length(this_index)>=MIN_LIMIT){
+        this_vec=VEC[this_index,]
+        ppc=principal_curve(this_vec)
+        new_vec=ppc$s
+        ppc$ord
+        P.VEC[this_index,]=new_vec
+        }
+    #visa.plot3d(principal_curve(this_vec)$s,COL=rep('black',8))
+    i=i+1}
+
+visa.plot3d(P.VEC,COL)
+
+
+############################
+
+MIN_LIMIT=4
+library(princurve)
+P.VEC=P.VEC
+i=1
+while(i<=N){
+    this_index=which(KC==i)
+    if(length(this_index)>=MIN_LIMIT){
+        this_vec=VEC[this_index,]
+        new_vec=principal_curve(this_vec)$s
+        P.VEC[this_index,]=new_vec
+        }
+    #visa.plot3d(principal_curve(this_vec)$s,COL=rep('black',8))
+    i=i+1}
+
+visa.plot3d(P.VEC,COL)
+
+
+
+
+
+
+
 
 
 
