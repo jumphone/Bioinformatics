@@ -199,6 +199,7 @@ saveRDS(pbmc,file='pbmc.final.RDS')
 ############################################################
 
 
+#####################################################
 setwd('F:/Zhenglab/NewZhengZhang')
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
@@ -253,4 +254,267 @@ PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
 .getGSEAinput(DATA,TAG,PATH)
 #######################################
 
+
+
+
+
+
+
+
+
+########################################
+setwd('F:/Zhenglab/NewZhengZhang')
+mybeer=readRDS(file='mybeer.RDS')
+
+
+PCUSE=mybeer$select
+COL=rep('black',length(mybeer$cor))
+COL[PCUSE]='red'
+plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
+    xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
+
+
+pbmc <- mybeer$seurat
+PCUSE=mybeer$select   
+#pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
+umap=BEER.bbknn(pbmc, PCUSE, NB=3, NT=10,DM=3)
+
+
+source('https://raw.githubusercontent.com/jumphone/VISA/master/VISA.R')
+
+COL=visa.col(pbmc@meta.data$batch)
+
+visa.plot3d(umap, COL)
+
+
+
+
+################################################
+
+VEC=umap
+.normOne = function(x){
+    x=x
+    delta=0.001
+    if(var(x)==0){
+        y=rep(0,length(x))
+    }else{
+        y=(x-min(x))/((max(x)-min(x))*(1+delta))
+        }
+    return(y)
+    }
+
+VEC=VEC
+VEC.E=apply(VEC,2,.normOne)
+DATA=as.matrix(pbmc@assays$RNA@data)
+
+visa.plot3d(VEC.E,COL)
+####################################################
+
+visa.plot3d(VEC.E,COL)
+
+N=20
+this_step=1/N
+
+SHOW=FALSE
+
+INDEX_LIST=list()
+CENTER_LIST=list()
+
+this_x=0
+while(this_x<1){
+    this_y=0
+    while(this_y<1){
+        this_z=0
+        while(this_z<1){
+           
+            
+            this_in_index = which(VEC.E[,1]>=this_x &  VEC.E[,1] <this_x+this_step &
+                                  VEC.E[,2]>=this_y &  VEC.E[,2] <this_y+this_step &
+                                  VEC.E[,3]>=this_z &  VEC.E[,3] <this_z+this_step)
+            
+            
+            this_center=c(this_x+this_step/2,this_y+this_step/2,this_z+this_step/2)      
+            
+            if(length(this_in_index)>0){
+                #####################
+                INDEX_LIST=c(INDEX_LIST, list(this_in_index))
+                CENTER_LIST=c(CENTER_LIST, list(this_center))
+                ######################
+                if(SHOW==TRUE){
+                    points3d(this_center[1],this_center[2],this_center[3],color= 'black')
+                    }
+                ############
+                }
+            
+            
+            this_z=this_z+this_step}            
+        this_y=this_y+this_step}
+    print(this_x)
+    this_x=this_x+this_step}
+
+
+#############################
+
+
+
+
+VEC.E=VEC.E
+USED_INDEX=c()
+SHOW=TRUE
+
+i=1
+while(i<=length(CENTER_LIST)){
+    this_center=CENTER_LIST[[i]]
+    this_index=INDEX_LIST[[i]]
+    ###################
+        
+        
+    this_dist=as.matrix(dist(VEC.E[this_index,]))
+    this_sum=apply(this_dist,2,sum)
+    
+    ######################
+    this_used=names(which(this_sum==min(this_sum))[1])
+    this_used_index=which(colnames(DATA)==this_used)
+    ######################
+    if(SHOW==TRUE){
+        points3d(VEC.E[this_used_index,1],VEC.E[this_used_index,2],VEC.E[this_used_index,3],
+              size=5,color= 'blue')
+        }
+    ############
+    
+    USED_INDEX=c(USED_INDEX,this_used_index)
+    i=i+1}
+
+
+USED_MAT=DATA[,USED_INDEX]
+
+##################################################
+
+
+CNUM=length(USED_INDEX)
+CNAME=colnames(DATA)[USED_INDEX]
+
+TIME_CUT=3
+
+SHOW=FALSE
+
+p1=c()
+p2=c()
+edge_score=c()
+i=1
+while(i<CNUM){
+    this_p1_loc=CENTER_LIST[[i]]    
+    this_distance_list=c()
+    j=i+1
+    while(j<=CNUM){
+        this_p2_loc=CENTER_LIST[[j]]
+        this_distance=sqrt(sum((this_p1_loc-this_p2_loc)^2))
+        this_distance_list=c(this_distance_list, this_distance)
+        j=j+1}
+    
+    used_j=i+which(this_distance_list<TIME_CUT*this_step)
+    for(j in used_j){
+        this_p2_loc=CENTER_LIST[[j]]
+        this_p1=CNAME[i]
+        this_p2=CNAME[j]
+        
+        ####################
+        #this_cor=cor(USED_MAT[,i],USED_MAT[,j],method='spearman')
+        #this_score=1-this_cor 
+        ########################
+        this_score=sqrt(sum((this_p1_loc-this_p2_loc)^2))
+        ####################
+        if(SHOW==TRUE){
+            segments3d(c(this_p1_loc[1],this_p2_loc[1]),
+                       c(this_p1_loc[2],this_p2_loc[2]),
+                       c(this_p1_loc[3],this_p2_loc[3]),
+                       col='black')
+            }
+        ######################
+        p1=c(p1,this_p1)
+        p2=c(p2,this_p2) 
+        edge_score=c(edge_score, this_score)
+        ###################
+        }
+        i=i+1
+    }
+
+###################################
+
+USED.VEC=VEC.E[USED_INDEX,]
+
+
+library(igraph)
+NET = cbind(p1,p2) 
+g <- make_graph(t(NET),directed = FALSE)
+MST=mst(g, weights = edge_score, algorithm = NULL)
+
+MST.EL=as_edgelist(MST)
+
+SHOW=FALSE
+
+i=1
+while(i<=nrow(MST.EL)){
+    this_p1=MST.EL[i,1]
+    this_p2=MST.EL[i,2]
+    this_p1_index=which(CNAME==this_p1)
+    this_p2_index=which(CNAME==this_p2)
+    #this_p1_loc=CENTER_LIST[[this_p1_index]]
+    #this_p2_loc=CENTER_LIST[[this_p2_index]]
+    this_p1_loc=USED.VEC[this_p1_index,]
+    this_p2_loc=USED.VEC[this_p2_index,]
+    ####################
+    if(SHOW==TRUE){
+        segments3d(c(this_p1_loc[1],this_p2_loc[1]),
+                   c(this_p1_loc[2],this_p2_loc[2]),
+                   c(this_p1_loc[3],this_p2_loc[3]),
+                   col='purple')
+        }
+    ######################    
+    i=i+1}
+
+
+####################
+
+
+BTN=betweenness(MST, v = V(MST), directed = TRUE, weights = NULL,
+  nobigint = TRUE, normalized = FALSE)
+plot(sort(BTN),type='s')
+#####################################
+BTN.CUT=quantile(BTN,0.2)
+#BTN.CUT=1000
+USED.NODE=names(which(BTN>=BTN.CUT))
+##################
+
+
+COL.G=rep('grey90',nrow(VEC.E))
+visa.plot3d(VEC.E,COL.G)
+MST.EL.USED=MST.EL[which(MST.EL[,1] %in% USED.NODE & MST.EL[,2] %in% USED.NODE),]
+
+
+#############################
+SHOW=TRUE
+
+i=1
+while(i<=nrow(MST.EL.USED)){
+    this_p1=MST.EL.USED[i,1]
+    this_p2=MST.EL.USED[i,2]
+    this_p1_index=which(CNAME==this_p1)
+    this_p2_index=which(CNAME==this_p2)
+    #this_p1_loc=CENTER_LIST[[this_p1_index]]
+    #this_p2_loc=CENTER_LIST[[this_p2_index]]
+    this_p1_loc=USED.VEC[this_p1_index,]
+    this_p2_loc=USED.VEC[this_p2_index,]
+    ####################
+    if(SHOW==TRUE){
+        segments3d(c(this_p1_loc[1],this_p2_loc[1]),
+                   c(this_p1_loc[2],this_p2_loc[2]),
+                   c(this_p1_loc[3],this_p2_loc[3]),
+                   col='purple')
+        }
+    ######################    
+    i=i+1}
+##################################################
+
+points3d(VEC.E[1,1],VEC.E[1,2],VEC.E[1,3],size=10,color='red')
 
