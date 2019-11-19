@@ -262,6 +262,20 @@ PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ########################################
 setwd('F:/Zhenglab/NewZhengZhang')
 mybeer=readRDS(file='mybeer.RDS')
@@ -289,9 +303,18 @@ visa.plot3d(umap, COL)
 
 
 
+DATA=as.matrix(pbmc@assays$RNA@data)
+
+colnames(DATA)=paste0('C.',1:ncol(DATA))
+
+
+
+
 ################################################
 
 VEC=umap
+rownames(VEC)=colnames(DATA)
+
 .normOne = function(x){
     x=x
     delta=0.001
@@ -305,7 +328,6 @@ VEC=umap
 
 VEC=VEC
 VEC.E=apply(VEC,2,.normOne)
-DATA=as.matrix(pbmc@assays$RNA@data)
 
 visa.plot3d(VEC.E,COL)
 ####################################################
@@ -357,6 +379,7 @@ while(this_x<1){
 
 
 
+visa.plot3d(VEC.E,COL)
 
 VEC.E=VEC.E
 USED_INDEX=c()
@@ -368,13 +391,15 @@ while(i<=length(CENTER_LIST)){
     this_index=INDEX_LIST[[i]]
     ###################
         
-        
-    this_dist=as.matrix(dist(VEC.E[this_index,]))
-    this_sum=apply(this_dist,2,sum)
-    
-    ######################
-    this_used=names(which(this_sum==min(this_sum))[1])
-    this_used_index=which(colnames(DATA)==this_used)
+    if(length(this_index)>1){    
+        this_dist=as.matrix(dist(VEC.E[this_index,]))
+        this_sum=apply(this_dist,2,sum)
+        ######################
+        this_used=names(which(this_sum==min(this_sum))[1])
+        this_used_index=which(colnames(DATA)==this_used)
+     }else{
+        this_used_index=this_index   
+        }
     ######################
     if(SHOW==TRUE){
         points3d(VEC.E[this_used_index,1],VEC.E[this_used_index,2],VEC.E[this_used_index,3],
@@ -382,7 +407,9 @@ while(i<=length(CENTER_LIST)){
         }
     ############
     
-    USED_INDEX=c(USED_INDEX,this_used_index)
+    USED_INDEX=c(USED_INDEX, this_used_index)
+    print(length(USED_INDEX))
+    print(i)
     i=i+1}
 
 
@@ -391,12 +418,15 @@ USED_MAT=DATA[,USED_INDEX]
 ##################################################
 
 
+
+visa.plot3d(VEC.E,COL)
+
 CNUM=length(USED_INDEX)
 CNAME=colnames(DATA)[USED_INDEX]
 
-TIME_CUT=3
+TIME_CUT=2
 
-SHOW=FALSE
+SHOW=TRUE
 
 p1=c()
 p2=c()
@@ -436,6 +466,7 @@ while(i<CNUM){
         edge_score=c(edge_score, this_score)
         ###################
         }
+        print(i)
         i=i+1
     }
 
@@ -444,14 +475,16 @@ while(i<CNUM){
 USED.VEC=VEC.E[USED_INDEX,]
 
 
+visa.plot3d(VEC.E,COL)
+
 library(igraph)
 NET = cbind(p1,p2) 
-g <- make_graph(t(NET),directed = FALSE)
+g <- make_graph(t(NET), directed = FALSE)
 MST=mst(g, weights = edge_score, algorithm = NULL)
 
 MST.EL=as_edgelist(MST)
 
-SHOW=FALSE
+SHOW=TRUE
 
 i=1
 while(i<=nrow(MST.EL)){
@@ -481,7 +514,7 @@ BTN=betweenness(MST, v = V(MST), directed = TRUE, weights = NULL,
   nobigint = TRUE, normalized = FALSE)
 plot(sort(BTN),type='s')
 #####################################
-BTN.CUT=quantile(BTN,0.2)
+BTN.CUT=quantile(BTN,0.5)
 #BTN.CUT=1000
 USED.NODE=names(which(BTN>=BTN.CUT))
 ##################
