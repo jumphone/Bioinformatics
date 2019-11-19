@@ -334,7 +334,7 @@ visa.plot3d(VEC.E,COL)
 
 visa.plot3d(VEC.E,COL)
 
-N=20
+N=30
 this_step=1/N
 
 SHOW=FALSE
@@ -424,7 +424,7 @@ visa.plot3d(VEC.E,COL)
 CNUM=length(USED_INDEX)
 CNAME=colnames(DATA)[USED_INDEX]
 
-TIME_CUT=2
+TIME_CUT=1.2
 
 SHOW=TRUE
 
