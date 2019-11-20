@@ -476,14 +476,17 @@ while(i<CNUM){
 USED.VEC=VEC.E[USED_INDEX,]
 
 ######################
-library('circlize')
-CRF=colorRamp2(c(0,0.5, 1 ), c('grey95','red1','red3'))
+
 EXP=DATA[which(rownames(DATA)=='Ptprc'),]
 EXP=EXP/max(EXP)
-COL.E=CRF(EXP)
+COL.E=visa.vcol(EXP, c(0,0.5,1), c('grey90','red1','red3'))
 ###########
 visa.plot3d(VEC.E,COL.E)
+visa.id3d(VEC.E)
 ######################
+
+
+
 
 
 library(igraph)
