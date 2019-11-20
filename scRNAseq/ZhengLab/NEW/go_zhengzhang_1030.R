@@ -287,6 +287,7 @@ COL[PCUSE]='red'
 plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
     xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
 
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
 pbmc <- mybeer$seurat
 PCUSE=mybeer$select   
