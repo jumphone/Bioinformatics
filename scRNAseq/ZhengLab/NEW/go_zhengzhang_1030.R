@@ -475,8 +475,16 @@ while(i<CNUM){
 
 USED.VEC=VEC.E[USED_INDEX,]
 
+######################
+library('circlize')
+CRF=colorRamp2(c(0,0.5, 1 ), c('grey95','red1','red3'))
+EXP=DATA[which(rownames(DATA)=='Ptprc'),]
+EXP=EXP/max(EXP)
+COL.E=CRF(EXP)
+###########
+visa.plot3d(VEC.E,COL.E)
+######################
 
-visa.plot3d(VEC.E,COL)
 
 library(igraph)
 NET = cbind(p1,p2) 
@@ -506,6 +514,10 @@ while(i<=nrow(MST.EL)){
         }
     ######################    
     i=i+1}
+
+
+
+
 
 
 ####################
