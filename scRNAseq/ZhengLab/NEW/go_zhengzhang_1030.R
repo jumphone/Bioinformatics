@@ -276,6 +276,34 @@ PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ########################################
 setwd('F:/Zhenglab/NewZhengZhang')
 mybeer=readRDS(file='mybeer.RDS')
@@ -333,10 +361,16 @@ VEC.E=apply(VEC,2,.normOne)
 visa.plot3d(VEC.E,COL)
 ####################################################
 
+
+
+
 visa.plot3d(VEC.E,COL)
 
-N=30
+N=10
 this_step=1/N
+
+NUM_CUT=1
+
 
 SHOW=FALSE
 
@@ -355,10 +389,11 @@ while(this_x<1){
                                   VEC.E[,2]>=this_y &  VEC.E[,2] <this_y+this_step &
                                   VEC.E[,3]>=this_z &  VEC.E[,3] <this_z+this_step)
             
-            
+                
+                
             this_center=c(this_x+this_step/2,this_y+this_step/2,this_z+this_step/2)      
             
-            if(length(this_in_index)>0){
+            if(length(this_in_index)>=NUM_CUT){
                 #####################
                 INDEX_LIST=c(INDEX_LIST, list(this_in_index))
                 CENTER_LIST=c(CENTER_LIST, list(this_center))
@@ -376,8 +411,266 @@ while(this_x<1){
     this_x=this_x+this_step}
 
 
+
 #############################
 
+
+
+
+
+
+DATA=DATA
+
+visa.plot3d(VEC.E,COL)
+
+VEC.E=VEC.E
+USED_INDEX=c()
+SHOW=TRUE
+
+i=1
+while(i<=length(CENTER_LIST)){
+    this_center=CENTER_LIST[[i]]
+    this_index=INDEX_LIST[[i]]
+    ###################
+        
+    if(length(this_index)>1){    
+        this_dist=as.matrix(dist(VEC.E[this_index,]))
+        this_sum=apply(this_dist,2,sum)
+        ######################
+        this_used=names(which(this_sum==min(this_sum))[1])
+        this_used_index=which(colnames(DATA)==this_used)
+     }else{
+        this_used_index=this_index   
+        }
+    ######################
+    if(SHOW==TRUE){
+        points3d(VEC.E[this_used_index,1],VEC.E[this_used_index,2],VEC.E[this_used_index,3],
+              size=5,color= 'blue')
+        }
+    ############
+    
+    USED_INDEX=c(USED_INDEX, this_used_index)
+    print(length(USED_INDEX))
+    print(i)
+    i=i+1}
+
+
+USED_MAT=DATA[,USED_INDEX]
+
+##################################################
+
+
+
+#install.packages('matlib')
+library(matlib)
+
+visa.plot3d(VEC.E,COL)
+
+
+
+DATA=DATA
+CNUM=length(USED_INDEX)
+CNAME=colnames(DATA)[USED_INDEX]
+
+TIME_CUT=1.2
+
+SHOW=TRUE
+
+p1=c()
+p2=c()
+edge_score=c()
+EDGE_MAT=c()
+L_CUT=5
+
+i=1
+while(i<CNUM){
+    this_p1_loc=CENTER_LIST[[i]]    
+    this_distance_list=c()
+    j=i+1
+    while(j<=CNUM){
+        this_p2_loc=CENTER_LIST[[j]]
+        this_distance=sqrt(sum((this_p1_loc-this_p2_loc)^2))
+        this_distance_list=c(this_distance_list, this_distance)
+        j=j+1}
+    
+    used_j=i+which(this_distance_list<TIME_CUT*this_step)
+    for(j in used_j){
+        this_p2_loc=CENTER_LIST[[j]]
+        this_p1=CNAME[i]
+        this_p2=CNAME[j]
+        #################################
+        ###################################    
+        index_i=INDEX_LIST[[i]]
+        index_j=INDEX_LIST[[j]]
+        
+        if(length(c(index_i,index_j)) >=L_CUT){
+      
+        direction_ij=this_p1_loc-this_p2_loc
+
+        vec_ij=VEC.E[c(index_i,index_j),]    
+        data_ij= DATA[,c(index_i,index_j)]   
+         
+            
+        library(matlib)
+        p_list=c()
+        iii=1
+        while(iii<=nrow(vec_ij)){
+            this_p=sqrt(sum(vec_ij[iii,]^2))*cos(angle(as.vector(direction_ij), as.vector( vec_ij[iii,] ),degree=FALSE))
+            p_list=c(p_list, this_p)
+            iii=iii+1}
+        
+        this_var=apply(data_ij,1,var)   
+        cor_list=rep(0,length(this_var))
+        cor_list    
+        this_corf=function(x){
+            return(cor(x,p_list,method='spearman') )
+            }
+        cor_list[which(this_var>0)]=apply(data_ij[which(this_var>0),],1,this_corf) 
+        names(cor_list)=rownames(data_ij)   
+            
+            
+        ####################
+        ########################
+        this_score=sqrt(sum((this_p1_loc-this_p2_loc)^2))
+        ####################
+        if(SHOW==TRUE){
+            segments3d(c(this_p1_loc[1],this_p2_loc[1]),
+                       c(this_p1_loc[2],this_p2_loc[2]),
+                       c(this_p1_loc[3],this_p2_loc[3]),
+                       col='black')
+            }
+        ######################
+        p1=c(p1,this_p1)
+        p2=c(p2,this_p2) 
+        edge_score=c(edge_score, this_score)
+        EDGE_MAT=cbind(EDGE_MAT, cor_list)
+        ###################
+        ################
+        }   
+        ############
+        }
+        
+        
+        
+        print(i)
+        i=i+1
+    }
+
+
+sort(-apply(abs(EDGE_MAT),1,sum))[1:10]
+
+
+
+
+
+CUT=0.3
+CSIZE=c()
+i=1
+while(i <= nrow(EDGE_MAT)){
+
+
+
+    NET=cbind(p1,p2)
+    NET=NET[which(abs(EXP)>=CUT),]
+    g <- make_graph(t(NET), directed = FALSE)
+
+    EXP=EDGE_MAT[i,]
+    CSIZE=c(CSIZE,max(components(g)$csize))
+    if(i %%100==1){print(i)}
+    i=i+1
+    }
+
+
+names(CSIZE)=rownames(EDGE_MAT)
+
+    NET=cbind(p1,p2)
+    NET=NET[which(abs(EXP)>=CUT),]
+    g <- make_graph(t(NET), directed = FALSE)
+
+
+visa.plot3d(VEC.E,COL)
+
+A=apply(abs(EDGE_MAT),2,sum)
+
+j=1
+while(j<=100){
+
+    MAXA=which(A== -sort(-A)[j])
+
+    this_used=which(rownames(VEC.E) %in% c(p1[MAXA],p2[MAXA]))
+
+    points3d(VEC.E[this_used,1],VEC.E[this_used,2],VEC.E[this_used,3],
+              size=10,color= 'red')
+
+    j=j+1
+}
+
+
+.writeTable(OUT,PATH='OK.txt')
+
+p1
+p2
+
+library(igraph)
+NET = cbind(p1,p2) 
+g <- make_graph(t(NET), directed = FALSE)
+#MST=mst(g, weights = edge_score, algorithm = NULL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################################
 
 
 visa.plot3d(VEC.E,COL)
@@ -477,12 +770,12 @@ USED.VEC=VEC.E[USED_INDEX,]
 
 ######################
 
-EXP=DATA[which(rownames(DATA)=='Ptprc'),]
+EXP=DATA[which(rownames(DATA)=='Lgr5'),]
 EXP=EXP/max(EXP)
 COL.E=visa.vcol(EXP, c(0,0.5,1), c('grey90','red1','red3'))
 ###########
 visa.plot3d(VEC.E,COL.E)
-visa.id3d(VEC.E)
+#visa.id3d(VEC.E)
 ######################
 
 
