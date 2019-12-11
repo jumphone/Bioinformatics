@@ -206,6 +206,8 @@ source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 pbmc=readRDS(file='pbmc.final.RDS')
 
 
+FeaturePlot(pbmc,featurs='Cdc42')
+
 #######################################
 ALL.DATA=as.matrix(pbmc@assays$RNA@data)
 ALL.TAG=pbmc@meta.data$batch
