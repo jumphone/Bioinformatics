@@ -206,7 +206,7 @@ source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 pbmc=readRDS(file='pbmc.final.RDS')
 
 
-FeaturePlot(pbmc,featurs='Cdc42')
+FeaturePlot(pbmc,features='Cdc42')
 
 #######################################
 ALL.DATA=as.matrix(pbmc@assays$RNA@data)
@@ -255,6 +255,33 @@ TAG=ALL.TAG[USED.CELL]
 PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
 .getGSEAinput(DATA,TAG,PATH)
 #######################################
+
+
+
+
+#######################################
+CT='TA.Cell'
+BT=c('CDC42Rescue','CDC42HET')
+USED.CELL=which(pbmc@meta.data$celltype ==CT & pbmc@meta.data$batch %in% BT)
+DATA=ALL.DATA[,USED.CELL]
+TAG=ALL.TAG[USED.CELL]
+PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
+.getGSEAinput(DATA,TAG,PATH)
+#######################################
+
+#######################################
+CT='Stem.Cell'
+BT=c('CDC42Rescue','CDC42HET')
+USED.CELL=which(pbmc@meta.data$celltype ==CT & pbmc@meta.data$batch %in% BT)
+DATA=ALL.DATA[,USED.CELL]
+TAG=ALL.TAG[USED.CELL]
+PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
+.getGSEAinput(DATA,TAG,PATH)
+#######################################
+
+
+
+
 
 
 
