@@ -383,32 +383,747 @@ b/a
 85
 0.1109661
 
+             
+             
+             
+             
 ######################################
+YAP=as.character(read.table('IMG/YAP.txt',header=F)[,1])
+MTOR=as.character(read.table('IMG/MTOR.txt',header=F)[,1])
+PRO=as.character(read.table('IMG/PRO.txt',header=F)[,1])
+###############          
+             
+             
+             
+             
+###########             
+THIS='Stem.Cell'
+THIS_INDEX_HET=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42HET')
+THIS_INDEX_KO=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42KO')
+THIS_INDEX_RES=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42Rescue' )
+
+MAT=pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),c(THIS_INDEX_HET,THIS_INDEX_KO,THIS_INDEX_RES)]
+
+             
+         
+MAT.BATCH=c(rep('Het',length(THIS_INDEX_HET)),
+            rep('KO',length(THIS_INDEX_KO)),
+            rep('Rescue',length(THIS_INDEX_RES)))
+
+
+             
+############################################################             
+             
+GENE=toupper(rownames(MAT))           
+
+YAP.INDEX=which(GENE %in% YAP)
+MTOR.INDEX=which(GENE %in% MTOR)
+PRO.INDEX=which(GENE %in% PRO)
+GENE.BATCH=   c(rep('YAP',length(YAP.INDEX)),
+            rep('MTOR',length(MTOR.INDEX)),
+            rep('PRO',length(PRO.INDEX)))     
+
+MAT=MAT[c(YAP.INDEX,MTOR.INDEX,PRO.INDEX),]
+YAP.INDEX=which(GENE.BATCH=='YAP') 
+MTOR.INDEX=which(GENE.BATCH=='MTOR')
+PRO.INDEX=which(GENE.BATCH=='PRO')
+             
+########################################################            
+             
+             
+library('ComplexHeatmap')
+library('circlize')
+library('seriation')
+set.seed(1)
+
+
+.normX <- function(x){
+    y=(x-min(x))/(max(x)-min(x))
+    return(y)
+    }
+
+
+.normR <- function(x){
+    y=rank(x)/max(rank(x,ties.method='average'))
+    return(y)
+    }
+
+MAT=as.matrix(MAT)   
+s.mat=t(apply(t(MAT),2,.normR))
+
+SSS=function(x,d){return(smooth.spline(x,df=d)$y)}
+s.mat=t(apply(t(s.mat),2,SSS,d=30))             
+             
+LW1=apply(s.mat[,which(MAT.BATCH %in% c('Het'))] ,1,mean)
+LW2=apply(s.mat[,which(MAT.BATCH %in% c('Rescue'))] ,1,mean) 
+UP= apply(s.mat[,which(MAT.BATCH %in% c('KO'))] ,1,mean)  
+             
+###################################################
+SCORE=apply(cbind(LW1/UP,LW2/UP),1,max)
+###################################################
+USED=c(YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]],
+       MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]],
+       PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH,
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F3.Stem.heat.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+###########################################################################################################
 
 
 
+             
+             
+             
+             
+             
+             
+             
+             
+             
+###########             
+THIS='TA.Cell'
+THIS_INDEX_HET=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42HET')
+THIS_INDEX_KO=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42KO')
+THIS_INDEX_RES=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42Rescue' )
+
+MAT=pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),c(THIS_INDEX_HET,THIS_INDEX_KO,THIS_INDEX_RES)]
+
+             
+         
+MAT.BATCH=c(rep('Het',length(THIS_INDEX_HET)),
+            rep('KO',length(THIS_INDEX_KO)),
+            rep('Rescue',length(THIS_INDEX_RES)))
 
 
+             
+############################################################             
+             
+GENE=toupper(rownames(MAT))           
+
+YAP.INDEX=which(GENE %in% YAP)
+MTOR.INDEX=which(GENE %in% MTOR)
+PRO.INDEX=which(GENE %in% PRO)
+GENE.BATCH=   c(rep('YAP',length(YAP.INDEX)),
+            rep('MTOR',length(MTOR.INDEX)),
+            rep('PRO',length(PRO.INDEX)))     
+
+MAT=MAT[c(YAP.INDEX,MTOR.INDEX,PRO.INDEX),]
+YAP.INDEX=which(GENE.BATCH=='YAP') 
+MTOR.INDEX=which(GENE.BATCH=='MTOR')
+PRO.INDEX=which(GENE.BATCH=='PRO')
+             
+########################################################            
+             
+             
+library('ComplexHeatmap')
+library('circlize')
+library('seriation')
+set.seed(1)
 
 
+.normX <- function(x){
+    y=(x-min(x))/(max(x)-min(x))
+    return(y)
+    }
 
 
+.normR <- function(x){
+    y=rank(x)/max(rank(x,ties.method='average'))
+    return(y)
+    }
+
+MAT=as.matrix(MAT)   
+s.mat=t(apply(t(MAT),2,.normR))
+
+SSS=function(x,d){return(smooth.spline(x,df=d)$y)}
+s.mat=t(apply(t(s.mat),2,SSS,d=30))             
+             
+LW1=apply(s.mat[,which(MAT.BATCH %in% c('Het'))] ,1,mean)
+LW2=apply(s.mat[,which(MAT.BATCH %in% c('Rescue'))] ,1,mean) 
+UP= apply(s.mat[,which(MAT.BATCH %in% c('KO'))] ,1,mean)  
+             
+###################################################
+SCORE=apply(cbind(LW1/UP,LW2/UP),1,max)
+###################################################
+USED=c(YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]],
+       MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]],
+       PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH,
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
 
 
+tiff(paste0("IMG/F3.TA.heat.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+###########################################################################################################
 
 
+        
+             
+    
+            
+             
+             
+             
+             
+             
+#AD. AP             
+AD=as.character(read.table('IMG/AD.txt',header=F)[,1])
+AP=as.character(read.table('IMG/AP.txt',header=F)[,1])            
+###########             
+THIS='Stem.Cell'
+THIS_INDEX_HET=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42HET')
+THIS_INDEX_KO=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42KO')
+THIS_INDEX_RES=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42Rescue' )
+
+MAT=pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),c(THIS_INDEX_HET,THIS_INDEX_KO,THIS_INDEX_RES)]
+
+             
+         
+MAT.BATCH=c(rep('Het',length(THIS_INDEX_HET)),
+            rep('KO',length(THIS_INDEX_KO)),
+            rep('Rescue',length(THIS_INDEX_RES)))
 
 
+             
+############################################################             
+             
+GENE=toupper(rownames(MAT))           
+
+AD.INDEX=which(GENE %in% AD)
+AP.INDEX=which(GENE %in% AP)
+
+GENE.BATCH=   c(rep('AD',length(AD.INDEX)),
+            rep('AP',length(AP.INDEX)))     
+
+MAT=MAT[c(AD.INDEX,AP.INDEX),]
+AD.INDEX=which(GENE.BATCH=='AD') 
+AP.INDEX=which(GENE.BATCH=='AP')
+          
+########################################################            
+             
+             
+library('ComplexHeatmap')
+library('circlize')
+library('seriation')
+set.seed(1)
 
 
+.normX <- function(x){
+    y=(x-min(x))/(max(x)-min(x))
+    return(y)
+    }
 
 
+.normR <- function(x){
+    y=rank(x)/max(rank(x,ties.method='average'))
+    return(y)
+    }
+
+MAT=as.matrix(MAT)   
+s.mat=t(apply(t(MAT),2,.normR))
+
+SSS=function(x,d){return(smooth.spline(x,df=d)$y)}
+s.mat=t(apply(t(s.mat),2,SSS,d=30))             
+             
+LW1=apply(s.mat[,which(MAT.BATCH %in% c('Het'))] ,1,mean)
+LW2=apply(s.mat[,which(MAT.BATCH %in% c('Rescue'))] ,1,mean) 
+UP= apply(s.mat[,which(MAT.BATCH %in% c('KO'))] ,1,mean)  
+             
+###################################################
+#SCORE=apply(cbind(LW1/UP,LW2/UP),1,max)
+SCORE=LW1/UP
+###################################################
+USED=c(AD.INDEX[order(SCORE[AD.INDEX])[1:9]],
+       AP.INDEX[order(SCORE[AP.INDEX])[1:8]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH,
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("AD"='red','AP'='blue')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
 
 
+tiff(paste0("IMG/F4.Stem.heat.ADAP.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+#####################             
+             
+             
+             
+     
+             
+             
+#AD. AP             
+AD=as.character(read.table('IMG/AD.txt',header=F)[,1])
+AP=as.character(read.table('IMG/AP.txt',header=F)[,1])            
+###########             
+THIS='TA.Cell'
+THIS_INDEX_HET=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42HET')
+THIS_INDEX_KO=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42KO')
+THIS_INDEX_RES=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42Rescue' )
+
+MAT=pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),c(THIS_INDEX_HET,THIS_INDEX_KO,THIS_INDEX_RES)]
+
+             
+         
+MAT.BATCH=c(rep('Het',length(THIS_INDEX_HET)),
+            rep('KO',length(THIS_INDEX_KO)),
+            rep('Rescue',length(THIS_INDEX_RES)))
 
 
+             
+############################################################             
+             
+GENE=toupper(rownames(MAT))           
+
+AD.INDEX=which(GENE %in% AD)
+AP.INDEX=which(GENE %in% AP)
+
+GENE.BATCH=   c(rep('AD',length(AD.INDEX)),
+            rep('AP',length(AP.INDEX)))     
+
+MAT=MAT[c(AD.INDEX,AP.INDEX),]
+AD.INDEX=which(GENE.BATCH=='AD') 
+AP.INDEX=which(GENE.BATCH=='AP')
+          
+########################################################            
+             
+             
+library('ComplexHeatmap')
+library('circlize')
+library('seriation')
+set.seed(1)
 
 
+.normX <- function(x){
+    y=(x-min(x))/(max(x)-min(x))
+    return(y)
+    }
+
+
+.normR <- function(x){
+    y=rank(x)/max(rank(x,ties.method='average'))
+    return(y)
+    }
+
+MAT=as.matrix(MAT)   
+s.mat=t(apply(t(MAT),2,.normR))
+
+SSS=function(x,d){return(smooth.spline(x,df=d)$y)}
+s.mat=t(apply(t(s.mat),2,SSS,d=30))             
+             
+LW1=apply(s.mat[,which(MAT.BATCH %in% c('Het'))] ,1,mean)
+LW2=apply(s.mat[,which(MAT.BATCH %in% c('Rescue'))] ,1,mean) 
+UP= apply(s.mat[,which(MAT.BATCH %in% c('KO'))] ,1,mean)  
+             
+###################################################
+#SCORE=apply(cbind(LW1/UP,LW2/UP),1,max)
+SCORE=LW1/UP
+###################################################
+USED=c(AD.INDEX[order(SCORE[AD.INDEX])[1:14]],
+       AP.INDEX[order(SCORE[AP.INDEX])[1:8]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH,
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("AD"='red','AP'='blue')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F4.TA.heat.ADAP.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+#####################             
+                         
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+###########             
+THIS='TA.Cell'
+THIS_INDEX_HET=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42HET')
+THIS_INDEX_KO=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42KO')
+THIS_INDEX_RES=which(pbmc@meta.data$celltype %in% c(THIS) & pbmc@meta.data$batch=='CDC42Rescue' )
+
+MAT=pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),c(THIS_INDEX_HET,THIS_INDEX_KO,THIS_INDEX_RES)]
+
+             
+         
+MAT.BATCH=c(rep('Het',length(THIS_INDEX_HET)),
+            rep('KO',length(THIS_INDEX_KO)),
+            rep('Rescue',length(THIS_INDEX_RES)))
+
+           
+GENE=toupper(rownames(MAT))           
+
+YAP.INDEX=which(GENE %in% YAP)
+MTOR.INDEX=which(GENE %in% MTOR)
+PRO.INDEX=which(GENE %in% PRO)
+MAT=MAT[c(YAP.INDEX,MTOR.INDEX,PRO.INDEX),]
+
+
+.normR <- function(x){
+    y=rank(x)/max(rank(x,ties.method='average'))
+    return(y)
+    }
+
+MAT=as.matrix(MAT)   
+s.mat=t(apply(t(MAT),2,.normR))
+
+SSS=function(x,d){return(smooth.spline(x,df=d)$y)}
+s.mat=t(apply(t(s.mat),2,SSS,d=30))          
+o.mat=s.mat[USED,]         
+             
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH,
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)      
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
 
 
 
