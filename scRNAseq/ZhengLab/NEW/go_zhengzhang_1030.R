@@ -280,27 +280,110 @@ PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
 #######################################
 
 
+# 2020.01.07
+
+
+
+setwd('F:/Zhenglab/NewZhengZhang')
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+pbmc=readRDS(file='pbmc.final.RDS')
+
+#CDC42HET     CDC42KO CDC42Rescue      YapHet 
+#       6152        4786        3449        7391 
+
+
+tiff(paste0("IMG/F1.CDC42HET.tiff"),width=5,height=4,units='in',res=600)
+USED.CELL=colnames(pbmc)[which((!pbmc@meta.data$celltype %in% c('Immune.Cell')) & pbmc@meta.data$batch=='CDC42HET'  )  ]
+DimPlot(pbmc,group.by='celltype',cells=USED.CELL)
+dev.off()
+
+tiff(paste0("IMG/F1.CDC42KO.tiff"),width=5,height=4,units='in',res=600)
+USED.CELL=colnames(pbmc)[which((!pbmc@meta.data$celltype %in% c('Immune.Cell')) & pbmc@meta.data$batch=='CDC42KO'  )  ]
+DimPlot(pbmc,group.by='celltype',cells=USED.CELL)
+dev.off()
+
+tiff(paste0("IMG/F1.CDC42Rescue.tiff"),width=5,height=4,units='in',res=600)
+USED.CELL=colnames(pbmc)[which((!pbmc@meta.data$celltype %in% c('Immune.Cell')) & pbmc@meta.data$batch=='CDC42Rescue'  )  ]
+DimPlot(pbmc,group.by='celltype',cells=USED.CELL)
+dev.off()
+
+
+###############
+library(ggplot2)
+tiff(paste0("IMG/F2.Ereg.CDC42HET.tiff"),width=5,height=4,units='in',res=600)
+USED.CELL=colnames(pbmc)[which((!pbmc@meta.data$celltype %in% c('Immune.Cell')) & pbmc@meta.data$batch=='CDC42HET'  )  ]
+pbmc@meta.data$Ereg.EXP=pbmc@assays$RNA@data[which(rownames(pbmc)=='Ereg'),]
+pbmc@meta.data$Ereg.EXP[which(!pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell'))]=0
+
+p1=FeaturePlot(pbmc,features=c('Ereg.EXP'),cells=USED.CELL,order=TRUE,pt.size=2,combine = FALSE)
+fix.sc <- scale_color_gradientn( colours = c('lightgrey', 'red'),  limits = c(0, 2))
+p2 <- lapply(p1, function (x) x + fix.sc)
+CombinePlots(p2)
+
+dev.off()
+
+
+tiff(paste0("IMG/F2.Ereg.CDC42KO.tiff"),width=5,height=4,units='in',res=600)
+USED.CELL=colnames(pbmc)[which((!pbmc@meta.data$celltype %in% c('Immune.Cell')) & pbmc@meta.data$batch=='CDC42KO'  )  ]
+pbmc@meta.data$Ereg.EXP=pbmc@assays$RNA@data[which(rownames(pbmc)=='Ereg'),]
+pbmc@meta.data$Ereg.EXP[which(!pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell'))]=0
+
+p1=FeaturePlot(pbmc,features=c('Ereg.EXP'),cells=USED.CELL,order=TRUE,pt.size=2,combine = FALSE)
+fix.sc <- scale_color_gradientn( colours = c('lightgrey', 'red'),  limits = c(0, 2))
+p2 <- lapply(p1, function (x) x + fix.sc)
+CombinePlots(p2)
+
+dev.off()
+
+
+
+tiff(paste0("IMG/F2.Ereg.CDC42Rescue.tiff"),width=5,height=4,units='in',res=600)
+USED.CELL=colnames(pbmc)[which((!pbmc@meta.data$celltype %in% c('Immune.Cell')) & pbmc@meta.data$batch=='CDC42Rescue'  )  ]
+pbmc@meta.data$Ereg.EXP=pbmc@assays$RNA@data[which(rownames(pbmc)=='Ereg'),]
+pbmc@meta.data$Ereg.EXP[which(!pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell'))]=0
+
+p1=FeaturePlot(pbmc,features=c('Ereg.EXP'),cells=USED.CELL,order=TRUE,pt.size=2,combine = FALSE)
+fix.sc <- scale_color_gradientn( colours = c('lightgrey', 'red'),  limits = c(0, 2))
+p2 <- lapply(p1, function (x) x + fix.sc)
+CombinePlots(p2)
+             
+dev.off()
 
 
 
 
 
+a=length(which(pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell') & pbmc@meta.data$batch=='CDC42HET' ))
+b=length(which(pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell') & pbmc@meta.data$batch=='CDC42HET' & 
+              pbmc@assays$RNA@data[which(rownames(pbmc)=='Ereg'),]>0) )
+
+b/a
+846
+61
+0.07210402
 
 
+a=length(which(pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell') & pbmc@meta.data$batch=='CDC42KO' ))
+b=length(which(pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell') & pbmc@meta.data$batch=='CDC42KO' & 
+              pbmc@assays$RNA@data[which(rownames(pbmc)=='Ereg'),]>0) )
+
+b/a
+1325
+339
+0.2558491
 
 
+a=length(which(pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell') & pbmc@meta.data$batch=='CDC42Rescue' ))
+b=length(which(pbmc@meta.data$celltype %in% c('TA.Cell','Stem.Cell') & pbmc@meta.data$batch=='CDC42Rescue' & 
+              pbmc@assays$RNA@data[which(rownames(pbmc)=='Ereg'),]>0) )
 
+b/a
+766
+85
+0.1109661
 
-
-
-
-
-
-
-
-
-
-
+######################################
 
 
 
