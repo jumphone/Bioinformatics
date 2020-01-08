@@ -17,7 +17,7 @@ USED=which(BATCH %in% c('decidua0117','decidua0417.2',
 DATA=DATA[,USED]
 BATCH=BATCH[USED]
 
-mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL)   
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=FALSE, RMG=NULL)   
 
 
 # Check selected PCs
@@ -32,9 +32,35 @@ saveRDS(mybeer,'mybeer_decidua.RDS')
 
 
 
-
+pbmc=mybeer$seurat
 PCUSE <- mybeer$select
-pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
+#pbmc=BEER.combat(pbmc)
+#PCA = pbmc@reductions$pca@cell.embeddings
+#PCA=vector.rankPCA(PCA)
+#pbmc@reductions$pca@cell.embeddings=PCA
+
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE,
+                n.neighbors = 20, min.dist=0.1)
+
+FeaturePlot(pbmc,features='CCL5')
+
+
+
+
+
+#umap=BEER.bbknn(pbmc, PCUSE, NB=3, NT=10)
+#pbmc@reductions$umap@cell.embeddings=umap
+#DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
+
+#pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
+umap=BEER.bbknn(pbmc, PCUSE, NB=3, NT=10)
+pbmc@reductions$umap@cell.embeddings=umap
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
+
+
+FeaturePlot(pbmc,features='CCL5')
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE[1:50], check_duplicates=FALSE,n.neighbors = 5)
+
 
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
 
