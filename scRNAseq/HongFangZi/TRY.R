@@ -42,7 +42,38 @@ PCUSE <- mybeer$select
 pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE,
                 n.neighbors = 20, min.dist=0.1)
 
-FeaturePlot(pbmc,features='CCL5')
+
+FeaturePlot(pbmc,features='CCL5',order=TRUE)
+
+
+FeaturePlot(pbmc,features='COL1A1')
+
+FeaturePlot(pbmc,features='KRT7',order=TRUE)
+
+FeaturePlot(pbmc,features='HLA-DPA1',order=TRUE)
+
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
+
+TYPE=rep('NM',length(pbmc@meta.data$batch))
+TYPE[which(pbmc@meta.data$batch %in% c('decidua2019c',
+                                      'decidua20190215',
+                                      'decidua510'))]='PE'
+
+pbmc@meta.data$type=TYPE
+
+
+DimPlot(pbmc, reduction.use='umap', group.by='type', pt.size=0.1) 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
