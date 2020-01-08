@@ -11,12 +11,17 @@ USED=which(BATCH %in% c('decidua0117','decidua0417.2',
                        'decidua508','decidua510'
                        ))
 
+DATA=DATA[,USED]
+BATCH=BATCH[USED]
 
-
+PosN=apply(DATA,2,.getPos)
+USED=which(PosN>500 & PosN<2000)
 
 DATA=DATA[,USED]
 BATCH=BATCH[USED]
 
+
+##########################
 mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=FALSE, RMG=NULL)   
 
 
@@ -50,7 +55,13 @@ FeaturePlot(pbmc,features='COL1A1')
 
 FeaturePlot(pbmc,features='KRT7',order=TRUE)
 
+FeaturePlot(pbmc,features='LTB',order=TRUE)
+
 FeaturePlot(pbmc,features='HLA-DPA1',order=TRUE)
+
+
+FeaturePlot(pbmc,features='CD34')
+
 
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
 
@@ -62,11 +73,48 @@ TYPE[which(pbmc@meta.data$batch %in% c('decidua2019c',
 pbmc@meta.data$type=TYPE
 
 
+
+
 DimPlot(pbmc, reduction.use='umap', group.by='type', pt.size=0.1) 
 
+USED=vector.SeuratSelect(pbmc)
+pbmc=vector.SeuratAddMetaByCell(pbmc, USED)
+
+DimPlot(pbmc, reduction.use='umap', group.by='select', pt.size=0.1) 
+
+Idents(pbmc)=pbmc@meta.data$select
+MMM=FindMarkers(pbmc, ident.1 = 'YES', only.pos=TRUE,min.pct = 0.25)
+
+head(MMM,n=20)
 
 
 
+
+
+VEC = pbmc@reductions$umap@cell.embeddings
+rownames(VEC) = colnames(pbmc)
+PCA = pbmc@reductions$pca@cell.embeddings
+# Remove quantile-based colinearity among PCs (new feature in VECTOR 0.0.3):   
+PCA=vector.rankPCA(PCA)
+
+
+# Define pixel
+OUT=vector.buildGrid(VEC, N=50,SHOW=TRUE)
+
+# Build network
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+# Calculate Quantile Skewness (QS) score
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
+# Get pixel's QS score
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+
+# Find starting point
+OUT=vector.autoCenter(OUT,UP=0.8,SHOW=TRUE)
+
+# Infer vector
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
 
 
