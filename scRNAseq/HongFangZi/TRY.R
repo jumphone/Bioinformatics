@@ -56,34 +56,6 @@ saveRDS(pbmc,'pbmc_decidua.RDS')
 
 
 
-VEC = pbmc@reductions$umap@cell.embeddings
-rownames(VEC) = colnames(pbmc)
-PCA = pbmc@reductions$pca@cell.embeddings
-# Remove quantile-based colinearity among PCs (new feature in VECTOR 0.0.3):   
-PCA=vector.rankPCA(PCA)
-
-
-# Define pixel
-OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
-
-# Build network
-OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
-
-# Calculate Quantile Skewness (QS) score
-OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
-
-# Get pixel's QS score
-OUT=vector.gridValue(OUT,SHOW=TRUE)
-
-# Find starting point
-OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-
-# Infer vector
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
-
-
-
-
 
 
 
@@ -154,34 +126,6 @@ MMM=FindMarkers(pbmc, ident.1 = 'YES', only.pos=TRUE,min.pct = 0.25)
 
 head(MMM,n=20)
 
-
-
-
-
-VEC = pbmc@reductions$umap@cell.embeddings
-rownames(VEC) = colnames(pbmc)
-PCA = pbmc@reductions$pca@cell.embeddings
-# Remove quantile-based colinearity among PCs (new feature in VECTOR 0.0.3):   
-PCA=vector.rankPCA(PCA)
-
-
-# Define pixel
-OUT=vector.buildGrid(VEC, N=50,SHOW=TRUE)
-
-# Build network
-OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
-
-# Calculate Quantile Skewness (QS) score
-OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
-
-# Get pixel's QS score
-OUT=vector.gridValue(OUT,SHOW=TRUE)
-
-# Find starting point
-OUT=vector.autoCenter(OUT,UP=0.8,SHOW=TRUE)
-
-# Infer vector
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
 
 
