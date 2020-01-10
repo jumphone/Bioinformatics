@@ -470,7 +470,8 @@ USED=c(YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]],
 o.mat=s.mat[USED,]
 o.mat.GENE.BATCH=GENE.BATCH[USED]
 #o.mat=MAT[1:100,]
-col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.25,0.5, 0.75,1 ), c('blue3','blue1','white','red1','red3'))
+#col_fun =colorRamp2(c(0,0.4,0.5, 0.6,1 ), c('green3','green1','black','red1','red3'))
 
 ha = HeatmapAnnotation(
 	 
@@ -496,8 +497,6 @@ Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
 	
 	)
 
-             
-
 
 tiff(paste0("IMG/F3.Stem.heat.tiff"),width=8,height=7,units='in',res=600)             
      
@@ -509,12 +508,178 @@ Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
 	
 	)
 dev.off()
+	     
+	     
+
+	     
+	 
+	     
+	     
+	     
+	     
+###################################################
+USED=c(YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]])
+      # MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]],
+      # PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5, 0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)     
+	     
+
+tiff(paste0("IMG/F3.Stem.heat.YAP.HET.KO.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()	     
+	     
+	     
 ###########################################################################################################
 
 
 
+                
+	     
+	     
+###################################################
+USED=c(#YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]])
+      MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]])
+      # PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
              
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5, 0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
              
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)     
+	     
+
+tiff(paste0("IMG/F3.Stem.heat.MTOR.HET.KO.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()	     
+	     
+	     
+###########################################################################################################
+  
+            
+	     
+	     
+###################################################
+USED=c(#YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]])
+      #MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]])
+       PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5, 0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)     
+	     
+
+tiff(paste0("IMG/F3.Stem.heat.PRO.HET.KO.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()	     
+	     
+	     
+####################       
              
              
              
@@ -590,7 +755,8 @@ SCORE=apply(cbind(LW1/UP,LW2/UP),1,max)
 USED=c(YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]],
        MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]],
        PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
-             
+ USED=USED[which(!rownames(MAT)[USED] %in% c('Bdnf','Igf2','Cited1','Nptx2','Neurog3') )]          
+            
 ###################################################             
                         
 o.mat=s.mat[USED,]
@@ -626,7 +792,7 @@ Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
 
 
 tiff(paste0("IMG/F3.TA.heat.tiff"),width=8,height=7,units='in',res=600)             
-     
+   
 Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
 	show_column_dend = FALSE, show_row_dend = FALSE, 
 	show_column_names=FALSE, show_row_names=TRUE,
@@ -637,9 +803,182 @@ Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
 dev.off()
 ###########################################################################################################
 
+	     
+	     
+	     
 
-        
+#############        
+###################################################
+USED=c(YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]])
+       #MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]],
+       #PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
              
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F3.TA.heat.YAP.HET.KO.tiff"),width=8,height=7,units='in',res=600)         
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()     
+	     
+######################################################################	     
+	     
+     
+
+#############        
+###################################################
+USED=c(#YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]])
+       MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]])
+       #PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F3.TA.heat.MTOR.HET.KO.tiff"),width=8,height=7,units='in',res=600)         
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()     
+	     
+######################################################################	     
+	
+	     
+############        
+###################################################
+USED=c(#YAP.INDEX[order(SCORE[YAP.INDEX])[1:10]])
+       #MTOR.INDEX[order(SCORE[MTOR.INDEX])[1:7]])
+       PRO.INDEX[order(SCORE[PRO.INDEX])[1:20]])
+USED=USED[which(!rownames(MAT)[USED] %in% c('Bdnf','Igf2','Cited1','Nptx2','Neurog3') )]          
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("YAP"='red','MTOR'='blue','PRO'='green')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F3.TA.heat.PRO.HET.KO.tiff"),width=8,height=7,units='in',res=600)         
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()     
+	     
+######################################################################	     
+	     
+	     	     	     	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
     
             
              
@@ -762,10 +1101,141 @@ Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
 	)
 dev.off()
 #####################             
+          
+
+	
+	     
+	     
+	     
+	     
+	     
+	     
+###################################################
+USED=c(AD.INDEX[order(SCORE[AD.INDEX])[1:9]])
+       #AP.INDEX[order(SCORE[AP.INDEX])[1:8]])
              
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
              
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("AD"='red','AP'='blue')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F4.Stem.heat.AD.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+#####################              
              
      
+
+	     
+	     
+	     
+    
+	     
+###################################################
+USED=c(#AD.INDEX[order(SCORE[AD.INDEX])[1:9]])
+       AP.INDEX[order(SCORE[AP.INDEX])[1:8]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("AD"='red','AP'='blue')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F4.Stem.heat.AP.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+##################### 	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
              
              
 #AD. AP             
@@ -888,7 +1358,117 @@ dev.off()
              
              
              
+  
+	     
+###################################################
+USED=c(AD.INDEX[order(SCORE[AD.INDEX])[1:9]])
+       #AP.INDEX[order(SCORE[AP.INDEX])[1:8]])
              
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("AD"='red','AP'='blue')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F4.TA.heat.AD.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+#####################              
+             
+     
+
+	     
+	     
+	     
+    
+	     
+###################################################
+USED=c(#AD.INDEX[order(SCORE[AD.INDEX])[1:9]])
+       AP.INDEX[order(SCORE[AP.INDEX])[1:8]])
+             
+###################################################             
+                        
+o.mat=s.mat[USED,which(MAT.BATCH %in% c('Het','KO'))]
+o.mat.GENE.BATCH=GENE.BATCH[USED]
+#o.mat=MAT[1:100,]
+#col_fun =colorRamp2(c(0,0.25,0.5,0.75,1 ), c('blue3','blue1','white','red1','red3'))
+col_fun =colorRamp2(c(0,0.3,0.4,0.5, 0.6, 0.7,1 ), c('green1','green1','green3','black','red3','red1','red1'))
+
+ha = HeatmapAnnotation(
+	 
+    Batch = MAT.BATCH[which(MAT.BATCH %in% c('Het','KO'))],
+    col = list(
+	       Batch = c("Het"='gold','KO'='royalblue3','Rescue'='grey70')
+	      )
+    #gp = gpar(col = "black")    
+)
+             
+ha.row=rowAnnotation(
+    Pathway = o.mat.GENE.BATCH,
+    col = list(
+	       Pathway = c("AD"='red','AP'='blue')
+	      )
+)
+        
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+
+             
+
+
+tiff(paste0("IMG/F4.TA.heat.AP.tiff"),width=8,height=7,units='in',res=600)             
+     
+Heatmap(o.mat,row_title='',name="Exp",cluster_rows=FALSE,cluster_columns=FALSE,
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=TRUE,
+	col=col_fun, border = TRUE,
+	top_annotation = ha,right_annotation=ha.row
+	
+	)
+dev.off()
+##################### 	     
+	                  
              
              
              
