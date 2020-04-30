@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+HGNC: protein-coding gene
+
 Single-cell online book: https://osca.bioconductor.org/
 
 RSEM (TPM): https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-323
