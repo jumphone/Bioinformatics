@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+NGS Workshop 2019: https://angus.readthedocs.io/en/2019/toc.html
+
 HGNC: protein-coding gene
 
 Single-cell online book: https://osca.bioconductor.org/
