@@ -1,5 +1,5 @@
 
-setwd('E:/Project/YunFEI_20200818/DIPG correlation')
+setwd('F:/E_DISK/Project/YunFEI_20200818/DIPG correlation')
 
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
 
@@ -33,8 +33,9 @@ heatmap.2(out_1,Rowv=T,Colv=T,sepcolor="black",
          margins=c(10,12))
 
 dev.off()
-
-write.table(out_1,file='SpearmanCor_DIPG_KOOLIG2-subtype.txt',quote=F,row.names=T,col.names=T,sep='\t')
+sout_1=apply(out_1,2,scale)
+rownames(sout_1)=rownames(out_1)
+write.table(sout_1,file='ORIG_DIPG_KOOLIG2-subtype.txt',quote=F,row.names=T,col.names=T,sep='\t')
 
 #########
 SC_MAT_2=read.table('primary_dipg-rna.tpm-subtype.txt',header=T,row.names=1,sep='\t')
@@ -54,9 +55,9 @@ heatmap.2(out_2,Rowv=T,Colv=T,sepcolor="black",
 dev.off()
 
 
-write.table(out_2,file='SpearmanCor_primary_dipg-rna.tpm-subtype.txt',quote=F,row.names=T,col.names=T,sep='\t')
-
-
+sout_2=apply(out_2,2,scale)
+rownames(sout_2)=rownames(out_2)
+write.table(sout_2,file='ORIG_primary_dipg-rna.tpm-subtype.txt',quote=F,row.names=T,col.names=T,sep='\t')
 
 
 
@@ -82,6 +83,10 @@ heatmap.2(out_1,Rowv=T,Colv=T,sepcolor="black",
          margins=c(10,12))
 dev.off()
 
+sout_1=apply(out_1,2,scale)
+rownames(sout_1)=rownames(out_1)
+write.table(sout_1,file='COMBAT_DIPG_KOOLIG2-subtype.txt',quote=F,row.names=T,col.names=T,sep='\t')
+
 
 
 ################
@@ -104,6 +109,9 @@ heatmap.2(out_2,Rowv=T,Colv=T,sepcolor="black",
 dev.off()
 
 
+sout_2=apply(out_2,2,scale)
+rownames(sout_2)=rownames(out_2)
+write.table(sout_2,file='COMBAT_primary_dipg-rna.tpm-subtype.txt',quote=F,row.names=T,col.names=T,sep='\t')
 
 
 
