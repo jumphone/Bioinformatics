@@ -1,5 +1,11 @@
 # Bioinformatics Notes
 
+GREAT predict functions of cis-regulatory regions: http://bejerano.stanford.edu/great/public/html/index.php
+
+FOCS enhancer and promoter: http://acgt.cs.tau.ac.il/focs/
+
+3DIV 3D genome databse: http://kobic.kr/3div/
+
 NGS Workshop 2019: https://angus.readthedocs.io/en/2019/toc.html
 
 HGNC: protein-coding gene
