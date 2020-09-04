@@ -1,5 +1,7 @@
 # Bioinformatics Notes
 
+ChromHMM: http://compbio.mit.edu/ChromHMM/
+
 GREAT predict functions of cis-regulatory regions: http://bejerano.stanford.edu/great/public/html/index.php
 
 FOCS enhancer and promoter: http://acgt.cs.tau.ac.il/focs/
