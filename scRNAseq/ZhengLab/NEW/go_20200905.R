@@ -1,11 +1,102 @@
 setwd('F:/Zhenglab/NewZhengZhang/NEW_20200905')
 source('https://raw.githubusercontent.com/jumphone/scRef/master/scRef.R')
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
 library(Seurat)
 pbmc=readRDS('../pbmc.final.RDS')
 
+EXP=pbmc@assays$RNA@counts
+BATCH=pbmc@meta.data$batch
+
+
 wt.pbmc=readRDS('new.wt.pbmc.rds')
 ko.pbmc=readRDS('new.ko.pbmc.rds')
+
+BATCH=c(BATCH,rep('NEW.WT',ncol(wt.pbmc)), rep('NEW.KO',ncol(ko.pbmc)))
+
+DATA=.simple_combine(EXP, wt.pbmc@assays$RNA@counts)$combine
+DATA=.simple_combine(DATA, ko.pbmc@assays$RNA@counts)$combine
+
+
+dim(DATA)
+length(BATCH)
+
+saveRDS(DATA, 'DATA.RDS')
+saveRDS(BATCH, 'BATCH.RDS')
+
+#################################
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=50, ROUND=1, GN=3000, SEED=1, COMBAT=TRUE )
+saveRDS(mybeer,file='mybeer.RDS')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 HQRef=readRDS('HQRef.rds')
 ref_tag=cbind(colnames(pbmc),as.character(pbmc@meta.data$celltype))
