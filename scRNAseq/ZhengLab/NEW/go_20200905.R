@@ -192,6 +192,59 @@ apply(TB,2,.norm_sum)
 saveRDS(pbmc,file='pbmc.final.RDS')
 
 
+######################################################
+
+setwd('F:/Zhenglab/NewZhengZhang/NEW_20200905')
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+pbmc=readRDS(file='pbmc.final.RDS')
+
+
+#######################################
+ALL.DATA=as.matrix(pbmc@assays$RNA@data)
+ALL.TAG=pbmc@meta.data$batch
+
+
+#######################################
+CT='TA.Cell'
+BT=c('NEW.WT','NEW.KO')
+USED.CELL=which(pbmc@meta.data$celltype ==CT & pbmc@meta.data$batch %in% BT)
+DATA=ALL.DATA[,USED.CELL]
+TAG=ALL.TAG[USED.CELL]
+PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
+.getGSEAinput(DATA,TAG,PATH)
+#######################################
+
+#######################################
+CT='Stem.Cell'
+BT=c('NEW.WT','NEW.KO')
+USED.CELL=which(pbmc@meta.data$celltype ==CT & pbmc@meta.data$batch %in% BT)
+DATA=ALL.DATA[,USED.CELL]
+TAG=ALL.TAG[USED.CELL]
+PATH=paste0('GSEA/',CT,'.',paste0(BT,collapse  ='.'))
+.getGSEAinput(DATA,TAG,PATH)
+#######################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
