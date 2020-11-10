@@ -1,3 +1,5 @@
+bowtie2-build hg19.fa hg19
+
 export PATH=$PATH:/home/zhangfeng/disk/project/Cuffdiff/tools/cufflinks-2.2.1.Linux_x86_64
 export PATH=$PATH:/home/zhangfeng/disk/project/Cuffdiff/tools/bowtie2
 export PATH=$PATH:/home/zhangfeng/disk/project/Cuffdiff/tools/tophat-2.1.0.Linux_x86_64
